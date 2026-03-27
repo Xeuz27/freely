@@ -1,12 +1,15 @@
 import { AppSidebar } from '@/components/app-sidebar'
+import { CalendarBoard } from '@/components/calendar-board'
 import { CrmBoard } from '@/components/crm-board'
 import { KanbanBoard } from '@/components/kanban-board'
+import { ProjectBoard } from '@/components/project-board'
+import { TimetrackBoard } from '@/components/timetrack-board'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { useState } from 'react'
 
-type View = 'kanban' | 'crm'
+export type View = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack'
 
 const ShadProvider = () => {
 	const [activeView, setActiveView] = useState<View>('kanban')
@@ -47,6 +50,9 @@ const ShadProvider = () => {
 					<main className="flex-1 overflow-hidden">
 						{activeView === 'kanban' && <KanbanBoard />}
 						{activeView === 'crm' && <CrmBoard />}
+						{activeView === 'projects' && <ProjectBoard />}
+						{activeView === 'calendar' && <CalendarBoard />}
+						{activeView === 'timetrack' && <TimetrackBoard />}
 					</main>
 				</div>
 			</SidebarInset>

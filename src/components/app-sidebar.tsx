@@ -4,22 +4,17 @@ import { SearchForm } from '@/components/search-form'
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar } from '@/components/ui/sidebar'
 import { VersionSwitcher } from '@/components/version-switcher'
 import { cn } from '@/lib/utils'
-import { LayoutGrid, Users } from 'lucide-react'
+import { CalendarDays, Clock, FolderKanban, LayoutGrid, Users } from 'lucide-react'
 
 // This is sample data.
 const data = {
 	versions: ['1.0.1', '1.1.0-alpha', '2.0.0-beta1'],
 	navMain: [
-		{
-			id: 'kanban',
-			title: 'Kanban Board',
-			Icon: LayoutGrid
-		},
-		{
-			id: 'crm',
-			title: 'Crm',
-			Icon: Users
-		}
+		{ id: 'kanban', title: 'Kanban Board ', Icon: LayoutGrid },
+		{ id: 'crm', title: 'Crm', Icon: Users },
+		{ id: 'projects', title: 'Projects', Icon: FolderKanban },
+		{ id: 'calendar', title: 'Calendar', Icon: CalendarDays },
+		{ id: 'timetrack', title: 'Time Tracker', Icon: Clock }
 	]
 }
 // {
@@ -146,8 +141,6 @@ const data = {
 // 	]
 // }
 
-type View = 'kanban' | 'crm'
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { open } = useSidebar()
 	/* @ts-ignore */
@@ -166,7 +159,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							{/* @ts-ignore */}
 							<SidebarMenuButton onClick={() => setActiveView(id)}>
 								<Icon className={cn('size-5 shrink-0', activeView === id ? 'text-sidebar-primary' : 'text-muted-foreground')} />
-								{!sidebarCollapsed && (
+								{open && (
 									<span className={cn('text-sm tracking-wide', activeView === id ? '' : 'text-muted-foreground')}>{title}</span>
 								)}
 							</SidebarMenuButton>
