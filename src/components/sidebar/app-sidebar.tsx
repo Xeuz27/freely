@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import { SearchForm } from '@/components/search-form'
+import { SearchForm } from '@/components/sidebar/search-form'
+import { VersionSwitcher } from '@/components/sidebar/version-switcher'
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar } from '@/components/ui/sidebar'
-import { VersionSwitcher } from '@/components/version-switcher'
 import { cn } from '@/lib/utils'
 import { CalendarDays, Clock, FolderKanban, LayoutGrid, Users } from 'lucide-react'
 

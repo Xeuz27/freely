@@ -17,8 +17,8 @@ import {
 import { arrayMove } from '@dnd-kit/sortable'
 import { LayoutGrid, Plus, Search } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { AddCardDialog } from './add-card-dialog'
-import { AddColumnDialog } from './add-column-dialog'
+import { AddCardDialog } from './add-card-dialog.tsx'
+import { AddColumnDialog } from './add-column-dialog.tsx'
 import { KanbanCard } from './kanban-card.tsx'
 import { KanbanColumn } from './kanban-column.tsx'
 
