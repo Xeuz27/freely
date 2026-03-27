@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { timeSlots } from '@/types/calendar-types'
 import { type ContactStatus, type Lead, statusConfig } from '@/types/crm-types'
 import { useEffect, useState } from 'react'
 
@@ -23,6 +24,12 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 	const [phone, setPhone] = useState('')
 	const [company, setCompany] = useState('')
 	const [status, setStatus] = useState<ContactStatus>('new')
+	const [action, setAction] = useState<Lead['action']>({
+		title: '',
+		date: '',
+		startTime: '',
+		endTime: ''
+	})
 	const [note, setNote] = useState('')
 	const [info, setInfo] = useState('')
 
@@ -35,6 +42,7 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 			setStatus(editLead.status)
 			setNote(editLead.note)
 			setInfo(editLead.info)
+			setAction(editLead.action)
 		} else {
 			setName('')
 			setEmail('')
@@ -46,7 +54,7 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 		}
 	}, [editLead, open])
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
 		if (!name.trim()) return
 
@@ -57,6 +65,7 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 			phone: phone.trim() || undefined,
 			company: company.trim() || undefined,
 			status,
+			action: action || undefined,
 			note: note.trim(),
 			info: info.trim()
 		})
@@ -74,7 +83,7 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<Label htmlFor="name">Name *</Label>
+							<Label htmlFor="name">Name</Label>
 							<Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required />
 						</div>
 
@@ -112,6 +121,74 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 								))}
 							</SelectContent>
 						</Select>
+					</div>
+					<div className="grid grid-rows-2 space-y-6 px-8">
+						<div className="space-y-2">
+							<Label htmlFor="action">Action</Label>
+							<Input
+								id="action"
+								className=""
+								placeholder="Presentation call"
+								value={action?.title}
+								/* @ts-ignore */
+								onChange={(e) => setAction((prev) => ({ ...prev, title: e.target.value }))}
+							/>
+						</div>
+						<div className="flex justify-between">
+							<div className="space-y-2">
+								<Label htmlFor="date">Date</Label>
+								<Input
+									id="date"
+									type="date"
+									value={action?.date}
+									/* @ts-ignore */
+									onChange={(e) => setAction((prev) => ({ ...prev, date: e.target.value }))}
+									required
+								/>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="startTime">Start Time</Label>
+								<Select
+									value={action?.startTime}
+									onValueChange={(e) => {
+										/* @ts-ignore */
+										setAction((prev) => ({ ...prev, startTime: e }))
+									}}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="Start" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="none">No time</SelectItem>
+										{timeSlots.map((time) => (
+											<SelectItem key={time} value={time}>
+												{time}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="startTime">End Time</Label>
+								<Select
+									value={action?.endTime}
+									/* @ts-ignore */
+									onValueChange={(e) => setAction((prev) => ({ ...prev, endTime: e }))}
+								>
+									<SelectTrigger>
+										<SelectValue placeholder="End" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="none">No time</SelectItem>
+										{timeSlots.map((time) => (
+											<SelectItem key={time} value={time}>
+												{time}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+						</div>
 					</div>
 
 					<div className="space-y-2">

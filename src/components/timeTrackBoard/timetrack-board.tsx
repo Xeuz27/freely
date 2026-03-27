@@ -11,7 +11,7 @@ import { Calendar, ChevronLeft, ChevronRight, Clock, FolderKanban, LayoutGrid, M
 import { useMemo, useState } from 'react'
 import { TimeEntryDialog } from './time-entry-dialog'
 
-const sampleProjects: Project[] = [
+export const sampleProjects: Project[] = [
 	{
 		id: 'proj-1',
 		name: 'Website Redesign',
@@ -34,7 +34,7 @@ const sampleProjects: Project[] = [
 	}
 ]
 
-const sampleKanbanCards: KanbanCard[] = [
+export const sampleKanbanCards: KanbanCard[] = [
 	{ id: 'card-1', title: 'Design homepage mockup', type: 'task', createdAt: new Date() },
 	{ id: 'card-2', title: 'API integration research', type: 'idea', createdAt: new Date() },
 	{ id: 'card-3', title: 'User feedback analysis', type: 'data', createdAt: new Date() }

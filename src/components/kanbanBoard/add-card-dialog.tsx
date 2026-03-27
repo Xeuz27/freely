@@ -1,14 +1,17 @@
-'use client'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+
 import { cn } from '@/lib/utils'
 import { type CardType, cardTypeColors } from '@/types/kanban-types'
-import { CheckSquare, Database, FileText, Lightbulb } from 'lucide-react'
-import { useState } from 'react'
+import { CheckSquare, Database, FileText, FolderKanban, Lightbulb, UserRoundPlus } from 'lucide-react'
+import { sampleLeads } from '../crmBoard/crm-board'
+import { sampleProjects } from '../timeTrackBoard/timetrack-board'
 
 interface AddCardDialogProps {
 	open: boolean
@@ -20,7 +23,8 @@ const typeOptions: { value: CardType; label: string; icon: typeof CheckSquare }[
 	{ value: 'task', label: 'Task', icon: CheckSquare },
 	{ value: 'note', label: 'Note', icon: FileText },
 	{ value: 'idea', label: 'Idea', icon: Lightbulb },
-	{ value: 'data', label: 'Data', icon: Database }
+	{ value: 'data', label: 'Data', icon: Database },
+	{ value: 'lead', label: 'Lead', icon: UserRoundPlus }
 ]
 
 export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogProps) {
@@ -28,6 +32,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
 	const [description, setDescription] = useState('')
 	const [type, setType] = useState<CardType>('task')
 	const [tagsInput, setTagsInput] = useState('')
+	const [linkedProjectId, setLinkedProjectId] = useState('')
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -56,7 +61,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
 				<form onSubmit={handleSubmit}>
 					<DialogHeader>
 						<DialogTitle>Add New Item</DialogTitle>
-						<DialogDescription>Create a new task, note, idea, or data entry.</DialogDescription>
+						<DialogDescription>Create a new task, note, idea, lead, or data entry.</DialogDescription>
 					</DialogHeader>
 
 					<div className="space-y-4 py-4">
@@ -107,6 +112,46 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
 								onChange={(e) => setDescription(e.target.value)}
 								rows={3}
 							/>
+						</div>
+						<div className="grid grid-cols-2 gap-3">
+							<div className="space-y-2">
+								<Label className="flex items-center gap-1.5">
+									<FolderKanban className="size-3.5" />
+									Link to Project
+								</Label>
+								<Select value={linkedProjectId} onValueChange={setLinkedProjectId}>
+									<SelectTrigger>
+										<SelectValue placeholder="None" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="none">None</SelectItem>
+										{sampleProjects.map((project) => (
+											<SelectItem key={project.id} value={project.id}>
+												{project.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="space-y-2">
+								<Label className="flex items-center gap-1.5">
+									<FolderKanban className="size-3.5" />
+									Link to Lead
+								</Label>
+								<Select value={linkedProjectId} onValueChange={setLinkedProjectId}>
+									<SelectTrigger>
+										<SelectValue placeholder="None" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="none">None</SelectItem>
+										{sampleLeads.map((project) => (
+											<SelectItem key={project.id} value={project.id}>
+												{project.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
 						</div>
 
 						<div className="space-y-2">

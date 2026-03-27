@@ -24,6 +24,7 @@ import {
 	Users
 } from 'lucide-react'
 import { Fragment, useMemo, useState } from 'react'
+import { outerLeads } from '../crmBoard/crm-board.tsx'
 import { EventDialog } from './event-dialog.tsx'
 
 const eventTypeIcons: Record<EventType, React.ReactNode> = {
@@ -39,7 +40,7 @@ interface CalendarBoardProps {
 	kanbanCards?: KanbanCard[]
 }
 
-const initialEvents: CalendarEvent[] = [
+export const initialEvents: CalendarEvent[] = [
 	{
 		id: '1',
 		title: 'Call with Sarah Chen',
@@ -202,10 +203,23 @@ const dayTimeSlots = [
 	'21:30',
 	'22:00'
 ]
+const getEventsFromLeads = () => {
+	return outerLeads.map((lead) => {
+		if (lead !== undefined && lead.action !== undefined) {
+			return {
+				id: lead.id,
+				title: lead.action?.title,
+				date: lead.action?.date,
+				startTime: lead.action?.startTime,
+				endTime: lead.action?.endTime
+			}
+		}
+	})
+}
 
 export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanCards }: CalendarBoardProps) {
 	const [currentDate, setCurrentDate] = useState(new Date())
-	const [events, setEvents] = useState<CalendarEvent[]>(initialEvents)
+	const [events, setEvents] = useState<CalendarEvent[]>([...initialEvents])
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -347,48 +361,51 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 		return Math.max(1, end - start)
 	}
 
-	const EventCard = ({ event, compact = false }: { event: CalendarEvent; compact?: boolean }) => (
-		<div
-			className={cn(
-				'group flex items-start gap-1.5 p-1.5 rounded-md border text-xs cursor-pointer transition-colors',
-				eventTypeConfig[event.type].color
-			)}
-		>
-			<span className="mt-0.5 shrink-0">{eventTypeIcons[event.type]}</span>
-			<div className="flex-1 min-w-0">
-				<p className="font-medium truncate">{event.title}</p>
-				{!compact && event.startTime && (
-					<p className="text-[10px] opacity-70">
-						{event.startTime}
-						{event.endTime && ` - ${event.endTime}`}
-					</p>
+	const EventCard = ({ event, compact = false }: { event: CalendarEvent; compact?: boolean }) => {
+		console.log(event)
+		return (
+			<div
+				className={cn(
+					'group flex items-start gap-1.5 p-1.5 rounded-md border text-xs cursor-pointer transition-colors',
+					event.type ? eventTypeConfig[event.type].color : ''
 				)}
-				{!compact && (event.leadName || event.kanbanCardTitle) && (
-					<div className="flex items-center gap-1 mt-0.5">
-						<Link2 className="size-2.5 opacity-50" />
-						<span className="text-[10px] opacity-70 truncate">{event.leadName || event.kanbanCardTitle}</span>
-					</div>
-				)}
+			>
+				<span className="mt-0.5 shrink-0">{eventTypeIcons[event.type]}</span>
+				<div className="flex-1 min-w-0">
+					<p className="font-medium truncate">{event.title}</p>
+					{!compact && event.startTime && (
+						<p className="text-[10px] opacity-70">
+							{event.startTime}
+							{event.endTime && ` - ${event.endTime}`}
+						</p>
+					)}
+					{!compact && (event.leadName || event.kanbanCardTitle) && (
+						<div className="flex items-center gap-1 mt-0.5">
+							<Link2 className="size-2.5 opacity-50" />
+							<span className="text-[10px] opacity-70 truncate">{event.leadName || event.kanbanCardTitle}</span>
+						</div>
+					)}
+				</div>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<button className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-white/10 rounded transition-opacity">
+							<MoreHorizontal className="size-3" />
+						</button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuItem onClick={() => handleEditEvent(event)}>
+							<Edit2 className="size-3 mr-2" />
+							Edit
+						</DropdownMenuItem>
+						<DropdownMenuItem onClick={() => handleDeleteEvent(event.id)} className="text-red-400">
+							<Trash2 className="size-3 mr-2" />
+							Delete
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<button className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-white/10 rounded transition-opacity">
-						<MoreHorizontal className="size-3" />
-					</button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end">
-					<DropdownMenuItem onClick={() => handleEditEvent(event)}>
-						<Edit2 className="size-3 mr-2" />
-						Edit
-					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => handleDeleteEvent(event.id)} className="text-red-400">
-						<Trash2 className="size-3 mr-2" />
-						Delete
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-		</div>
-	)
+		)
+	}
 
 	const DayEventCard = ({ event }: { event: CalendarEvent }) => (
 		<div
@@ -535,16 +552,21 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 								if (!day) {
 									return <div key={`empty-${idx}`} className="min-h-[120px] bg-card/50" />
 								}
-
 								const dayEvents = getEventsForDate(day)
 								const isCurrentDay = isToday(day)
+								const allEvents = [
+									...dayEvents,
+									getEventsFromLeads()
+										.filter((item) => item !== undefined)
+										.flat()
+								]
 
 								return (
 									<div
 										key={day.toISOString()}
 										className={cn(
 											'min-h-[120px] bg-card p-2 group/day transition-colors hover:bg-card/80',
-											isCurrentDay && 'bg-primary/5'
+											isCurrentDay && 'bg-primary/15'
 										)}
 									>
 										<div className="flex items-center justify-between mb-1">
@@ -568,12 +590,12 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 											</button>
 										</div>
 										<div className="space-y-1">
-											{dayEvents.slice(0, 3).map((event) => (
+											{allEvents.flat().map((event) => (
 												<EventCard key={event.id} event={event} compact />
 											))}
-											{dayEvents.length > 3 && (
+											{/* {dayEvents.length > 3 && (
 												<p className="text-xs text-muted-foreground pl-1">+{dayEvents.length - 3} more</p>
-											)}
+											)} */}
 										</div>
 									</div>
 								)

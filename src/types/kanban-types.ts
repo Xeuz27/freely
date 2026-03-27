@@ -1,4 +1,4 @@
-export type CardType = 'task' | 'note' | 'idea' | 'data'
+export type CardType = 'task' | 'note' | 'idea' | 'data' | 'lead'
 
 export interface KanbanCard {
 	id: string
@@ -35,6 +35,11 @@ export const cardTypeColors: Record<CardType, { bg: string; text: string; border
 		bg: 'bg-pink-500/10',
 		text: 'text-pink-400',
 		border: 'border-pink-500/30'
+	},
+	lead: {
+		bg: 'bg-teal-500/10',
+		text: 'text-teal-400',
+		border: 'border-teal-500/30'
 	}
 }
 
@@ -42,5 +47,6 @@ export const cardTypeIcons: Record<CardType, string> = {
 	task: 'CheckSquare',
 	note: 'FileText',
 	idea: 'Lightbulb',
-	data: 'Database'
+	data: 'Database',
+	lead: 'UserRoundPlus'
 }

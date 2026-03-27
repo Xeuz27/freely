@@ -9,6 +9,12 @@ export interface Lead {
 	status: ContactStatus
 	note: string
 	info: string
+	action?: {
+		title: string
+		date: string
+		startTime: string
+		endTime: string
+	} | undefined
 	createdAt: Date
 	updatedAt: Date
 }

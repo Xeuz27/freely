@@ -1,5 +1,6 @@
 import { CalendarBoard } from '@/components/calendarBoard/calendar-board'
 import { CrmBoard } from '@/components/crmBoard/crm-board'
+import { DocumentBoard } from '@/components/documentBoard/document-board'
 import { KanbanBoard } from '@/components/kanbanBoard/kanban-board'
 import { ProjectBoard } from '@/components/projectBoard/project-board'
 import { AppSidebar } from '@/components/sidebar/app-sidebar'
@@ -9,7 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { useState } from 'react'
 
-export type View = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack'
+export type View = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
 
 const ShadProvider = () => {
 	const [activeView, setActiveView] = useState<View>('kanban')
@@ -53,6 +54,7 @@ const ShadProvider = () => {
 						{activeView === 'projects' && <ProjectBoard />}
 						{activeView === 'calendar' && <CalendarBoard />}
 						{activeView === 'timetrack' && <TimetrackBoard />}
+						{activeView === 'document' && <DocumentBoard />}
 					</main>
 				</div>
 			</SidebarInset>

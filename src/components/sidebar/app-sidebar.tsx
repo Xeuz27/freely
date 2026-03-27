@@ -4,7 +4,7 @@ import { SearchForm } from '@/components/sidebar/search-form'
 import { VersionSwitcher } from '@/components/sidebar/version-switcher'
 import { Sidebar, SidebarContent, SidebarHeader, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
-import { CalendarDays, Clock, FolderKanban, LayoutGrid, Users } from 'lucide-react'
+import { CalendarDays, Clock, FileText, FolderKanban, LayoutGrid, Users } from 'lucide-react'
 
 // This is sample data.
 const data = {
@@ -14,7 +14,8 @@ const data = {
 		{ id: 'crm', title: 'Crm', Icon: Users },
 		{ id: 'projects', title: 'Projects', Icon: FolderKanban },
 		{ id: 'calendar', title: 'Calendar', Icon: CalendarDays },
-		{ id: 'timetrack', title: 'Time Tracker', Icon: Clock }
+		{ id: 'timetrack', title: 'Time Tracker', Icon: Clock },
+		{ id: 'document', title: 'Documents', Icon: FileText }
 	]
 }
 // {

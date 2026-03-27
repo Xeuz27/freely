@@ -1,5 +1,3 @@
-'use client'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,7 +9,7 @@ import { useState } from 'react'
 import { LeadDialog } from './lead-dialog'
 import { LeadRow } from './lead-row'
 
-const initialLeads: Lead[] = [
+export const sampleLeads: Lead[] = [
 	{
 		id: '1',
 		name: 'Sarah Chen',
@@ -75,8 +73,10 @@ const initialLeads: Lead[] = [
 type SortField = 'name' | 'status' | 'createdAt' | 'updatedAt'
 type SortOrder = 'asc' | 'desc'
 
+export let outerLeads: Lead[] = [...sampleLeads]
+
 export function CrmBoard() {
-	const [leads, setLeads] = useState<Lead[]>(initialLeads)
+	const [leads, setLeads] = useState<Lead[]>(sampleLeads)
 	const [searchQuery, setSearchQuery] = useState('')
 	const [statusFilter, setStatusFilter] = useState<ContactStatus | 'all'>('all')
 	const [dialogOpen, setDialogOpen] = useState(false)
@@ -94,6 +94,7 @@ export function CrmBoard() {
 				createdAt: new Date(),
 				updatedAt: new Date()
 			}
+			outerLeads = [...outerLeads, { ...newLead }]
 			setLeads((prev) => [newLead, ...prev])
 		}
 		setEditingLead(null)

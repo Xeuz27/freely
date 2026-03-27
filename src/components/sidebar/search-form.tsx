@@ -7,7 +7,6 @@ import { SearchIcon } from 'lucide-react'
 
 export function SearchForm({ ...props }: React.ComponentProps<'form'>) {
 	const { open, toggleSidebar } = useSidebar()
-	console.log(open)
 	return (
 		<form {...props}>
 			<SidebarGroup className="p-0">
