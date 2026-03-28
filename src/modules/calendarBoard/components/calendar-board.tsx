@@ -4,6 +4,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { EventDialog } from '@/modules/calendarBoard/components/event-dialog'
+import { outerLeads } from '@/modules/crmBoard/components/crm-board.tsx'
 import { type CalendarEvent, type EventType, eventTypeConfig } from '@/types/calendar-types.ts'
 import { type Lead } from '@/types/crm-types'
 import { type KanbanCard } from '@/types/kanban-types'
@@ -24,9 +26,6 @@ import {
 	Users
 } from 'lucide-react'
 import { Fragment, useMemo, useState } from 'react'
-import { outerLeads } from '../crmBoard/crm-board.tsx'
-import { EventDialog } from './event-dialog.tsx'
-
 const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	meeting: <Users className="size-3" />,
 	call: <Phone className="size-3" />,
@@ -209,7 +208,7 @@ const getEventsFromLeads = () => {
 			return {
 				id: lead.id,
 				title: lead.action?.title,
-				date: lead.action?.date,
+				date: new Date(lead.action?.date),
 				startTime: lead.action?.startTime,
 				endTime: lead.action?.endTime
 			}
@@ -590,12 +589,13 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 											</button>
 										</div>
 										<div className="space-y-1">
-											{allEvents.flat().map((event) => (
+											{dayEvents.flat().map((event) => (
+												/* @ts-ignore */
 												<EventCard key={event.id} event={event} compact />
 											))}
-											{/* {dayEvents.length > 3 && (
+											{dayEvents.length > 3 && (
 												<p className="text-xs text-muted-foreground pl-1">+{dayEvents.length - 3} more</p>
-											)} */}
+											)}
 										</div>
 									</div>
 								)

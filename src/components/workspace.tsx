@@ -3,8 +3,8 @@
 import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight, LayoutGrid, Users } from 'lucide-react'
 import { useState } from 'react'
-import { CrmBoard } from './crmBoard/crm-board.tsx'
-import { KanbanBoard } from './kanbanBoard/kanban-board.tsx'
+import { CrmBoard } from '../modules/crmBoard/components/crm-board.tsx'
+import { KanbanBoard } from '../modules/kanbanBoard/components/kanban-board.tsx'
 
 type View = 'kanban' | 'crm'
 
