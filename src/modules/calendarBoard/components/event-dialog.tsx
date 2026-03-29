@@ -1,5 +1,3 @@
-'use client'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -12,6 +10,7 @@ import { type Lead } from '@/types/crm-types'
 import { type KanbanCard } from '@/types/kanban-types'
 import { AlertCircle, Bell, CheckSquare, Link2, Phone, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import useCalendar from '../hooks/useCalendar'
 
 const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	meeting: <Users className="size-4" />,
@@ -20,11 +19,11 @@ const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	reminder: <Bell className="size-4" />,
 	deadline: <AlertCircle className="size-4" />
 }
-
+type eventData = Omit<CalendarEvent, 'id' | 'createdAt'> & { id?: string }
 interface EventDialogProps {
 	open: boolean
 	onOpenChange: (open: boolean) => void
-	onSave: (event: Omit<CalendarEvent, 'id' | 'createdAt'> & { id?: string }) => void
+	onSave: (event: eventData, setEvents: any, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => void
 	editEvent?: CalendarEvent | null
 	initialDate?: Date
 	initialTime?: string
@@ -42,6 +41,7 @@ export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate
 	const [linkedLeadId, setLinkedLeadId] = useState<string>('')
 	const [linkedKanbanId, setLinkedKanbanId] = useState<string>('')
 
+	const { setEvents, setEditingEvent, setSelectedDate, setSelectedTime } = useCalendar()
 	useEffect(() => {
 		if (editEvent) {
 			setTitle(editEvent.title)
@@ -71,21 +71,27 @@ export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate
 		const selectedLead = leads.find((l) => l.id === linkedLeadId)
 		const selectedKanban = kanbanCards.find((c) => c.id === linkedKanbanId)
 
-		onSave({
-			id: editEvent?.id,
-			title: title.trim(),
-			description: description.trim() || undefined,
-			date: new Date(date),
-			startTime: startTime || undefined,
-			endTime: endTime || undefined,
-			type,
-			leadId: linkedLeadId || undefined,
-			leadName: selectedLead?.name,
-			leadStatus: selectedLead?.status,
-			kanbanCardId: linkedKanbanId || undefined,
-			kanbanCardTitle: selectedKanban?.title,
-			kanbanCardType: selectedKanban?.type
-		})
+		onSave(
+			{
+				id: editEvent?.id,
+				title: title.trim(),
+				description: description.trim() || undefined,
+				date: new Date(date),
+				startTime: startTime || undefined,
+				endTime: endTime || undefined,
+				type,
+				leadId: linkedLeadId || undefined,
+				leadName: selectedLead?.name,
+				leadStatus: selectedLead?.status,
+				kanbanCardId: linkedKanbanId || undefined,
+				kanbanCardTitle: selectedKanban?.title,
+				kanbanCardType: selectedKanban?.type
+			},
+			setEvents,
+			setEditingEvent,
+			setSelectedDate,
+			setSelectedTime
+		)
 		onOpenChange(false)
 	}
 
