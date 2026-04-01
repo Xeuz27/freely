@@ -1,4 +1,3 @@
-import { dayTimeSlots } from '@/data/dayTimeSlots'
 import { sampleEvents } from '@/data/sampleEvents'
 import type { CalendarEvent } from '@/types/calendar-types'
 import { useMemo, useState } from 'react'
@@ -15,8 +14,6 @@ const useCalendar = () => {
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 	const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 	const [view, setView] = useState<'month' | 'week' | 'day'>('month')
-
-	const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 	const daysInMonth = new Date(year, month + 1, 0).getDate()
 	const firstDayOfMonth = new Date(year, month, 1).getDay()
@@ -61,48 +58,28 @@ const useCalendar = () => {
 		})
 	}, [events, today])
 
-	const formatDateHeader = () => {
-		if (view === 'day') {
-			return currentDate.toLocaleDateString('en-US', {
-				weekday: 'long',
-				month: 'long',
-				day: 'numeric',
-				year: 'numeric'
-			})
-		}
-		return `${monthNames[month]} ${year}`
-	}
-	const getTimeSlotHeight = (startTime: string, endTime: string) => {
-		const start = dayTimeSlots.indexOf(startTime)
-		const end = dayTimeSlots.indexOf(endTime)
-		if (start === -1 || end === -1) return 1
-		return Math.max(1, end - start)
-	}
-
 	return {
 		currentDate,
-		days,
-		dialogOpen,
-		editingEvent,
-		events,
-		formatDateHeader,
-		getEventsForDate,
-		getTimeSlotHeight,
-		getTodayEvents,
-		getWeekDays,
-		month,
-		selectedDate,
-		selectedTime,
 		setCurrentDate,
-		setDialogOpen,
-		setEditingEvent,
-		setEvents,
-		setSelectedDate,
-		setSelectedTime,
-		setView,
+		days,
 		today,
+		month,
+		year,
+		dialogOpen,
+		setDialogOpen,
+		editingEvent,
+		setEditingEvent,
+		events,
+		setEvents,
+		selectedDate,
+		setSelectedDate,
+		selectedTime,
+		setSelectedTime,
 		view,
-		year
+		setView,
+		getEventsForDate,
+		getTodayEvents,
+		getWeekDays
 	}
 }
 

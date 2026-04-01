@@ -1,7 +1,7 @@
 import type { CalendarEvent } from '@/types/calendar-types'
 import type { Dispatch, SetStateAction } from 'react'
 
-const handlePrev = (view: string, year: any, month: any, currentDate: any, setCurrentDate: Dispatch<SetStateAction<Date>>) => {
+const handlePrev = (view: string, year: number, month: number, currentDate: Date, setCurrentDate: Dispatch<SetStateAction<Date>>) => {
 	if (view === 'month') {
 		setCurrentDate(new Date(year, month - 1, 1))
 	} else if (view === 'week') {

@@ -2,36 +2,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils'
 import { type CalendarEvent, eventTypeConfig } from '@/types/calendar-types'
 import { Edit2, Link2, MoreHorizontal, Trash2 } from 'lucide-react'
-import type { Dispatch, SetStateAction } from 'react'
-import { handleDeleteEvent, handleEditEvent } from '../utils/handlers'
+import useCalendarContext from '../hooks/useCalendarContext'
+import { handleDeleteEvent } from '../utils/handlers'
 import { eventTypeIcons } from './calendar-board'
 
-const EventCard = ({
-	event,
-	setEvents,
-	compact,
-	key,
-	setEditingEvent,
-	setSelectedDate,
-	setSelectedTime,
-	setDialogOpen
-}: {
-	event: CalendarEvent
-	setEvents?: Dispatch<SetStateAction<CalendarEvent[]>>
-	setEditingEvent?: Dispatch<SetStateAction<CalendarEvent | null>>
-	setSelectedDate?: Dispatch<SetStateAction<Date | null>>
-	setSelectedTime?: Dispatch<SetStateAction<string | undefined>>
-
-	setDialogOpen?: Dispatch<SetStateAction<boolean>>
-
-	compact?: boolean
-	key: string
-}) => {
+const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean }) => {
+	const { setEvents, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
 	return (
 		<div
-			key={key}
+			key={event.id}
 			className={cn(
-				'group flex items-start gap-1.5 p-1.5 rounded-md border text-xs cursor-pointer transition-colors',
+				'group flex items-start gap-1.5 p-1.5 rounded-md border text-xs hover:scale-[1.02]  transition-all cursor-pointer',
 				event.type ? eventTypeConfig[event.type].color : ''
 			)}
 		>
@@ -58,7 +39,14 @@ const EventCard = ({
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
-					<DropdownMenuItem onClick={() => handleEditEvent(event, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)}>
+					<DropdownMenuItem
+						onClick={() => {
+							setEditingEvent(event)
+							setSelectedDate(null)
+							setSelectedTime(undefined)
+							setDialogOpen(true)
+						}}
+					>
 						<Edit2 className="size-3 mr-2" />
 						Edit
 					</DropdownMenuItem>

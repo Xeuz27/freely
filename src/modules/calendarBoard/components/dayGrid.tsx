@@ -4,21 +4,21 @@ import { dayTimeSlots } from '@/data/dayTimeSlots'
 import { cn } from '@/lib/utils'
 import { eventTypeConfig, type EventType } from '@/types/calendar-types'
 import { CalendarDays, Link2, Plus } from 'lucide-react'
-import useCalendar from '../hooks/useCalendar'
+import useCalendarContext from '../hooks/useCalendarContext'
 import { handleAddEvent, handleEditEvent } from '../utils/handlers'
 import { isToday } from '../utils/isToday'
 import { eventTypeIcons } from './calendar-board'
 import { DayEventCard } from './day-event-card'
 
 const DayGrid = () => {
-	const { getEventsForDate, currentDate, setEditingEvent, setSelectedDate, setSelectedTime, setEvents } = useCalendar()
+	const { getEventsForDate, currentDate, selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
 	return (
 		<div className="h-full flex gap-6">
 			{/* Day View - Timeline */}
 			<div className="flex-1 flex flex-col">
-				<div className="flex items-center justify-between mb-4">
+				<div className="flex items-center justify-between py-4">
 					<h3 className="text-sm font-medium text-muted-foreground">{isToday(currentDate) ? "Today's Schedule" : 'Schedule'}</h3>
-					<Badge variant="outline" className="text-xs">
+					<Badge variant="outline" className="text-xs border-0">
 						{getEventsForDate(currentDate).length} events
 					</Badge>
 				</div>
@@ -30,34 +30,49 @@ const DayGrid = () => {
 								const slotEvents = getEventsForDate(currentDate).filter(
 									(e) => e.startTime === time || e.startTime === dayTimeSlots[dayTimeSlots.indexOf(time) + 1]
 								)
+								console.log(slotEvents)
 
 								return (
 									<div key={time} className="flex gap-4 group/slot">
 										<div className="w-16 py-3 text-xs text-muted-foreground text-right shrink-0">{time}</div>
 										<div
-											className="flex-1 min-h-[60px] border-t border-border/50 py-2 relative cursor-pointer hover:bg-secondary/20 rounded transition-colors"
-											onClick={() => handleAddEvent(currentDate, time)}
+											className={cn(
+												'flex-1 min-h-[60px] border-t border-border/50 py-2 relative cursor-pointer  rounded transition-colors',
+												slotEvents.length > 0 ? '' : 'hover:bg-secondary/20'
+											)}
+											onClick={() =>
+												handleAddEvent(
+													currentDate,
+													selectedTime,
+													setEditingEvent,
+													setSelectedDate,
+													setSelectedTime,
+													setDialogOpen
+												)
+											}
 										>
-											<button
-												className="absolute right-2 top-2 opacity-0 group-hover/slot:opacity-100 p-1 hover:bg-secondary rounded transition-opacity"
-												onClick={(e) => {
-													e.stopPropagation()
-													handleAddEvent(currentDate, time)
-												}}
-											>
-												<Plus className="size-3.5 text-muted-foreground" />
-											</button>
+											{slotEvents.length === 0 && (
+												<button
+													className="absolute right-2 top-2 opacity-0 group-hover/slot:opacity-100 p-1 hover:bg-secondary rounded transition-opacity"
+													onClick={(e) => {
+														e.stopPropagation()
+														handleAddEvent(
+															currentDate,
+															selectedTime,
+															setEditingEvent,
+															setSelectedDate,
+															setSelectedTime,
+															setDialogOpen
+														)
+													}}
+												>
+													<Plus className="size-3.5 text-muted-foreground" />
+												</button>
+											)}
+
 											<div className="space-y-2">
 												{slotEvents.map((event) => (
-													/*@ts-ignore*/
-													<DayEventCard
-														setEditingEvent={setEditingEvent}
-														setSelectedDate={setSelectedDate}
-														setSelectedTime={setSelectedTime}
-														setEvents={setEvents}
-														key={event.id}
-														event={event}
-													/>
+													<DayEventCard event={event} />
 												))}
 											</div>
 										</div>
@@ -69,7 +84,7 @@ const DayGrid = () => {
 			</div>
 
 			{/* Day View - Sidebar with all events */}
-			<div className="w-80 border-l border-border pl-6">
+			<div className="w-80 border-l border-border p-6">
 				<div className="sticky top-0">
 					<h3 className="text-sm font-medium text-muted-foreground mb-4">All Events</h3>
 					{getEventsForDate(currentDate).length === 0 ? (
@@ -78,7 +93,14 @@ const DayGrid = () => {
 								<CalendarDays className="size-6 text-muted-foreground" />
 							</div>
 							<p className="text-sm text-muted-foreground">No events scheduled</p>
-							<Button variant="outline" size="sm" className="mt-3" onClick={() => handleAddEvent(currentDate)}>
+							<Button
+								variant="outline"
+								size="sm"
+								className="mt-3"
+								onClick={() =>
+									handleAddEvent(currentDate, selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)
+								}
+							>
 								<Plus className="size-3.5 mr-1" />
 								Add Event
 							</Button>

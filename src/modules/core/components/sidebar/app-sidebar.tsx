@@ -145,7 +145,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { open } = useSidebar()
 	/* @ts-ignore */
-	const { activeView, setActiveView, sidebarCollapsed, setSidebarCollapsed } = props
+	const { activeView, setActiveView } = props
 	return (
 		<Sidebar {...props}>
 			<ul className={cn(' flex flex-col flex-1', open ? 'divide-y-1 divide-accent/40' : '')}>

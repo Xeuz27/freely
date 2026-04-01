@@ -10,7 +10,7 @@ import { type Lead } from '@/types/crm-types'
 import { type KanbanCard } from '@/types/kanban-types'
 import { AlertCircle, Bell, CheckSquare, Link2, Phone, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import useCalendar from '../hooks/useCalendar'
+import useCalendarContext from '../hooks/useCalendarContext'
 
 const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	meeting: <Users className="size-4" />,
@@ -21,7 +21,6 @@ const eventTypeIcons: Record<EventType, React.ReactNode> = {
 }
 type eventData = Omit<CalendarEvent, 'id' | 'createdAt'> & { id?: string }
 interface EventDialogProps {
-	open: boolean
 	onOpenChange: (open: boolean) => void
 	onSave: (event: eventData, setEvents: any, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => void
 	editEvent?: CalendarEvent | null
@@ -31,7 +30,7 @@ interface EventDialogProps {
 	kanbanCards?: KanbanCard[]
 }
 
-export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate, initialTime, leads = [], kanbanCards = [] }: EventDialogProps) {
+export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, leads = [], kanbanCards = [] }: EventDialogProps) {
 	const [title, setTitle] = useState('')
 	const [description, setDescription] = useState('')
 	const [date, setDate] = useState('')
@@ -41,17 +40,18 @@ export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate
 	const [linkedLeadId, setLinkedLeadId] = useState<string>('')
 	const [linkedKanbanId, setLinkedKanbanId] = useState<string>('')
 
-	const { setEvents, setEditingEvent, setSelectedDate, setSelectedTime } = useCalendar()
+	const { setEvents, editingEvent, setEditingEvent, setSelectedDate, setSelectedTime, dialogOpen } = useCalendarContext()
+
 	useEffect(() => {
-		if (editEvent) {
-			setTitle(editEvent.title)
-			setDescription(editEvent.description || '')
-			setDate(editEvent.date.toISOString().split('T')[0])
-			setStartTime(editEvent.startTime || '')
-			setEndTime(editEvent.endTime || '')
-			setType(editEvent.type)
-			setLinkedLeadId(editEvent.leadId || '')
-			setLinkedKanbanId(editEvent.kanbanCardId || '')
+		if (editingEvent) {
+			setTitle(editingEvent.title)
+			setDescription(editingEvent.description || '')
+			setDate(editingEvent.date.toISOString().split('T')[0])
+			setStartTime(editingEvent.startTime || '')
+			setEndTime(editingEvent.endTime || '')
+			setType(editingEvent.type)
+			setLinkedLeadId(editingEvent.leadId || '')
+			setLinkedKanbanId(editingEvent.kanbanCardId || '')
 		} else {
 			setTitle('')
 			setDescription('')
@@ -62,9 +62,9 @@ export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate
 			setLinkedLeadId('')
 			setLinkedKanbanId('')
 		}
-	}, [editEvent, initialDate, initialTime, open])
+	}, [editingEvent, initialDate, initialTime])
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
 		if (!title.trim() || !date) return
 
@@ -73,7 +73,7 @@ export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate
 
 		onSave(
 			{
-				id: editEvent?.id,
+				id: editingEvent?.id,
 				title: title.trim(),
 				description: description.trim() || undefined,
 				date: new Date(date),
@@ -96,11 +96,11 @@ export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate
 	}
 
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
+		<Dialog open={dialogOpen} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-[500px]">
 				<DialogHeader>
-					<DialogTitle>{editEvent ? 'Edit Event' : 'New Event'}</DialogTitle>
-					<DialogDescription>{editEvent ? 'Update the event details below.' : 'Add a new event to your calendar.'}</DialogDescription>
+					<DialogTitle>{editingEvent ? 'Edit Event' : 'New Event'}</DialogTitle>
+					<DialogDescription>{editingEvent ? 'Update the event details below.' : 'Add a new event to your calendar.'}</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="space-y-2">
@@ -234,7 +234,7 @@ export function EventDialog({ open, onOpenChange, onSave, editEvent, initialDate
 						<Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
 							Cancel
 						</Button>
-						<Button type="submit">{editEvent ? 'Save Changes' : 'Create Event'}</Button>
+						<Button type="submit">{editingEvent ? 'Save Changes' : 'Create Event'}</Button>
 					</div>
 				</form>
 			</DialogContent>

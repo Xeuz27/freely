@@ -2,15 +2,17 @@ import { Button } from '@/components/ui/button'
 import { sampleKanbanCards } from '@/data/sampleKanbanCards'
 import { sampleLeads } from '@/data/sampleLeads'
 import { cn } from '@/lib/utils'
-import { EventDialog } from '@/modules/calendarBoard/components/event-dialog'
+import { WorkspaceHeader } from '@/modules/core/components/workspace-Header'
 import { type EventType } from '@/types/calendar-types.ts'
 import { type Lead } from '@/types/crm-types'
 import { type KanbanCard } from '@/types/kanban-types'
 import { AlertCircle, Bell, CalendarDays, CheckSquare, ChevronLeft, ChevronRight, Phone, Plus, Users } from 'lucide-react'
-import useCalendar from '../hooks/useCalendar'
+import useCalendarContext from '../hooks/useCalendarContext'
+import { formatDateHeader } from '../utils/formatDateHeader'
 import { handleAddEvent, handleNext, handlePrev, handleSaveEvent } from '../utils/handlers'
 import { DayGrid } from './dayGrid'
-import MonthGrid from './monthGrid'
+import { EventDialog } from './event-dialog'
+import { MonthGrid } from './monthGrid'
 import { WeekGrid } from './weekGrid'
 
 export const eventTypeIcons: Record<EventType, React.ReactNode> = {
@@ -25,7 +27,19 @@ interface CalendarBoardProps {
 	leads?: Lead[]
 	kanbanCards?: KanbanCard[]
 }
-
+const Btn = ({ view, onClick, text }: { view: string; onClick: () => void; text: string }) => {
+	return (
+		<button
+			onClick={() => onClick()}
+			className={cn(
+				'px-3 py-1.5 text-sm rounded-md transition-colors',
+				view === text ? 'bg-background text-foreground shadow-sm border border-accent/30' : 'text-muted-foreground hover:text-foreground'
+			)}
+		>
+			{text}
+		</button>
+	)
+}
 export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanCards }: CalendarBoardProps) {
 	const {
 		days,
@@ -41,15 +55,13 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 		setSelectedDate,
 		setSelectedTime,
 		setDialogOpen,
-		getEventsForDate,
 		editingEvent,
-		dialogOpen,
-		formatDateHeader
-	} = useCalendar()
+		dialogOpen
+	} = useCalendarContext()
 
 	return (
-		<div className="flex flex-col h-screen bg-background">
-			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
+		<div className="flex flex-1 flex-col h-screen px-4">
+			<WorkspaceHeader>
 				<div className="flex items-center gap-3">
 					<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10">
 						<CalendarDays className="size-5 text-primary" />
@@ -62,45 +74,21 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 
 				<div className="flex items-center gap-3">
 					<div className="flex items-center bg-secondary/50 rounded-lg p-1">
-						<button
-							onClick={() => setView('month')}
-							className={cn(
-								'px-3 py-1.5 text-sm rounded-md transition-colors',
-								view === 'month' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-							)}
-						>
-							Month
-						</button>
-						<button
-							onClick={() => setView('week')}
-							className={cn(
-								'px-3 py-1.5 text-sm rounded-md transition-colors',
-								view === 'week' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-							)}
-						>
-							Week
-						</button>
-						<button
-							onClick={() => {
-								setView('day')
-								setCurrentDate(new Date())
-							}}
-							className={cn(
-								'px-3 py-1.5 text-sm rounded-md transition-colors',
-								view === 'day' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-							)}
-						>
-							Day
-						</button>
+						<Btn view={view} onClick={() => setView('month')} text="month" />
+						<Btn view={view} onClick={() => setView('week')} text="week" />
+						<Btn view={view} onClick={() => setView('day')} text="day" />
 					</div>
 					<Button
-						onClick={() => handleAddEvent(new Date(), selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)}
+						className="hover:bg-accent/20"
+						onClick={() => {
+							handleAddEvent(new Date(), selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)
+						}}
 					>
 						<Plus className="size-4 mr-1" />
 						Add Event
 					</Button>
 				</div>
-			</header>
+			</WorkspaceHeader>
 
 			<div className="px-6 py-3 border-b border-border">
 				<div className="flex items-center justify-between">
@@ -108,17 +96,18 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 						<Button variant="ghost" size="icon" onClick={() => handlePrev(view, year, month, currentDate, setCurrentDate)}>
 							<ChevronLeft className="size-4" />
 						</Button>
-						<h2 className="text-lg font-semibold min-w-[280px] text-center">{formatDateHeader()}</h2>
+						<h2 className="text-lg font-semibold min-w-[280px] text-center">{formatDateHeader(view, currentDate, month, year)}</h2>
 						<Button variant="ghost" size="icon" onClick={() => handleNext(view, currentDate, setCurrentDate, year, month)}>
 							<ChevronRight className="size-4" />
 						</Button>
 					</div>
 					<Button
-						variant="outline"
+						variant="default"
+						className="bg-accent/10 hover:bg-accent/20"
 						size="sm"
 						onClick={() => {
 							setCurrentDate(new Date())
-							if (view === 'day') setView('day')
+							if (view !== 'day') setView('day')
 						}}
 					>
 						Today
@@ -126,26 +115,21 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 				</div>
 			</div>
 
-			<div className="flex-1 overflow-auto p-6">
-				{view === 'month' ? (
-					<MonthGrid days={days} getEventsForDate={getEventsForDate} setCurrentDate={setCurrentDate} setView={setView} />
-				) : view === 'week' ? (
-					<WeekGrid />
-				) : (
-					<DayGrid />
-				)}
+			<div className="flex-1 overflow-auto relative">
+				{view === 'month' ? <MonthGrid days={days} /> : view === 'week' ? <WeekGrid /> : <DayGrid />}
 			</div>
 
-			<EventDialog
-				open={dialogOpen}
-				onOpenChange={setDialogOpen}
-				onSave={handleSaveEvent}
-				editEvent={editingEvent}
-				initialDate={selectedDate || undefined}
-				initialTime={selectedTime}
-				leads={leads}
-				kanbanCards={kanbanCards}
-			/>
+			{dialogOpen && (
+				<EventDialog
+					onOpenChange={setDialogOpen}
+					onSave={handleSaveEvent}
+					editEvent={editingEvent}
+					initialDate={selectedDate || undefined}
+					initialTime={selectedTime}
+					leads={leads}
+					kanbanCards={kanbanCards}
+				/>
+			)}
 		</div>
 	)
 }
