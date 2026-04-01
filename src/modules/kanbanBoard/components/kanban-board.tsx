@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils.ts'
 import type { CardType, KanbanCard as KanbanCardType, KanbanColumn as KanbanColumnType } from '@/types/kanban-types'
 import {
 	closestCorners,
@@ -238,7 +239,7 @@ export function KanbanBoard() {
 	}))
 
 	return (
-		<div className="flex flex-col h-screen bg-background">
+		<div className="flex flex-col flex-1 p-6 h-screen bg-background">
 			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
 				<div className="flex items-center gap-3">
 					<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10">
@@ -267,7 +268,7 @@ export function KanbanBoard() {
 				</div>
 			</header>
 
-			<div className="flex-1 overflow-x-auto p-6">
+			<div className="flex-1">
 				<DndContext
 					sensors={sensors}
 					collisionDetection={closestCorners}
@@ -275,7 +276,7 @@ export function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-					<div className="flex gap-4 h-full">
+					<div className={cn('grid gap-4 h-full', `grid-cols-${columns.length + 1}`)}>
 						{filteredColumns.map((column) => (
 							<KanbanColumn
 								key={column.id}
@@ -288,7 +289,7 @@ export function KanbanBoard() {
 
 						<button
 							onClick={() => setAddColumnDialogOpen(true)}
-							className="flex items-center justify-center w-[320px] min-h-[200px] shrink-0 rounded-xl border-2 border-dashed border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+							className="flex items-center justify-center min-h-[200px] shrink-0 rounded-xl border-2 border-dashed border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
 						>
 							<div className="flex flex-col items-center gap-2">
 								<Plus className="size-6" />

@@ -20,7 +20,7 @@ export function KanbanColumn({ column, onAddCard, onDeleteCard, onDeleteColumn }
 	})
 
 	return (
-		<div className={cn('flex flex-col h-full min-h-[500px] w-[290px] shrink-0 rounded-xl bg-secondary/30 border border-border/50')}>
+		<div className={cn('flex flex-col h-full min-h-[500px] shrink-0 rounded-xl bg-secondary/30 border border-border/50')}>
 			<div className="flex items-center justify-between p-4 border-b border-border/50">
 				<div className="flex items-center gap-2">
 					<h3 className="font-semibold text-sm text-foreground">{column.title}</h3>
