@@ -237,7 +237,9 @@ export function KanbanBoard() {
 				card.tags?.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
 		)
 	}))
-
+	const cols = (n: number) => {
+		return `grid-cols-${n + 1}`
+	}
 	return (
 		<div className="flex flex-col flex-1 p-6 h-screen bg-background">
 			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -276,7 +278,7 @@ export function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-					<div className={cn('grid gap-4 h-full', `grid-cols-${columns.length + 1}`)}>
+					<div className={cn('grid gap-4 h-full border border-red-100/50', cols(filteredColumns.length))}>
 						{filteredColumns.map((column) => (
 							<KanbanColumn
 								key={column.id}
