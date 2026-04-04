@@ -6,7 +6,7 @@ import useCalendarContext from '../hooks/useCalendarContext'
 import { handleDeleteEvent, handleEditEvent } from '../utils/handlers'
 
 const DayEventCard = ({ event }: { event: CalendarEvent }) => {
-	const { setEditingEvent, setEvents, setSelectedDate, setSelectedTime } = useCalendarContext()
+	const { setEditingEvent, setEvents, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
 
 	return (
 		<div
@@ -48,7 +48,7 @@ const DayEventCard = ({ event }: { event: CalendarEvent }) => {
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
-					<DropdownMenuItem onClick={() => handleEditEvent(event, setEditingEvent, setSelectedDate, setSelectedTime)}>
+					<DropdownMenuItem onClick={() => handleEditEvent(event, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)}>
 						<Edit2 className="size-4 mr-2" />
 						Edit
 					</DropdownMenuItem>

@@ -30,7 +30,6 @@ const DayGrid = () => {
 								const slotEvents = getEventsForDate(currentDate).filter(
 									(e) => e.startTime === time || e.startTime === dayTimeSlots[dayTimeSlots.indexOf(time) + 1]
 								)
-								console.log(slotEvents)
 
 								return (
 									<div key={time} className="flex gap-4 group/slot">
@@ -40,7 +39,7 @@ const DayGrid = () => {
 												'flex-1 min-h-[60px] border-t border-border/50 py-2 relative cursor-pointer  rounded transition-colors',
 												slotEvents.length > 0 ? '' : 'hover:bg-secondary/20'
 											)}
-											onClick={() =>
+											onClick={() => {
 												handleAddEvent(
 													currentDate,
 													selectedTime,
@@ -49,7 +48,8 @@ const DayGrid = () => {
 													setSelectedTime,
 													setDialogOpen
 												)
-											}
+												setSelectedTime(time)
+											}}
 										>
 											{slotEvents.length === 0 && (
 												<button
@@ -64,6 +64,7 @@ const DayGrid = () => {
 															setSelectedTime,
 															setDialogOpen
 														)
+														setSelectedTime(time)
 													}}
 												>
 													<Plus className="size-3.5 text-muted-foreground" />
@@ -120,7 +121,7 @@ const DayGrid = () => {
 											'p-3 rounded-lg border cursor-pointer transition-all hover:scale-[1.02]',
 											eventTypeConfig[event.type].color
 										)}
-										onClick={() => handleEditEvent(event)}
+										onClick={() => handleEditEvent(event, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)}
 									>
 										<div className="flex items-start gap-2">
 											<span className="mt-0.5">{eventTypeIcons[event.type]}</span>

@@ -26,6 +26,9 @@ importers:
       '@fontsource-variable/inter':
         specifier: ^5.2.8
         version: 5.2.8
+      '@formkit/tempo':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@tailwindcss/vite':
         specifier: ^4.2.2
         version: 4.2.2(vite@6.4.1(jiti@2.6.1)(lightningcss@1.32.0))
@@ -614,6 +617,9 @@ packages:
 
   '@fontsource-variable/inter@5.2.8':
     resolution: {integrity: sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ==}
+
+  '@formkit/tempo@1.0.0':
+    resolution: {integrity: sha512-2jhR8jnWFt4ajtbpHL2ZvJJ+ofj/XpAumb1OLmsY7U5iwCjGKuk0wqLR7dGsZfyvJeivfWLD9vzj9cdkUUWzyg==}
 
   '@hono/node-server@1.19.11':
     resolution: {integrity: sha512-dr8/3zEaB+p0D2n/IUrlPF1HZm586qgJNXK1a9fhg/PzdtkK7Ksd5l312tJX2yBuALqDYBlG20QEbayqPyxn+g==}
@@ -4666,6 +4672,8 @@ snapshots:
   '@floating-ui/utils@0.2.11': {}
 
   '@fontsource-variable/inter@5.2.8': {}
+
+  '@formkit/tempo@1.0.0': {}
 
   '@hono/node-server@1.19.11(hono@4.12.9)':
     dependencies:

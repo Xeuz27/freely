@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { format } from '@formkit/tempo'
 import { Plus } from 'lucide-react'
 import useCalendarContext from '../hooks/useCalendarContext.ts'
 import { getEventsFromLeads } from '../utils/getEventsFromLeads'
@@ -25,8 +26,8 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 					}
 					const dayEvents = getEventsForDate(day)
 					const isCurrentDay = isToday(day)
-					const allEvents = [...dayEvents, getEventsFromLeads().flat()]
-					// fechear bien los eventos
+					const allEvents = [...dayEvents, getEventsFromLeads().filter((item) => format(item.date, 'D') === format(day, 'D'))].flat()
+
 					return (
 						<div
 							key={day.toISOString()}
@@ -58,10 +59,7 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 								</button>
 							</div>
 							<div className="space-y-1">
-								{dayEvents
-									.flat()
-									.map((event) => <EventCard event={event} compact />)
-									.slice(0, 3)}
+								{dayEvents.map((event) => <EventCard event={event} compact />).slice(0, 3)}
 								{dayEvents.length > 3 && <p className="text-xs text-muted-foreground pt-1">+{dayEvents.length - 3} more</p>}
 							</div>
 						</div>

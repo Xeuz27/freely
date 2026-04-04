@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { type CalendarEvent, type EventType, eventTypeConfig, timeSlots } from '@/types/calendar-types'
 import { type Lead } from '@/types/crm-types'
 import { type KanbanCard } from '@/types/kanban-types'
+import { addHour, format } from '@formkit/tempo'
 import { AlertCircle, Bell, CheckSquare, Link2, Phone, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext'
@@ -46,7 +47,7 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 		if (editingEvent) {
 			setTitle(editingEvent.title)
 			setDescription(editingEvent.description || '')
-			setDate(editingEvent.date.toISOString().split('T')[0])
+			setDate(format(editingEvent.date, 'YYYY-MM-DD', 'en'))
 			setStartTime(editingEvent.startTime || '')
 			setEndTime(editingEvent.endTime || '')
 			setType(editingEvent.type)
@@ -55,14 +56,14 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 		} else {
 			setTitle('')
 			setDescription('')
-			setDate(initialDate ? initialDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0])
+			setDate(initialDate ? format(initialDate, 'YYYY-MM-DD', 'en') : format(new Date(), 'YYYY-MM-DD', 'en'))
 			setStartTime(initialTime || '')
 			setEndTime('')
 			setType('meeting')
 			setLinkedLeadId('')
 			setLinkedKanbanId('')
 		}
-	}, [editingEvent, initialDate, initialTime])
+	}, [])
 
 	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
@@ -76,7 +77,7 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 				id: editingEvent?.id,
 				title: title.trim(),
 				description: description.trim() || undefined,
-				date: new Date(date),
+				date: new Date(addHour(format(date, 'YYYY-MM-DDTHH:mm:ssZ', 'en'), 4)),
 				startTime: startTime || undefined,
 				endTime: endTime || undefined,
 				type,
@@ -187,7 +188,9 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 
 						<div className="grid grid-cols-2 gap-3">
 							<div className="space-y-2">
-								<Label className="text-xs">Lead</Label>
+								<Label htmlFor="linkedLeadId" className="text-xs">
+									Lead
+								</Label>
 								<Select value={linkedLeadId} onValueChange={setLinkedLeadId}>
 									<SelectTrigger>
 										<SelectValue placeholder="Select lead" />
@@ -207,7 +210,9 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 							</div>
 
 							<div className="space-y-2">
-								<Label className="text-xs">Kanban Card</Label>
+								<Label htmlFor="linkedKanbanId" className="text-xs">
+									Kanban Card
+								</Label>
 								<Select value={linkedKanbanId} onValueChange={setLinkedKanbanId}>
 									<SelectTrigger>
 										<SelectValue placeholder="Select card" />
