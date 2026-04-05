@@ -1,5 +1,4 @@
-'use client'
-
+//@ts-nocheck
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -7,9 +6,10 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { useForm } from '@/modules/core/hooks/useForm'
 import { timeSlots } from '@/types/calendar-types'
-import { type ContactStatus, type Lead, statusConfig } from '@/types/crm-types'
-import { useEffect, useState } from 'react'
+import { statusConfig, type Lead } from '@/types/crm-types'
+import { useEffect } from 'react'
 
 interface LeadDialogProps {
 	open: boolean
@@ -19,57 +19,56 @@ interface LeadDialogProps {
 }
 
 export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogProps) {
-	const [name, setName] = useState('')
-	const [email, setEmail] = useState('')
-	const [phone, setPhone] = useState('')
-	const [company, setCompany] = useState('')
-	const [status, setStatus] = useState<ContactStatus>('new')
-	const [action, setAction] = useState<Lead['action']>({
+	const initialFormState = {
+		id: '',
+		name: '',
+		email: '',
+		phone: '',
+		company: '',
+		status: '',
+		note: '',
+		info: '',
+		createdAt: '',
+		updatedAt: ''
+	}
+	const initialActionState = {
 		title: '',
 		date: '',
 		startTime: '',
 		endTime: ''
-	})
-	const [note, setNote] = useState('')
-	const [info, setInfo] = useState('')
+	}
+	const { formState, onInputChange, setFormState, onResetForm } = useForm(initialFormState)
+	const {
+		formState: actionState,
+		onInputChange: onInputChange2,
+		setFormState: setFormState2,
+		onResetForm: onResetForm2
+	} = useForm(initialActionState)
 
 	useEffect(() => {
 		if (editLead) {
-			setName(editLead.name)
-			setEmail(editLead.email || '')
-			setPhone(editLead.phone || '')
-			setCompany(editLead.company || '')
-			setStatus(editLead.status)
-			setNote(editLead.note)
-			setInfo(editLead.info)
-			setAction(editLead.action)
-		} else {
-			setName('')
-			setEmail('')
-			setPhone('')
-			setCompany('')
-			setStatus('new')
-			setNote('')
-			setInfo('')
+			for (const prop in editLead) {
+				//@ts-ignore
+				setFormState((prev) => ({ ...prev, [prop]: editLead[prop] }))
+			}
 		}
-	}, [editLead, open])
+	}, [])
 
 	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
-		if (!name.trim()) return
-
+		if (!formState.name.trim()) return
 		onSave({
 			id: editLead?.id,
-			name: name.trim(),
-			email: email.trim() || undefined,
-			phone: phone.trim() || undefined,
-			company: company.trim() || undefined,
-			status,
-			action: action || undefined,
-			note: note.trim(),
-			info: info.trim()
+			name: formState['name'].trim(),
+			email: formState['email'].trim() || undefined,
+			phone: formState['phone'].trim() || undefined,
+			company: formState['company'].trim() || undefined,
+			status: formState['status'],
+			note: formState['note'].trim(),
+			info: formState['info'].trim()
 		})
-
+		onResetForm()
+		onResetForm2()
 		onOpenChange(false)
 	}
 
@@ -84,30 +83,47 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="name">Name</Label>
-							<Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required />
+							<Input
+								name="name"
+								placeholder="John Doe"
+								//@ts-ignore
+								value={formState['name']}
+								onChange={onInputChange}
+								required
+							/>
 						</div>
 
 						<div className="space-y-2">
 							<Label htmlFor="email">Email</Label>
-							<Input id="email" type="email" placeholder="john@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+							<Input name="email" type="email" placeholder="john@example.com" value={formState['email']} onChange={onInputChange} />
 						</div>
 					</div>
 
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="phone">Phone</Label>
-							<Input id="phone" placeholder="+1 (555) 000-0000" value={phone} onChange={(e) => setPhone(e.target.value)} />
+							<Input name="phone" placeholder="+1 (555) 000-0000" value={formState['phone']} onChange={onInputChange} />
 						</div>
 
 						<div className="space-y-2">
 							<Label htmlFor="company">Company</Label>
-							<Input id="company" placeholder="Acme Inc." value={company} onChange={(e) => setCompany(e.target.value)} />
+							<Input name="company" placeholder="Acme Inc." value={formState['company']} onChange={onInputChange} />
 						</div>
 					</div>
 
 					<div className="space-y-2">
 						<Label htmlFor="status">Status</Label>
-						<Select value={status} onValueChange={(v) => setStatus(v as ContactStatus)}>
+						<Select
+							value={formState['status']}
+							onValueChange={(value) =>
+								onInputChange({
+									target: {
+										name: 'status',
+										value: value
+									}
+								})
+							}
+						>
 							<SelectTrigger className="w-full">
 								<SelectValue />
 							</SelectTrigger>
@@ -126,33 +142,29 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 						<div className="space-y-2">
 							<Label htmlFor="action">Action</Label>
 							<Input
-								id="action"
+								name={'title'}
 								className=""
 								placeholder="Presentation call"
-								value={action?.title}
-								/* @ts-ignore */
-								onChange={(e) => setAction((prev) => ({ ...prev, title: e.target.value }))}
+								value={actionState['title']}
+								onChange={onInputChange2}
 							/>
 						</div>
 						<div className="flex justify-between">
 							<div className="space-y-2">
 								<Label htmlFor="date">Date</Label>
-								<Input
-									id="date"
-									type="date"
-									value={action?.date}
-									/* @ts-ignore */
-									onChange={(e) => setAction((prev) => ({ ...prev, date: e.target.value }))}
-									required
-								/>
+								<Input name="date" type="date" value={actionState['date']} onChange={onInputChange2} required />
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="startTime">Start Time</Label>
 								<Select
-									value={action?.startTime}
-									onValueChange={(e) => {
-										/* @ts-ignore */
-										setAction((prev) => ({ ...prev, startTime: e }))
+									value={actionState['startTime']}
+									onValueChange={(value) => {
+										onInputChange2({
+											target: {
+												name: 'startTime',
+												value: value
+											}
+										})
 									}}
 								>
 									<SelectTrigger>
@@ -171,9 +183,12 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 							<div className="space-y-2">
 								<Label htmlFor="startTime">End Time</Label>
 								<Select
-									value={action?.endTime}
-									/* @ts-ignore */
-									onValueChange={(e) => setAction((prev) => ({ ...prev, endTime: e }))}
+									value={actionState['endTime']}
+									onValueChange={(value) =>
+										onInputChange2({
+											target: { name: 'endTime', value: value }
+										})
+									}
 								>
 									<SelectTrigger>
 										<SelectValue placeholder="End" />
@@ -194,10 +209,10 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 					<div className="space-y-2">
 						<Label htmlFor="note">Note</Label>
 						<Textarea
-							id="note"
+							name="note"
 							placeholder="Add any notes about this lead..."
-							value={note}
-							onChange={(e) => setNote(e.target.value)}
+							value={formState['note']}
+							onChange={onInputChange}
 							rows={2}
 						/>
 					</div>
@@ -205,10 +220,10 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 					<div className="space-y-2">
 						<Label htmlFor="info">Additional Info</Label>
 						<Textarea
-							id="info"
+							name="info"
 							placeholder="Source, interests, requirements, etc..."
-							value={info}
-							onChange={(e) => setInfo(e.target.value)}
+							value={formState['info']}
+							onChange={onInputChange}
 							rows={2}
 						/>
 					</div>

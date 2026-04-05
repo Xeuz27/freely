@@ -7,11 +7,11 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
+import { sampleLeads } from '@/data/sampleLeads'
 import { cn } from '@/lib/utils'
 import { sampleProjects } from '@/modules/timeTrackBoard/components/timetrack-board'
 import { type CardType, cardTypeColors } from '@/types/kanban-types'
 import { CheckSquare, Database, FileText, FolderKanban, Lightbulb, UserRoundPlus } from 'lucide-react'
-import { sampleLeads } from '../../crmBoard/components/crm-board'
 
 interface AddCardDialogProps {
 	open: boolean

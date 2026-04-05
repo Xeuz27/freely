@@ -1,5 +1,8 @@
 export type ContactStatus = 'new' | 'contacted' | 'qualified' | 'proposal' | 'negotiation' | 'won' | 'lost'
 
+export type SortField = 'name' | 'status' | 'createdAt' | 'updatedAt'
+export type SortOrder = 'asc' | 'desc'
+
 export interface Lead {
 	id: string
 	name: string
@@ -9,12 +12,6 @@ export interface Lead {
 	status: ContactStatus
 	note: string
 	info: string
-	action?: {
-		title: string
-		date: string
-		startTime: string
-		endTime: string
-	} | undefined
 	createdAt: Date
 	updatedAt: Date
 }

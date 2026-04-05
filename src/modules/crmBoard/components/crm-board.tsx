@@ -3,162 +3,36 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { sampleLeads } from '@/data/sampleLeads'
 import { type ContactStatus, type Lead, statusConfig } from '@/types/crm-types'
 import { ArrowUpDown, Filter, Plus, Search, Users } from 'lucide-react'
-import { useState } from 'react'
+import useCrmContext from '../hooks/useCrmContext'
 import { LeadDialog } from './lead-dialog'
 import { LeadRow } from './lead-row'
-
-export const sampleLeads: Lead[] = [
-	{
-		id: '1',
-		name: 'Sarah Chen',
-		email: 'sarah@techcorp.com',
-		phone: '+1 (555) 123-4567',
-		company: 'TechCorp Inc.',
-		status: 'qualified',
-		note: 'Interested in enterprise plan',
-		info: 'Met at SaaS conference, needs CRM integration',
-		createdAt: new Date('2024-01-15'),
-		updatedAt: new Date('2024-01-20')
-	},
-	{
-		id: '2',
-		name: 'Marcus Johnson',
-		email: 'marcus@startupxyz.io',
-		phone: '+1 (555) 987-6543',
-		company: 'StartupXYZ',
-		status: 'proposal',
-		note: 'Sent proposal last week',
-		info: 'Early-stage startup, budget conscious',
-		createdAt: new Date('2024-01-10'),
-		updatedAt: new Date('2024-01-22')
-	},
-	{
-		id: '3',
-		name: 'Emily Watson',
-		email: 'emily@designstudio.co',
-		company: 'Design Studio Co.',
-		status: 'new',
-		note: '',
-		info: 'Inbound from website form',
-		createdAt: new Date('2024-01-25'),
-		updatedAt: new Date('2024-01-25')
-	},
-	{
-		id: '4',
-		name: 'David Kim',
-		email: 'david@globaltech.com',
-		phone: '+1 (555) 456-7890',
-		company: 'GlobalTech Solutions',
-		status: 'negotiation',
-		note: 'Discussing contract terms',
-		info: 'Enterprise client, 500+ users',
-		createdAt: new Date('2024-01-05'),
-		updatedAt: new Date('2024-01-24')
-	},
-	{
-		id: '5',
-		name: 'Lisa Park',
-		email: 'lisa@creativehub.net',
-		company: 'Creative Hub',
-		status: 'contacted',
-		note: 'Follow up scheduled for next week',
-		info: 'Agency, potential reseller partnership',
-		createdAt: new Date('2024-01-18'),
-		updatedAt: new Date('2024-01-21')
-	}
-]
-
-type SortField = 'name' | 'status' | 'createdAt' | 'updatedAt'
-type SortOrder = 'asc' | 'desc'
 
 export let outerLeads: Lead[] = [...sampleLeads]
 
 export function CrmBoard() {
-	const [leads, setLeads] = useState<Lead[]>(sampleLeads)
-	const [searchQuery, setSearchQuery] = useState('')
-	const [statusFilter, setStatusFilter] = useState<ContactStatus | 'all'>('all')
-	const [dialogOpen, setDialogOpen] = useState(false)
-	const [editingLead, setEditingLead] = useState<Lead | null>(null)
-	const [sortField, setSortField] = useState<SortField>('updatedAt')
-	const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-
-	const handleSaveLead = (leadData: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => {
-		if (leadData.id) {
-			setLeads((prev) => prev.map((lead) => (lead.id === leadData.id ? { ...lead, ...leadData, updatedAt: new Date() } : lead)))
-		} else {
-			const newLead: Lead = {
-				...leadData,
-				id: crypto.randomUUID(),
-				createdAt: new Date(),
-				updatedAt: new Date()
-			}
-			outerLeads = [...outerLeads, { ...newLead }]
-			setLeads((prev) => [newLead, ...prev])
-		}
-		setEditingLead(null)
-	}
-
-	const handleDeleteLead = (id: string) => {
-		setLeads((prev) => prev.filter((lead) => lead.id !== id))
-	}
-
-	const handleUpdateLead = (updatedLead: Lead) => {
-		setLeads((prev) => prev.map((lead) => (lead.id === updatedLead.id ? updatedLead : lead)))
-	}
-
-	const handleEditLead = (lead: Lead) => {
-		setEditingLead(lead)
-		setDialogOpen(true)
-	}
-
-	const handleSort = (field: SortField) => {
-		if (sortField === field) {
-			setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-		} else {
-			setSortField(field)
-			setSortOrder('asc')
-		}
-	}
-
-	const filteredAndSortedLeads = leads
-		.filter((lead) => {
-			const matchesSearch =
-				lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				lead.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				lead.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				lead.note.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				lead.info.toLowerCase().includes(searchQuery.toLowerCase())
-			const matchesStatus = statusFilter === 'all' || lead.status === statusFilter
-			return matchesSearch && matchesStatus
-		})
-		.sort((a, b) => {
-			let comparison = 0
-			switch (sortField) {
-				case 'name':
-					comparison = a.name.localeCompare(b.name)
-					break
-				case 'status':
-					comparison = a.status.localeCompare(b.status)
-					break
-				case 'createdAt':
-					comparison = a.createdAt.getTime() - b.createdAt.getTime()
-					break
-				case 'updatedAt':
-					comparison = a.updatedAt.getTime() - b.updatedAt.getTime()
-					break
-			}
-			return sortOrder === 'asc' ? comparison : -comparison
-		})
-
-	const statusCounts = leads.reduce((acc, lead) => {
-		acc[lead.status] = (acc[lead.status] || 0) + 1
-		return acc
-	}, {} as Record<ContactStatus, number>)
+	const {
+		searchQuery,
+		setSearchQuery,
+		statusFilter,
+		setStatusFilter,
+		dialogOpen,
+		setDialogOpen,
+		editingLead,
+		setEditingLead,
+		filteredAndSortedLeads,
+		statusCounts,
+		handleSort,
+		handleEditLead,
+		handleUpdateLead,
+		handleDeleteLead,
+		handleSaveLead
+	} = useCrmContext()
 
 	return (
-		<div className="flex flex-col h-screen bg-background">
+		<div className="flex flex-1 flex-col h-screen bg-background">
 			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
 				<div className="flex items-center gap-3">
 					<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10">

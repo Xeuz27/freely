@@ -1,6 +1,3 @@
-import { type ContactStatus } from './crm-types'
-import { type CardType } from './kanban-types'
-
 export type EventType = 'meeting' | 'call' | 'task' | 'reminder' | 'deadline'
 
 export interface CalendarEvent {
@@ -11,15 +8,16 @@ export interface CalendarEvent {
 	startTime?: string // "09:00"
 	endTime?: string // "10:00"
 	type: EventType
-	// Link to lead
-	leadId?: string
-	leadName?: string
-	leadStatus?: ContactStatus
-	// Link to kanban card
-	kanbanCardId?: string
-	kanbanCardTitle?: string
-	kanbanCardType?: CardType
 	createdAt: Date
+	updatedAt?: Date
+}
+
+export interface eventLink {
+	id: string
+	eventId: string
+	leadId?: string
+	kanbanCardId?: string
+	projectId?: string
 }
 
 export const eventTypeConfig: Record<EventType, { label: string; color: string; icon: string }> = {
