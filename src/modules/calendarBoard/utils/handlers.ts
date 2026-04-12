@@ -1,5 +1,6 @@
 import type { CalendarEvent } from '@/types/calendar-types'
 import type { Dispatch, SetStateAction } from 'react'
+import { eventHandler } from '../reducer/calendarState'
 
 const handlePrev = (view: string, year: number, month: number, currentDate: Date, setCurrentDate: Dispatch<SetStateAction<Date>>) => {
 	if (view === 'month') {
@@ -43,22 +44,23 @@ const handleEditEvent = (event: CalendarEvent, setEditingEvent?: any, setSelecte
 	setDialogOpen(true)
 }
 
-const handleDeleteEvent = (id: string, setEvents: any) => {
-	setEvents((prev: any) => prev.filter((e: any) => e.id !== id))
+const handleDeleteEvent = (event: CalendarEvent) => {
+	eventHandler(event, true)
 }
 
 type eventData = Omit<CalendarEvent, 'id' | 'createdAt'> & { id?: string }
 
-const handleSaveEvent = (eventData: eventData, setEvents: any, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => {
+const handleSaveEvent = (eventData: eventData, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => {
 	if (eventData.id) {
-		setEvents((prev: any) => prev.map((e: any) => (e.id === eventData.id ? ({ ...e, ...eventData } as CalendarEvent) : e)))
+		//@ts-ignore
+		eventHandler(eventData)
 	} else {
 		const newEvent: CalendarEvent = {
 			...eventData,
-			id: crypto.randomUUID(),
+			id: crypto.randomUUID().split('-')[0],
 			createdAt: new Date()
 		}
-		setEvents((prev: any) => [...prev, newEvent])
+		eventHandler(newEvent)
 	}
 	setEditingEvent(null)
 	setSelectedDate(null)

@@ -145,7 +145,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { open } = useSidebar()
 	/* @ts-ignore */
-	const { activeView, setActiveView } = props
+	const { activeview, setactiveview } = props
 	return (
 		<Sidebar {...props}>
 			<ul className={cn(' flex flex-col flex-1', open ? 'divide-y-1 divide-accent/40' : '')}>
@@ -158,10 +158,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					{data.navMain.map(({ title, Icon, id }) => (
 						<SidebarMenuItem key={title} className="list-none">
 							{/* @ts-ignore */}
-							<SidebarMenuButton onClick={() => setActiveView(id)}>
-								<Icon className={cn('size-5 shrink-0', activeView === id ? 'text-sidebar-primary' : 'text-muted-foreground')} />
+							<SidebarMenuButton onClick={() => setactiveview(id)}>
+								<Icon className={cn('size-5 shrink-0', activeview === id ? 'text-sidebar-primary' : 'text-muted-foreground')} />
 								{open && (
-									<span className={cn('text-sm tracking-wide', activeView === id ? '' : 'text-muted-foreground')}>{title}</span>
+									<span className={cn('text-sm tracking-wide', activeview === id ? '' : 'text-muted-foreground')}>{title}</span>
 								)}
 							</SidebarMenuButton>
 						</SidebarMenuItem>

@@ -1,12 +1,12 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { eventTypeConfig, type CalendarEvent } from '@/types/calendar-types'
-import { AlertCircle, Bell, CheckSquare, Clock, Edit2, Link2, MoreHorizontal, Phone, Trash2, Users } from 'lucide-react'
+import { AlertCircle, Bell, CheckSquare, Clock, Edit2, MoreHorizontal, Phone, Trash2, Users } from 'lucide-react'
 import useCalendarContext from '../hooks/useCalendarContext'
 import { handleDeleteEvent, handleEditEvent } from '../utils/handlers'
 
 const DayEventCard = ({ event }: { event: CalendarEvent }) => {
-	const { setEditingEvent, setEvents, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
+	const { setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
 
 	return (
 		<div
@@ -34,12 +34,12 @@ const DayEventCard = ({ event }: { event: CalendarEvent }) => {
 					</div>
 				)}
 				{event.description && <p className="text-xs opacity-70 mt-1 truncate">{event.description}</p>}
-				{(event.leadName || event.kanbanCardTitle) && (
+				{/* {(event.leadName || event.kanbanCardTitle) && (
 					<div className="flex items-center gap-1.5 mt-2">
 						<Link2 className="size-3 opacity-50" />
 						<span className="text-xs opacity-70 truncate">{event.leadName || event.kanbanCardTitle}</span>
 					</div>
-				)}
+				)} */}
 			</div>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
@@ -52,7 +52,7 @@ const DayEventCard = ({ event }: { event: CalendarEvent }) => {
 						<Edit2 className="size-4 mr-2" />
 						Edit
 					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => handleDeleteEvent(event.id, setEvents)} className="text-red-400">
+					<DropdownMenuItem onClick={() => handleDeleteEvent(event)} className="text-red-400">
 						<Trash2 className="size-4 mr-2" />
 						Delete
 					</DropdownMenuItem>

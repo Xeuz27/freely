@@ -1,6 +1,7 @@
-import { sampleEvents } from '@/data/sampleEvents'
-import type { CalendarEvent } from '@/types/calendar-types'
+import usePersist from '@/modules/core/hooks/usePersist'
+import { useStore } from '@nanostores/react'
 import { useMemo, useState } from 'react'
+import { calendarState, setCalendarState } from '../reducer/calendarState'
 
 const useCalendar = () => {
 	const [currentDate, setCurrentDate] = useState(new Date())
@@ -8,13 +9,23 @@ const useCalendar = () => {
 	const year = currentDate.getFullYear()
 	const month = currentDate.getMonth()
 
-	const [events, setEvents] = useState<CalendarEvent[]>([...sampleEvents])
 	const [dialogOpen, setDialogOpen] = useState(false)
-	const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)
-	const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-	const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 	const [view, setView] = useState<'month' | 'week' | 'day'>('month')
 
+	const $calendarStore = useStore(calendarState)
+	const { events, editingEvent, selectedDate, selectedTime } = $calendarStore
+
+	usePersist('events', events, setCalendarState)
+
+	const setEditingEvent = (editingEvent: Object) => {
+		setCalendarState({ editingEvent: editingEvent })
+	}
+	const setSelectedDate = (selectedDate: Object) => {
+		setCalendarState({ selectedDate: selectedDate })
+	}
+	const setSelectedTime = (selectedTime: Object) => {
+		setCalendarState({ selectedTime: selectedTime })
+	}
 	const daysInMonth = new Date(year, month + 1, 0).getDate()
 	const firstDayOfMonth = new Date(year, month, 1).getDay()
 
@@ -70,7 +81,6 @@ const useCalendar = () => {
 		editingEvent,
 		setEditingEvent,
 		events,
-		setEvents,
 		selectedDate,
 		setSelectedDate,
 		selectedTime,

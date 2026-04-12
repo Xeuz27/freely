@@ -1,6 +1,6 @@
 import { sampleLeads } from '@/data/sampleLeads'
 import type { ContactStatus, Lead, SortField, SortOrder } from '@/types/crm-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { outerLeads } from '../components/crm-board'
 
 export const useCrm = () => {
@@ -12,13 +12,17 @@ export const useCrm = () => {
 	const [sortField, setSortField] = useState<SortField>('updatedAt')
 	const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
 
+	useEffect(() => {
+		if (dialogOpen === false) setEditingLead(null)
+	}, [dialogOpen])
+
 	const handleSaveLead = (leadData: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => {
 		if (leadData.id) {
 			setLeads((prev) => prev.map((lead) => (lead.id === leadData.id ? { ...lead, ...leadData, updatedAt: new Date() } : lead)))
 		} else {
 			const newLead: Lead = {
 				...leadData,
-				id: crypto.randomUUID(),
+				id: crypto.randomUUID().split('-')[0],
 				createdAt: new Date(),
 				updatedAt: new Date()
 			}

@@ -59,7 +59,14 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 								</button>
 							</div>
 							<div className="space-y-1">
-								{dayEvents.map((event) => <EventCard event={event} compact />).slice(0, 3)}
+								{dayEvents
+									.map((event) => (
+										<div key={event.id}>
+											<EventCard event={event} compact />
+										</div>
+									))
+									.slice(0, 3)}
+
 								{dayEvents.length > 3 && <p className="text-xs text-muted-foreground pt-1">+{dayEvents.length - 3} more</p>}
 							</div>
 						</div>

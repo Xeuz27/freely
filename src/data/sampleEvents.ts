@@ -1,4 +1,4 @@
-import type { CalendarEvent } from "@/types/calendar-types";
+import type { CalendarEvent } from '@/types/calendar-types'
 
 export const sampleEvents: CalendarEvent[] = [
   {
@@ -9,9 +9,9 @@ export const sampleEvents: CalendarEvent[] = [
     startTime: "10:00",
     endTime: "11:00",
     type: "call",
-    leadId: "1",
-    leadName: "Sarah Chen",
-    leadStatus: "qualified",
+    // leadId: "1",
+    // leadName: "Sarah Chen",
+    // leadStatus: "qualified",
     createdAt: new Date()
   },
   {
@@ -30,9 +30,9 @@ export const sampleEvents: CalendarEvent[] = [
     description: "Send proposal to GlobalTech",
     date: new Date(new Date().setDate(new Date().getDate() + 2)),
     type: "deadline",
-    leadId: "4",
-    leadName: "David Kim",
-    leadStatus: "negotiation",
+    // leadId: "4",
+    // leadName: "David Kim",
+    // leadStatus: "negotiation",
     createdAt: new Date()
   },
   {
@@ -41,9 +41,9 @@ export const sampleEvents: CalendarEvent[] = [
     date: new Date(new Date().setDate(new Date().getDate() + 1)),
     startTime: "09:00",
     type: "reminder",
-    leadId: "2",
-    leadName: "Marcus Johnson",
-    leadStatus: "proposal",
+    // leadId: "2",
+    // leadName: "Marcus Johnson",
+    // leadStatus: "proposal",
     createdAt: new Date()
   },
   {
@@ -64,9 +64,9 @@ export const sampleEvents: CalendarEvent[] = [
     startTime: "16:00",
     endTime: "17:00",
     type: "task",
-    kanbanCardId: "k1",
-    kanbanCardTitle: "Research competitor pricing",
-    kanbanCardType: "task",
+    // kanbanCardId: "k1",
+    // kanbanCardTitle: "Research competitor pricing",
+    // kanbanCardType: "task",
     createdAt: new Date()
   }
 ];

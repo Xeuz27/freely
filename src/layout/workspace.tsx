@@ -17,10 +17,10 @@ export function Workspace() {
 
 	return (
 		<SidebarProvider>
-			<CrmContextProvider>
-				<CalendarContextProvider>
+			<CalendarContextProvider>
+				<CrmContextProvider>
 					{/*@ts-ignore */}
-					<AppSidebar setActiveView={setActiveView} activeView={activeView} />
+					<AppSidebar setactiveview={setActiveView} activeview={activeView} />
 					<SidebarInset>
 						<main className="flex-1 flex overflow-hidden">
 							{activeView === 'kanban' && <KanbanBoard />}
@@ -31,8 +31,8 @@ export function Workspace() {
 							{activeView === 'document' && <DocumentBoard />}
 						</main>
 					</SidebarInset>
-				</CalendarContextProvider>
-			</CrmContextProvider>
+				</CrmContextProvider>
+			</CalendarContextProvider>
 		</SidebarProvider>
 	)
 }

@@ -6,10 +6,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import useCalendarContext from '@/modules/calendarBoard/hooks/useCalendarContext'
+import { handleSaveEvent } from '@/modules/calendarBoard/utils/handlers'
 import { useForm } from '@/modules/core/hooks/useForm'
 import { timeSlots } from '@/types/calendar-types'
 import { statusConfig, type Lead } from '@/types/crm-types'
+import { addHour, format } from '@formkit/tempo'
 import { useEffect } from 'react'
+
+type EventType = 'meeting' | 'call' | 'task' | 'reminder' | 'deadline'
 
 interface LeadDialogProps {
 	open: boolean
@@ -19,6 +24,7 @@ interface LeadDialogProps {
 }
 
 export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogProps) {
+	const { setEvents, setEditingEvent, setSelectedDate, setSelectedTime } = useCalendarContext()
 	const initialFormState = {
 		id: '',
 		name: '',
@@ -32,7 +38,8 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 		updatedAt: ''
 	}
 	const initialActionState = {
-		title: '',
+		eventTitle: '',
+		eventType: '',
 		date: '',
 		startTime: '',
 		endTime: ''
@@ -48,25 +55,42 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 	useEffect(() => {
 		if (editLead) {
 			for (const prop in editLead) {
-				//@ts-ignore
 				setFormState((prev) => ({ ...prev, [prop]: editLead[prop] }))
 			}
+		} else {
+			onResetForm()
+			onResetForm2()
 		}
-	}, [])
+	}, [open, editLead])
 
 	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
 		if (!formState.name.trim()) return
 		onSave({
 			id: editLead?.id,
-			name: formState['name'].trim(),
-			email: formState['email'].trim() || undefined,
-			phone: formState['phone'].trim() || undefined,
-			company: formState['company'].trim() || undefined,
-			status: formState['status'],
-			note: formState['note'].trim(),
-			info: formState['info'].trim()
+			name: formState.name.trim(),
+			email: formState.email.trim() || undefined,
+			phone: formState.phone.trim() || undefined,
+			company: formState.company.trim() || undefined,
+			status: formState.status,
+			note: formState.note.trim(),
+			info: formState.info.trim()
 		})
+		if (actionState.eventTitle.length >= 1) {
+			handleSaveEvent(
+				{
+					title: actionState.eventTitle,
+					type: actionState.eventType,
+					date: new Date(addHour(format(actionState.date, 'YYYY-MM-DDTHH:mm:ssZ', 'en'), 4)),
+					startTime: actionState.startTime || undefined,
+					endTime: actionState.endTime || undefined
+				},
+				setEvents,
+				setEditingEvent,
+				setSelectedDate,
+				setSelectedTime
+			)
+		}
 		onResetForm()
 		onResetForm2()
 		onOpenChange(false)
@@ -139,15 +163,27 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 						</Select>
 					</div>
 					<div className="grid grid-rows-2 space-y-6 px-8">
-						<div className="space-y-2">
-							<Label htmlFor="action">Action</Label>
-							<Input
-								name={'title'}
-								className=""
-								placeholder="Presentation call"
-								value={actionState['title']}
-								onChange={onInputChange2}
-							/>
+						<div className="gap-4 grid grid-cols-2">
+							<div className="flex flex-col space-y-2 justify-between">
+								<Label htmlFor="action">Event</Label>
+								<Input
+									name={'eventTitle'}
+									className=""
+									placeholder="Presentation call"
+									value={actionState['eventTitle']}
+									onChange={onInputChange2}
+								/>
+							</div>
+							<div className="flex flex-col space-y-2 justify-between">
+								<Label htmlFor="eventType">Event Type</Label>
+								<Input
+									name="eventType"
+									className=""
+									placeholder="event Type"
+									value={actionState['eventType']}
+									onChange={onInputChange2}
+								></Input>
+							</div>
 						</div>
 						<div className="flex justify-between">
 							<div className="space-y-2">

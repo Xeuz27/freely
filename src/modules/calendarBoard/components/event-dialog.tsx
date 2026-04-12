@@ -23,7 +23,7 @@ const eventTypeIcons: Record<EventType, React.ReactNode> = {
 type eventData = Omit<CalendarEvent, 'id' | 'createdAt'> & { id?: string }
 interface EventDialogProps {
 	onOpenChange: (open: boolean) => void
-	onSave: (event: eventData, setEvents: any, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => void
+	onSave: (event: eventData, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => void
 	editEvent?: CalendarEvent | null
 	initialDate?: Date
 	initialTime?: string
@@ -51,8 +51,8 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 			setStartTime(editingEvent.startTime || '')
 			setEndTime(editingEvent.endTime || '')
 			setType(editingEvent.type)
-			setLinkedLeadId(editingEvent.leadId || '')
-			setLinkedKanbanId(editingEvent.kanbanCardId || '')
+			// setLinkedLeadId(editingEvent.leadId || '')
+			// setLinkedKanbanId(editingEvent.kanbanCardId || '')
 		} else {
 			setTitle('')
 			setDescription('')
@@ -80,15 +80,14 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 				date: new Date(addHour(format(date, 'YYYY-MM-DDTHH:mm:ssZ', 'en'), 4)),
 				startTime: startTime || undefined,
 				endTime: endTime || undefined,
-				type,
-				leadId: linkedLeadId || undefined,
-				leadName: selectedLead?.name,
-				leadStatus: selectedLead?.status,
-				kanbanCardId: linkedKanbanId || undefined,
-				kanbanCardTitle: selectedKanban?.title,
-				kanbanCardType: selectedKanban?.type
+				type
+				// leadId: linkedLeadId || undefined,
+				// leadName: selectedLead?.name,
+				// leadStatus: selectedLead?.status,
+				// kanbanCardId: linkedKanbanId || undefined,
+				// kanbanCardTitle: selectedKanban?.title,
+				// kanbanCardType: selectedKanban?.type
 			},
-			setEvents,
 			setEditingEvent,
 			setSelectedDate,
 			setSelectedTime

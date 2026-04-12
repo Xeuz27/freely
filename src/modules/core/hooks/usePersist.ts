@@ -9,24 +9,12 @@ const usePersist = <T>(key: string, state: T, setState: (value: T) => void) => {
 	useEffect(() => {
 		if (values == null) return
 		//@ts-ignore
-		setValue(
-			//@ts-ignore
-			(prev) =>
-				//@ts-ignore
-				prev.map((e: any) => ({ ...e, createdAt: new Date(e.createdAt), date: new Date(e.date), new: 'new' }))
-		)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		setState(values)
+		setState({ events: values.map((e: any) => ({ ...e, createdAt: new Date(e.createdAt), date: new Date(e.date) })) })
 	}, [])
 
 	// on state changes, update the stage in localstorage
 	useEffect(() => {
-		setValue(
-			//@ts-ignore
-			(prev) =>
-				//@ts-ignore
-				prev.map((e: any) => ({ ...e, createdAt: new Date(e.createdAt), date: new Date(e.date), new: 'new' }))
-		)
 		setValue(state)
 	}, [state, setValue])
 

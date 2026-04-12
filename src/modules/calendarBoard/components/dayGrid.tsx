@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { dayTimeSlots } from '@/data/dayTimeSlots'
 import { cn } from '@/lib/utils'
 import { eventTypeConfig, type EventType } from '@/types/calendar-types'
-import { CalendarDays, Link2, Plus } from 'lucide-react'
+import { CalendarDays, Plus } from 'lucide-react'
 import useCalendarContext from '../hooks/useCalendarContext'
 import { handleAddEvent, handleEditEvent } from '../utils/handlers'
 import { isToday } from '../utils/isToday'
@@ -134,12 +134,12 @@ const DayGrid = () => {
 													</p>
 												)}
 												{event.description && <p className="text-xs opacity-60 mt-1 line-clamp-2">{event.description}</p>}
-												{(event.leadName || event.kanbanCardTitle) && (
+												{/* {(event.leadName || event.kanbanCardTitle) && (
 													<div className="flex items-center gap-1 mt-1.5">
 														<Link2 className="size-2.5 opacity-50" />
 														<span className="text-[10px] opacity-70">{event.leadName || event.kanbanCardTitle}</span>
 													</div>
-												)}
+												)} */}
 											</div>
 										</div>
 									</div>
