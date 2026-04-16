@@ -1,10 +1,13 @@
-import { sampleLeads } from '@/data/sampleLeads'
+import usePersist from '@/modules/core/hooks/usePersist'
 import type { ContactStatus, Lead, SortField, SortOrder } from '@/types/crm-types'
+import { useStore } from '@nanostores/react'
 import { useEffect, useState } from 'react'
-import { outerLeads } from '../components/crm-board'
+import { crmState, leadsHandler, setCrmState } from '../reducer/crmState'
 
+const setState = (leads: Lead[]) => {
+	setCrmState({ leads: leads.map((lead) => ({ ...lead, createdAt: new Date(lead.createdAt), updatedAt: new Date(lead.updatedAt) })) })
+}
 export const useCrm = () => {
-	const [leads, setLeads] = useState<Lead[]>(sampleLeads)
 	const [searchQuery, setSearchQuery] = useState('')
 	const [statusFilter, setStatusFilter] = useState<ContactStatus | 'all'>('all')
 	const [dialogOpen, setDialogOpen] = useState(false)
@@ -12,13 +15,21 @@ export const useCrm = () => {
 	const [sortField, setSortField] = useState<SortField>('updatedAt')
 	const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
 
+	const $crmState = useStore(crmState)
+	const { leads } = $crmState
+
+	usePersist('leads', leads, setState)
+
+	const setLeads = (lead: Lead, toDelete = false) => {
+		toDelete ? leadsHandler(lead, toDelete) : leadsHandler(lead)
+	}
 	useEffect(() => {
 		if (dialogOpen === false) setEditingLead(null)
 	}, [dialogOpen])
 
-	const handleSaveLead = (leadData: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => {
+	const handleSaveLead = (leadData: Lead) => {
 		if (leadData.id) {
-			setLeads((prev) => prev.map((lead) => (lead.id === leadData.id ? { ...lead, ...leadData, updatedAt: new Date() } : lead)))
+			leadsHandler(leadData)
 		} else {
 			const newLead: Lead = {
 				...leadData,
@@ -26,18 +37,17 @@ export const useCrm = () => {
 				createdAt: new Date(),
 				updatedAt: new Date()
 			}
-			let outerLeads2 = [...outerLeads, { ...newLead }]
-			setLeads((prev) => [newLead, ...prev])
+			leadsHandler(newLead)
 		}
 		setEditingLead(null)
 	}
 
-	const handleDeleteLead = (id: string) => {
-		setLeads((prev) => prev.filter((lead) => lead.id !== id))
+	const handleDeleteLead = (lead: Lead) => {
+		leadsHandler(lead, true)
 	}
 
 	const handleUpdateLead = (updatedLead: Lead) => {
-		setLeads((prev) => prev.map((lead) => (lead.id === updatedLead.id ? updatedLead : lead)))
+		leadsHandler(updatedLead)
 	}
 
 	const handleEditLead = (lead: Lead) => {
@@ -60,8 +70,8 @@ export const useCrm = () => {
 				lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				lead.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				lead.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				lead.note.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				lead.info.toLowerCase().includes(searchQuery.toLowerCase())
+				lead.note?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				lead.info?.toLowerCase().includes(searchQuery.toLowerCase())
 			const matchesStatus = statusFilter === 'all' || lead.status === statusFilter
 			return matchesSearch && matchesStatus
 		})

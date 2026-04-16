@@ -4,7 +4,7 @@ import { useCrm } from '../hooks/useCrm'
 
 type CrmContext = {
 	leads: Lead[]
-	setLeads: Dispatch<SetStateAction<Lead[]>>
+	setLeads: (lead: Lead, toDelete?: boolean) => void
 	searchQuery: string
 	setSearchQuery: Dispatch<SetStateAction<string>>
 	statusFilter: ContactStatus | 'all'
@@ -22,7 +22,7 @@ type CrmContext = {
 	handleSort: (field: SortField) => void
 	handleEditLead: (lead: Lead) => void
 	handleUpdateLead: (updatedLead: Lead) => void
-	handleDeleteLead: (id: string) => void
+	handleDeleteLead: (lead: Lead) => void
 	handleSaveLead: (leadData: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => void
 }
 type props = {

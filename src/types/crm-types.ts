@@ -10,8 +10,8 @@ export interface Lead {
 	phone?: string
 	company?: string
 	status: ContactStatus
-	note: string
-	info: string
+	note?: string
+	info?: string
 	createdAt: Date
 	updatedAt: Date
 }
