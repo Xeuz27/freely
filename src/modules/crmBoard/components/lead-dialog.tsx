@@ -7,11 +7,13 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import useCalendarContext from '@/modules/calendarBoard/hooks/useCalendarContext'
+import { calendarState } from '@/modules/calendarBoard/reducer/calendarState'
 import { handleSaveEvent } from '@/modules/calendarBoard/utils/handlers'
 import { useForm } from '@/modules/core/hooks/useForm'
-import { timeSlots } from '@/types/calendar-types'
+import { timeSlots, type eventLink } from '@/types/calendar-types'
 import { statusConfig, type Lead } from '@/types/crm-types'
 import { addHour, format } from '@formkit/tempo'
+import { useStore } from '@nanostores/react'
 import { useEffect } from 'react'
 
 type EventType = 'meeting' | 'call' | 'task' | 'reminder' | 'deadline'
@@ -21,10 +23,13 @@ interface LeadDialogProps {
 	onOpenChange: (open: boolean) => void
 	onSave: (lead: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => void
 	editLead?: Lead | null
+	eventsLinked: (leadId: string) => eventLink | null
 }
 
-export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogProps) {
+export function LeadDialog({ open, onOpenChange, onSave, editLead, eventsLinked }: LeadDialogProps) {
 	const { setEvents, setEditingEvent, setSelectedDate, setSelectedTime } = useCalendarContext()
+	const $calendarState = useStore(calendarState)
+	const { events } = $calendarState
 	const initialFormState = {
 		id: '',
 		name: '',
@@ -54,8 +59,22 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 
 	useEffect(() => {
 		if (editLead) {
+			let eventlinked = eventsLinked(editLead.id)
 			for (const prop in editLead) {
 				setFormState((prev) => ({ ...prev, [prop]: editLead[prop] }))
+			}
+			if (eventlinked !== null) {
+				let eventData = events.filter((e) => e.id === eventlinked.eventId)[0]
+				if (eventData) {
+					setFormState2((prev) => ({
+						...prev,
+						eventTitle: eventData.title,
+						eventType: eventData.type,
+						date: format(eventData.date, 'YYYY-MM-DD', 'en') ?? null,
+						startTime: eventData.startTime ?? '',
+						endTime: eventData.endTime ?? ''
+					}))
+				}
 			}
 		} else {
 			onResetForm()
@@ -69,12 +88,12 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 		onSave({
 			id: editLead?.id,
 			name: formState.name.trim(),
-			email: formState.email.trim() || undefined,
-			phone: formState.phone.trim() || undefined,
-			company: formState.company.trim() || undefined,
+			email: formState.email.trim() || '',
+			phone: formState.phone.trim() || '',
+			company: formState.company.trim() || '',
 			status: formState.status,
-			note: formState.note.trim(),
-			info: formState.info.trim()
+			note: formState.note.trim() || '',
+			info: formState.info.trim() || ''
 		})
 		if (actionState.eventTitle.length >= 1) {
 			handleSaveEvent(
@@ -85,7 +104,6 @@ export function LeadDialog({ open, onOpenChange, onSave, editLead }: LeadDialogP
 					startTime: actionState.startTime || undefined,
 					endTime: actionState.endTime || undefined
 				},
-				setEvents,
 				setEditingEvent,
 				setSelectedDate,
 				setSelectedTime
