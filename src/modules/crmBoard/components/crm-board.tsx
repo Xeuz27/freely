@@ -3,16 +3,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { sampleLeads } from '@/data/sampleLeads'
-import { type ContactStatus, type Lead, statusConfig } from '@/types/crm-types'
+import { calendarState } from '@/modules/calendarBoard/reducer/calendarState'
+import { type ContactStatus, statusConfig } from '@/types/crm-types'
+import { useStore } from '@nanostores/react'
 import { ArrowUpDown, Filter, Plus, Search, Users } from 'lucide-react'
 import useCrmContext from '../hooks/useCrmContext'
 import { LeadDialog } from './lead-dialog'
 import { LeadRow } from './lead-row'
 
-export let outerLeads: Lead[] = [...sampleLeads]
-
 export function CrmBoard() {
+	const $store = useStore(calendarState)
+	const { eventLinks } = $store
+
 	const {
 		searchQuery,
 		setSearchQuery,
@@ -30,7 +32,10 @@ export function CrmBoard() {
 		handleDeleteLead,
 		handleSaveLead
 	} = useCrmContext()
-
+	const eventsLinked = (leadId: string) => {
+		let eventslinked = eventLinks.filter((e) => e.leadId === leadId)
+		return eventslinked[0] ?? null
+	}
 	return (
 		<div className="flex flex-1 flex-col h-screen bg-background">
 			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
@@ -158,7 +163,7 @@ export function CrmBoard() {
 				</div>
 			</div>
 
-			<LeadDialog open={dialogOpen} onOpenChange={setDialogOpen} onSave={handleSaveLead} editLead={editingLead} />
+			<LeadDialog open={dialogOpen} onOpenChange={setDialogOpen} onSave={handleSaveLead} editLead={editingLead} eventsLinked={eventsLinked} />
 		</div>
 	)
 }

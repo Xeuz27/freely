@@ -11,7 +11,7 @@ import { useState } from 'react'
 
 interface LeadRowProps {
 	lead: Lead
-	onDelete: (id: string) => void
+	onDelete: (lead: Lead) => void
 	onUpdate: (lead: Lead) => void
 	onEdit: (lead: Lead) => void
 }
@@ -100,7 +100,7 @@ export function LeadRow({ lead, onDelete, onUpdate, onEdit }: LeadRowProps) {
 								<Pencil className="size-4 mr-2" />
 								Edit
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => onDelete(lead.id)} className="text-destructive focus:text-destructive">
+							<DropdownMenuItem onClick={() => onDelete(lead)} className="text-destructive focus:text-destructive">
 								<Trash2 className="size-4 mr-2" />
 								Delete
 							</DropdownMenuItem>
