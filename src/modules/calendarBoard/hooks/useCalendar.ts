@@ -1,7 +1,12 @@
 import usePersist from '@/modules/core/hooks/usePersist'
+import type { CalendarEvent } from '@/types/calendar-types'
 import { useStore } from '@nanostores/react'
 import { useMemo, useState } from 'react'
 import { calendarState, setCalendarState } from '../reducer/calendarState'
+
+const setState = (events: CalendarEvent[]) => {
+	setCalendarState({ events: events.map((e) => ({ ...e, createdAt: new Date(e.createdAt), date: new Date(e.date) })) })
+}
 
 const useCalendar = () => {
 	const [currentDate, setCurrentDate] = useState(new Date())
@@ -14,8 +19,7 @@ const useCalendar = () => {
 
 	const $calendarStore = useStore(calendarState)
 	const { events, editingEvent, selectedDate, selectedTime } = $calendarStore
-
-	usePersist('events', events, setCalendarState)
+	usePersist('events', events, setState)
 
 	const setEditingEvent = (editingEvent: Object) => {
 		setCalendarState({ editingEvent: editingEvent })

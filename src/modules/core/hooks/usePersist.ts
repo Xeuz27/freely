@@ -10,7 +10,7 @@ const usePersist = <T>(key: string, state: T, setState: (value: T) => void) => {
 		if (values == null) return
 		//@ts-ignore
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		setState({ events: values.map((e: any) => ({ ...e, createdAt: new Date(e.createdAt), date: new Date(e.date) })) })
+		setState(values)
 	}, [])
 
 	// on state changes, update the stage in localstorage
