@@ -11,7 +11,12 @@ export interface CalendarEvent {
 	createdAt: Date
 	updatedAt?: Date
 }
-
+export type linkHandlerParams =
+	| { id: string; key: keyof eventLink }
+	| {
+			link: eventLink
+			toDelete?: Boolean
+	  }
 export interface eventLink {
 	id: string
 	eventId: string

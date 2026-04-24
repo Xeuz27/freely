@@ -2,25 +2,23 @@
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { type ContactStatus, type Lead, statusConfig } from '@/types/crm-types'
-import { Building, Mail, MoreHorizontal, Pencil, Phone, Trash2, User } from 'lucide-react'
+import { Building, Mail, Pencil, Phone, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-
+import { handleDeleteLead, handleSaveLead } from '../actions/actions'
+import useCrmContext from '../hooks/useCrmContext'
 interface LeadRowProps {
 	lead: Lead
-	onDelete: (lead: Lead) => void
-	onUpdate: (lead: Lead) => void
-	onEdit: (lead: Lead) => void
 }
 
-export function LeadRow({ lead, onDelete, onUpdate, onEdit }: LeadRowProps) {
+export function LeadRow({ lead }: LeadRowProps) {
 	const [isHovered, setIsHovered] = useState(false)
-
+	const {setEditingLead, setDialogOpen} = useCrmContext()
+	
 	const handleStatusChange = (status: ContactStatus) => {
-		onUpdate({ ...lead, status, updatedAt: new Date() })
+		handleSaveLead({ ...lead, status })
 	}
 
 	const statusInfo = statusConfig[lead.status]
@@ -29,9 +27,6 @@ export function LeadRow({ lead, onDelete, onUpdate, onEdit }: LeadRowProps) {
 		<TableRow onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className="group">
 			<TableCell>
 				<div className="flex items-center gap-3">
-					<div className="flex items-center justify-center size-9 rounded-full bg-secondary">
-						<User className="size-4 text-muted-foreground" />
-					</div>
 					<div className="flex flex-col">
 						<span className="font-medium text-foreground">{lead.name}</span>
 						{lead.email && (
@@ -79,33 +74,27 @@ export function LeadRow({ lead, onDelete, onUpdate, onEdit }: LeadRowProps) {
 				</Select>
 			</TableCell>
 
-			<TableCell className="max-w-[200px]">
+			<TableCell className="max-w-[80px]">
 				<p className="text-sm text-muted-foreground truncate">{lead.note || '—'}</p>
 			</TableCell>
 
-			<TableCell className="max-w-[200px]">
-				<p className="text-sm text-muted-foreground truncate">{lead.info || '—'}</p>
+			<TableCell className="max-w-[80px]">
+				<p className="text-sm text-muted-foreground  truncate">{lead.info || '—'}</p>
 			</TableCell>
 
 			<TableCell>
-				<div className={`transition-opacity ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="ghost" size="icon" className="size-8">
-								<MoreHorizontal className="size-4" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuItem onClick={() => onEdit(lead)}>
-								<Pencil className="size-4 mr-2" />
-								Edit
-							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => onDelete(lead)} className="text-destructive focus:text-destructive">
-								<Trash2 className="size-4 mr-2" />
-								Delete
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
+				<div className={`transition-opacity flex gap-2 duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>	
+					<Button variant={'outline'} onClick={() => {
+						setDialogOpen(true)
+							setEditingLead(lead)
+						 }} className='opacity-30 hover:opacity-100 border-2 hover:border-accent-foreground/20! transition-opacity' >
+						<Pencil className="size-4 mr-2" />
+						Edit
+					</Button>
+					<Button variant={'secondary'} onClick={() => handleDeleteLead(lead)} className="text-destructive focus:text-destructive opacity-30 border-2 hover:border-destructive/40! hover:opacity-100 transition-opacity">
+						<Trash2 className="size-4 mr-2" />
+						Delete
+					</Button>
 				</div>
 			</TableCell>
 		</TableRow>

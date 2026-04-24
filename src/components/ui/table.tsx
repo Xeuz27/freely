@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { ArrowBigDown, ArrowBigUp } from "lucide-react"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -64,15 +65,35 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
+  //@ts-ignore
+  const { sortFn, sortBy, sortOrder, children } = props
   return (
     <th
+      onClick={(e) => {
+        e.stopPropagation()
+        if (sortFn) {
+          sortFn(children)
+        }
+      }}
       data-slot="table-head"
       className={cn(
-        "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        "h-10 px-2 text-left capitalize cursor-pointer align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
         className
       )}
-      {...props}
-    />
+    >
+      <div className="flex items-center justify-between">				
+        {children && <span>{children}</span>}
+				{children && sortBy === children && (
+					<span className="pointer-events-none">
+						{sortOrder == 'desc' ? (
+							<ArrowBigDown className="fill-primary/50 text-primary" />
+						) : (
+							<ArrowBigUp className="fill-primary/50 text-primary" />
+						)}
+					</span>
+				)}
+			</div>
+    </th>
   )
 }
 

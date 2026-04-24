@@ -9,18 +9,18 @@ type CalendarContext = {
 	today: Date
 	month: number
 	year: number
-	dialogOpen: boolean
-	setDialogOpen: Dispatch<SetStateAction<boolean>>
-	editingEvent: CalendarEvent | null
-	setEditingEvent: Dispatch<SetStateAction<CalendarEvent | null>>
-	events: CalendarEvent[]
-	setEvents: Dispatch<SetStateAction<CalendarEvent[]>>
-	selectedDate: Date | null
-	setSelectedDate: Dispatch<SetStateAction<Date | null>>
-	selectedTime: string | undefined
-	setSelectedTime: Dispatch<SetStateAction<string | undefined>>
-	view: 'month' | 'week' | 'day'
-	setView: Dispatch<SetStateAction<'month' | 'week' | 'day'>>
+	// dialogOpen: boolean
+	// setDialogOpen: Dispatch<SetStateAction<boolean>>
+	// editingEvent: CalendarEvent | null
+	// setEditingEvent: Dispatch<SetStateAction<CalendarEvent | null>>
+	// events: CalendarEvent[]
+	// setEvents: Dispatch<SetStateAction<CalendarEvent[]>>
+	// selectedDate: Date | null
+	// setSelectedDate: Dispatch<SetStateAction<Date | null>>
+	// selectedTime: string | undefined
+	// setSelectedTime: Dispatch<SetStateAction<string | undefined>>
+	// view: 'month' | 'week' | 'day'
+	// setView: Dispatch<SetStateAction<'month' | 'week' | 'day'>>
 	getEventsForDate: (date: Date) => CalendarEvent[]
 	getTodayEvents: CalendarEvent[]
 	getWeekDays: Date[]

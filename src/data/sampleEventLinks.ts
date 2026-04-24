@@ -8,7 +8,7 @@ export const sampleEventLinks: eventLink[] = [
 	},
 	{
 		id: 'jklasd',
-		eventId: '3d388570',
-		leadId: '066ef190'
+		eventId: '2',
+		leadId: '2'
 	}
 ]

@@ -1,6 +1,7 @@
+import { eventHandler, linksHandler } from '@/store/store'
 import type { CalendarEvent } from '@/types/calendar-types'
 import type { Dispatch, SetStateAction } from 'react'
-import { eventHandler } from '../reducer/calendarState'
+import { type eventLink } from './../../../types/calendar-types'
 
 const handlePrev = (view: string, year: number, month: number, currentDate: Date, setCurrentDate: Dispatch<SetStateAction<Date>>) => {
 	if (view === 'month') {
@@ -47,24 +48,29 @@ const handleEditEvent = (event: CalendarEvent, setEditingEvent?: any, setSelecte
 const handleDeleteEvent = (event: CalendarEvent) => {
 	eventHandler(event, true)
 }
+const handleSaveEventLink = (eventLink: eventLink) => {
+	let link: eventLink = eventLink
+	if (!eventLink.id) {
+		link = {
+			...eventLink,
+			id: crypto.randomUUID().split('-')[0]
+		}
+	}
+	linksHandler({ link })
+	return link
+}
 
-type eventData = Omit<CalendarEvent, 'id' | 'createdAt'> & { id?: string }
-
-const handleSaveEvent = (eventData: eventData, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => {
-	if (eventData.id) {
-		//@ts-ignore
-		eventHandler(eventData)
-	} else {
-		const newEvent: CalendarEvent = {
+const handleSaveEvent = (eventData: CalendarEvent) => {
+	let event: CalendarEvent = eventData
+	if (!eventData.id) {
+		event = {
 			...eventData,
 			id: crypto.randomUUID().split('-')[0],
 			createdAt: new Date()
 		}
-		eventHandler(newEvent)
 	}
-	setEditingEvent(null)
-	setSelectedDate(null)
-	setSelectedTime(undefined)
+	eventHandler(event)
+	return event
 }
 
-export { handleAddEvent, handleDeleteEvent, handleEditEvent, handleNext, handlePrev, handleSaveEvent }
+export { handleAddEvent, handleDeleteEvent, handleEditEvent, handleNext, handlePrev, handleSaveEvent, handleSaveEventLink }

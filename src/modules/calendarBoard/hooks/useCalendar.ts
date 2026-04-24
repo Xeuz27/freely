@@ -1,12 +1,9 @@
 import usePersist from '@/modules/core/hooks/usePersist'
-import type { CalendarEvent } from '@/types/calendar-types'
+import { state } from '@/store/store'
+import type { CalendarEvent, eventLink } from '@/types/calendar-types'
 import { useStore } from '@nanostores/react'
 import { useMemo, useState } from 'react'
-import { calendarState, setCalendarState } from '../reducer/calendarState'
-
-const setState = (events: CalendarEvent[]) => {
-	setCalendarState({ events: events.map((e) => ({ ...e, createdAt: new Date(e.createdAt), date: new Date(e.date) })) })
-}
+import { setState } from './../../../store/store'
 
 const useCalendar = () => {
 	const [currentDate, setCurrentDate] = useState(new Date())
@@ -14,22 +11,34 @@ const useCalendar = () => {
 	const year = currentDate.getFullYear()
 	const month = currentDate.getMonth()
 
-	const [dialogOpen, setDialogOpen] = useState(false)
-	const [view, setView] = useState<'month' | 'week' | 'day'>('month')
+	// const [dialogOpen, setDialogOpen] = useState(false)
+	// const [view, setView] = useState<'month' | 'week' | 'day'>('month')
 
-	const $calendarStore = useStore(calendarState)
-	const { events, editingEvent, selectedDate, selectedTime } = $calendarStore
-	usePersist('events', events, setState)
+	const $calendarStore = useStore(state)
+	const { events, eventLinks } = $calendarStore
 
-	const setEditingEvent = (editingEvent: Object) => {
-		setCalendarState({ editingEvent: editingEvent })
-	}
-	const setSelectedDate = (selectedDate: Object) => {
-		setCalendarState({ selectedDate: selectedDate })
-	}
-	const setSelectedTime = (selectedTime: Object) => {
-		setCalendarState({ selectedTime: selectedTime })
-	}
+	usePersist('events', events, (events: CalendarEvent[]) => {
+		setState({
+			events: events.map((event) => ({
+				...event,
+				createdAt: new Date(event.createdAt),
+				date: new Date(event.date)
+			}))
+		})
+	})
+	usePersist('eventLinks', eventLinks, (values: eventLink[]) => {
+		setState({ eventLinks: values })
+	})
+
+	// const setEditingEvent = (editingEvent: Object) => {
+	// 	setCalendarState({ editingEvent: editingEvent })
+	// }
+	// const setSelectedDate = (selectedDate: Object) => {
+	// 	setCalendarState({ selectedDate: selectedDate })
+	// }
+	// const setSelectedTime = (selectedTime: Object) => {
+	// 	setCalendarState({ selectedTime: selectedTime })
+	// }
 	const daysInMonth = new Date(year, month + 1, 0).getDate()
 	const firstDayOfMonth = new Date(year, month, 1).getDay()
 
@@ -80,17 +89,21 @@ const useCalendar = () => {
 		today,
 		month,
 		year,
-		dialogOpen,
-		setDialogOpen,
-		editingEvent,
-		setEditingEvent,
-		events,
-		selectedDate,
-		setSelectedDate,
-		selectedTime,
-		setSelectedTime,
-		view,
-		setView,
+
+		// dialogOpen,
+		// setDialogOpen,
+
+		// editingEvent,
+		// setEditingEvent,
+		// events,
+		// selectedDate,
+		// setSelectedDate,
+		// selectedTime,
+		// setSelectedTime,
+
+		// view,
+		// setView,
+
 		getEventsForDate,
 		getTodayEvents,
 		getWeekDays

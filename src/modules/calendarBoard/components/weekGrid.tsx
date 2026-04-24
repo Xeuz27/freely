@@ -1,3 +1,4 @@
+import { dayTimeSlots } from '@/data/dayTimeSlots'
 import { cn } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 import { Fragment } from 'react'
@@ -7,7 +8,7 @@ import { isToday } from '../utils/isToday'
 import EventCard from './event-card'
 
 const WeekGrid = () => {
-	const { getWeekDays, setCurrentDate, setView, getEventsForDate, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } =
+	const { getWeekDays, setCurrentDate, setView, getEventsForDate, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = 
 		useCalendarContext()
 
 	return (
@@ -30,7 +31,7 @@ const WeekGrid = () => {
 				))}
 			</div>
 			<div className="grid grid-cols-8 gap-0.5 bg-background/10 rounded-lg overflow-hidden max-h-[calc(100vh-220px)] overflow-y-auto">
-				{['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'].map((time) => (
+				{dayTimeSlots.map((time) => (
 					<Fragment key={`row-${time}`}>
 						<div className="py-4 px-2 text-xs text-muted-foreground text-right bg-card/60">{time}</div>
 						{getWeekDays.map((day) => {
@@ -70,3 +71,4 @@ const WeekGrid = () => {
 }
 
 export { WeekGrid }
+
