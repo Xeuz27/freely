@@ -71,3 +71,7 @@ export const timeSlots = [
 	'19:00',
 	'20:00'
 ]
+
+export type formify<Type> = {
+	[Key in keyof Type]: Type[Key] extends Date | undefined ? string | undefined : Type[Key]
+}

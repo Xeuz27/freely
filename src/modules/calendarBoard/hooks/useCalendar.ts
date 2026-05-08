@@ -6,16 +6,19 @@ import { useMemo, useState } from 'react'
 import { setState } from './../../../store/store'
 
 const useCalendar = () => {
+	const $Store = useStore(state)
+	const { events, eventLinks } = $Store
+
 	const [currentDate, setCurrentDate] = useState(new Date())
 	const today = new Date()
 	const year = currentDate.getFullYear()
 	const month = currentDate.getMonth()
 
-	// const [dialogOpen, setDialogOpen] = useState(false)
-	// const [view, setView] = useState<'month' | 'week' | 'day'>('month')
-
-	const $calendarStore = useStore(state)
-	const { events, eventLinks } = $calendarStore
+	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+	const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
+	const [editingEvent, setEditingEvent] = useState<CalendarEvent | undefined>(undefined)
+	const [dialogOpen, setDialogOpen] = useState(false)
+	const [view, setView] = useState<'month' | 'week' | 'day'>('month')
 
 	usePersist('events', events, (events: CalendarEvent[]) => {
 		setState({
@@ -30,15 +33,6 @@ const useCalendar = () => {
 		setState({ eventLinks: values })
 	})
 
-	// const setEditingEvent = (editingEvent: Object) => {
-	// 	setCalendarState({ editingEvent: editingEvent })
-	// }
-	// const setSelectedDate = (selectedDate: Object) => {
-	// 	setCalendarState({ selectedDate: selectedDate })
-	// }
-	// const setSelectedTime = (selectedTime: Object) => {
-	// 	setCalendarState({ selectedTime: selectedTime })
-	// }
 	const daysInMonth = new Date(year, month + 1, 0).getDate()
 	const firstDayOfMonth = new Date(year, month, 1).getDay()
 
@@ -90,19 +84,19 @@ const useCalendar = () => {
 		month,
 		year,
 
-		// dialogOpen,
-		// setDialogOpen,
+		dialogOpen,
+		setDialogOpen,
 
-		// editingEvent,
-		// setEditingEvent,
+		editingEvent,
+		setEditingEvent,
 		// events,
-		// selectedDate,
-		// setSelectedDate,
-		// selectedTime,
-		// setSelectedTime,
+		selectedDate,
+		setSelectedDate,
+		selectedTime,
+		setSelectedTime,
 
-		// view,
-		// setView,
+		view,
+		setView,
 
 		getEventsForDate,
 		getTodayEvents,

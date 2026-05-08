@@ -4,7 +4,7 @@ import { useCrm } from '../hooks/useCrm'
 
 type CrmContext = {
 	leads: Lead[]
-	setLeads: (lead: Lead, toDelete?: boolean) => void
+	// setLeads: (lead: Lead, toDelete?: boolean) => void
 	dialogOpen: boolean
 	setDialogOpen: Dispatch<SetStateAction<boolean>>
 	editingLead: Lead | null

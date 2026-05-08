@@ -48,29 +48,33 @@ const handleEditEvent = (event: CalendarEvent, setEditingEvent?: any, setSelecte
 const handleDeleteEvent = (event: CalendarEvent) => {
 	eventHandler(event, true)
 }
-const handleSaveEventLink = (eventLink: eventLink) => {
-	let link: eventLink = eventLink
+const handleSaveEventLink = (eventLink: Partial<eventLink>) => {
+	let link = eventLink
 	if (!eventLink.id) {
 		link = {
 			...eventLink,
 			id: crypto.randomUUID().split('-')[0]
 		}
 	}
-	linksHandler({ link })
+	linksHandler({ link: link as eventLink  })
 	return link
 }
-
-const handleSaveEvent = (eventData: CalendarEvent) => {
-	let event: CalendarEvent = eventData
+type eventData = Partial<CalendarEvent>
+const handleSaveEvent = (eventData: eventData) => {
+	let event = eventData
 	if (!eventData.id) {
 		event = {
 			...eventData,
 			id: crypto.randomUUID().split('-')[0],
 			createdAt: new Date()
 		}
+	}else {
+		event ={...eventData,
+			updatedAt: new Date()
+		}
 	}
-	eventHandler(event)
-	return event
+	eventHandler(event as CalendarEvent)
+	return event as CalendarEvent
 }
 
 export { handleAddEvent, handleDeleteEvent, handleEditEvent, handleNext, handlePrev, handleSaveEvent, handleSaveEventLink }
