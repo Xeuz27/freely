@@ -1,17 +1,18 @@
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { type CalendarEvent, type EventType, eventTypeConfig, timeSlots } from '@/types/calendar-types'
+import { updateForm, useForm } from '@/modules/core/hooks/useForm'
+import { eventTypeConfig, timeSlots, type CalendarEvent, type EventType, type formify } from '@/types/calendar-types'
 import { type Lead } from '@/types/crm-types'
 import { type KanbanCard } from '@/types/kanban-types'
 import { addHour, format } from '@formkit/tempo'
-import { AlertCircle, Bell, CheckSquare, Link2, Phone, Users } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { AlertCircle, Bell, CheckSquare, Phone, Users } from 'lucide-react'
+import { useEffect } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext'
+import { handleSaveEvent } from '../utils/handlers'
 
 const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	meeting: <Users className="size-4" />,
@@ -20,78 +21,59 @@ const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	reminder: <Bell className="size-4" />,
 	deadline: <AlertCircle className="size-4" />
 }
-type eventData = Omit<CalendarEvent, 'id' | 'createdAt'> & { id?: string }
 interface EventDialogProps {
 	onOpenChange: (open: boolean) => void
-	onSave: (event: eventData, setEditingEvent: any, setSelectedDate: any, setSelectedTime: any) => void
-	editEvent?: CalendarEvent | null
-	initialDate?: Date
-	initialTime?: string
+	editEvent?: CalendarEvent | undefined
+	initialDate: Date | undefined
+	initialTime: string | undefined
 	leads?: Lead[]
 	kanbanCards?: KanbanCard[]
 }
 
-export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, leads = [], kanbanCards = [] }: EventDialogProps) {
-	const [title, setTitle] = useState('')
-	const [description, setDescription] = useState('')
-	const [date, setDate] = useState('')
-	const [startTime, setStartTime] = useState('')
-	const [endTime, setEndTime] = useState('')
-	const [type, setType] = useState<EventType>('meeting')
-	const [linkedLeadId, setLinkedLeadId] = useState<string>('')
-	const [linkedKanbanId, setLinkedKanbanId] = useState<string>('')
-
-	const { setEvents, editingEvent, setEditingEvent, setSelectedDate, setSelectedTime, dialogOpen } = useCalendarContext()
-
+export function EventDialog({ onOpenChange, initialDate, initialTime, leads = [], kanbanCards = [] }: EventDialogProps) {
+	const initialForm : formify<CalendarEvent>= {
+		id:'',
+		title: '',
+		description: '',
+		date: '',
+		createdAt: '',
+		updatedAt: '',
+		startTime: '',
+		endTime: '',
+		type: 'meeting',
+	}
+	const {formState, setFormState, onInputChange, onResetForm }= useForm(initialForm)
+	const { editingEvent, dialogOpen } = useCalendarContext()
+	
 	useEffect(() => {
 		if (editingEvent) {
-			setTitle(editingEvent.title)
-			setDescription(editingEvent.description || '')
-			setDate(format(editingEvent.date, 'YYYY-MM-DD', 'en'))
-			setStartTime(editingEvent.startTime || '')
-			setEndTime(editingEvent.endTime || '')
-			setType(editingEvent.type)
-			// setLinkedLeadId(editingEvent.leadId || '')
-			// setLinkedKanbanId(editingEvent.kanbanCardId || '')
+			for (const prop in editingEvent){ 
+				updateForm(prop as keyof CalendarEvent, editingEvent , setFormState)
+			}
 		} else {
-			setTitle('')
-			setDescription('')
-			setDate(initialDate ? format(initialDate, 'YYYY-MM-DD', 'en') : format(new Date(), 'YYYY-MM-DD', 'en'))
-			setStartTime(initialTime || '')
-			setEndTime('')
-			setType('meeting')
-			setLinkedLeadId('')
-			setLinkedKanbanId('')
+			setFormState((prev) => ({
+				...prev,
+				date: initialDate
+					? format(initialDate, 'YYYY-MM-DD', 'en')
+					: format(new Date(), 'YYYY-MM-DD', 'en'),
+				startTime: initialTime || ''
+			}))
 		}
 	}, [])
 
 	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
-		if (!title.trim() || !date) return
+		if (!formState.title.trim()) return
 
-		const selectedLead = leads.find((l) => l.id === linkedLeadId)
-		const selectedKanban = kanbanCards.find((c) => c.id === linkedKanbanId)
-
-		onSave(
-			{
-				id: editingEvent?.id,
-				title: title.trim(),
-				description: description.trim() || undefined,
-				date: new Date(addHour(format(date, 'YYYY-MM-DDTHH:mm:ssZ', 'en'), 4)),
-				startTime: startTime || undefined,
-				endTime: endTime || undefined,
-				type
-				// leadId: linkedLeadId || undefined,
-				// leadName: selectedLead?.name,
-				// leadStatus: selectedLead?.status,
-				// kanbanCardId: linkedKanbanId || undefined,
-				// kanbanCardTitle: selectedKanban?.title,
-				// kanbanCardType: selectedKanban?.type
-			},
-			setEditingEvent,
-			setSelectedDate,
-			setSelectedTime
-		)
+		handleSaveEvent({
+			id: editingEvent?.id,
+				title: formState.title.trim(),
+				description: formState.description!.trim() || undefined, 
+				date: new Date(addHour(format(formState.date!, 'YYYY-MM-DD', 'en'), 4)),
+				startTime: formState.startTime || undefined,
+				endTime: formState.endTime || undefined,
+				type: formState.type
+		})
 		onOpenChange(false)
 	}
 
@@ -105,7 +87,7 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="space-y-2">
 						<Label htmlFor="title">Title</Label>
-						<Input id="title" placeholder="Event title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+						<Input name="title" placeholder="Event title" value={formState.title} onChange={onInputChange} required />
 					</div>
 
 					<div className="space-y-2">
@@ -115,9 +97,17 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 								<button
 									key={t}
 									type="button"
-									onClick={() => setType(t)}
-									className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-colors ${
-										type === t
+									onClick={(t) =>
+										onInputChange({
+											target: {
+												name: 'type',
+												//@ts-ignore
+												value: t.target.innerText.toLowerCase()
+											}
+										})
+									}
+									className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs md:text-sm transition-colors ${
+										formState.type === t
 											? eventTypeConfig[t].color + ' border'
 											: 'bg-secondary/50 border-border text-muted-foreground hover:bg-secondary'
 									}`}
@@ -129,15 +119,25 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 						</div>
 					</div>
 
-					<div className="grid grid-cols-3 gap-3">
-						<div className="space-y-2">
+					<div className="grid grid-cols-3 gap-4">
+						<div className="space-y-2 col-span-3">
 							<Label htmlFor="date">Date</Label>
-							<Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+							<Input name="date" type="date" value={formState.date} onChange={onInputChange} required />
 						</div>
+						<div className="col-span-3 grid gap-4 grid-cols-2">
 						<div className="space-y-2">
 							<Label htmlFor="startTime">Start Time</Label>
-							<Select value={startTime} onValueChange={setStartTime}>
-								<SelectTrigger>
+							<Select value={formState.startTime} 
+							onValueChange={(value) => {
+								onInputChange({
+									target: {
+										name: 'startTime',
+										value: value
+									}
+								})
+							}}
+							>
+								<SelectTrigger className='w-full mb-0'>
 									<SelectValue placeholder="Start" />
 								</SelectTrigger>
 								<SelectContent>
@@ -152,8 +152,15 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="endTime">End Time</Label>
-							<Select value={endTime} onValueChange={setEndTime}>
-								<SelectTrigger>
+							<Select value={formState.endTime} onValueChange={(value) => {
+										onInputChange({
+											target: {
+												name: 'endTime',
+												value: value
+											}
+										})
+									}}>
+								<SelectTrigger className='w-full mb-0'>
 									<SelectValue placeholder="End" />
 								</SelectTrigger>
 								<SelectContent>
@@ -166,74 +173,20 @@ export function EventDialog({ onOpenChange, onSave, initialDate, initialTime, le
 								</SelectContent>
 							</Select>
 						</div>
+						</div>
 					</div>
 
-					<div className="space-y-2">
+					<div className="space-y-2 mb-0">
 						<Label htmlFor="description">Description</Label>
 						<Textarea
-							id="description"
+						className='mb-0'
+							name="description"
 							placeholder="Add details..."
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
+							value={formState.description}
+							onChange={onInputChange}
 							rows={2}
 						/>
 					</div>
-
-					<div className="space-y-3 pt-2 border-t border-border">
-						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<Link2 className="size-4" />
-							<span>Link to...</span>
-						</div>
-
-						<div className="grid grid-cols-2 gap-3">
-							<div className="space-y-2">
-								<Label htmlFor="linkedLeadId" className="text-xs">
-									Lead
-								</Label>
-								<Select value={linkedLeadId} onValueChange={setLinkedLeadId}>
-									<SelectTrigger>
-										<SelectValue placeholder="Select lead" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="none">No lead</SelectItem>
-										{leads.map((lead) => (
-											<SelectItem key={lead.id} value={lead.id}>
-												<div className="flex items-center gap-2">
-													<span>{lead.name}</span>
-													{lead.company && <span className="text-xs text-muted-foreground">({lead.company})</span>}
-												</div>
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</div>
-
-							<div className="space-y-2">
-								<Label htmlFor="linkedKanbanId" className="text-xs">
-									Kanban Card
-								</Label>
-								<Select value={linkedKanbanId} onValueChange={setLinkedKanbanId}>
-									<SelectTrigger>
-										<SelectValue placeholder="Select card" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="none">No card</SelectItem>
-										{kanbanCards.map((card) => (
-											<SelectItem key={card.id} value={card.id}>
-												<div className="flex items-center gap-2">
-													<span>{card.title}</span>
-													<Badge variant="outline" className="text-xs">
-														{card.type}
-													</Badge>
-												</div>
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</div>
-						</div>
-					</div>
-
 					<div className="flex justify-end gap-2 pt-4">
 						<Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
 							Cancel

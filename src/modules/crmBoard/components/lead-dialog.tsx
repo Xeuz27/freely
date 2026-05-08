@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -6,12 +5,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import useCalendarContext from '@/modules/calendarBoard/hooks/useCalendarContext'
 import { handleSaveEvent, handleSaveEventLink } from '@/modules/calendarBoard/utils/handlers'
-import { useForm } from '@/modules/core/hooks/useForm'
+import { updateForm, useForm } from '@/modules/core/hooks/useForm'
 import { state } from '@/store/store'
-import { timeSlots, type eventLink } from '@/types/calendar-types'
-import { statusConfig, type Lead } from '@/types/crm-types'
+import { timeSlots, type eventLink, type formify } from '@/types/calendar-types'
+import { statusConfig, type ContactStatus, type Lead } from '@/types/crm-types'
 import { addHour, format } from '@formkit/tempo'
 import { useStore } from '@nanostores/react'
 import { useEffect } from 'react'
@@ -27,16 +25,15 @@ interface LeadDialogProps {
 }
 
 export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadDialogProps) {
-	const { setEvents } = useCalendarContext()
 	const $state = useStore(state)
 	const { events } = $state
-	const initialFormState = {
+	const initialFormState: formify<Lead> = {
 		id: '',
 		name: '',
 		email: '',
 		phone: '',
 		company: '',
-		status: '',
+		status: 'new',
 		note: '',
 		info: '',
 		createdAt: '',
@@ -50,7 +47,7 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 		startTime: '',
 		endTime: ''
 	}
-	const { formState, onInputChange, setFormState, onResetForm } = useForm(initialFormState)
+	const { formState, onInputChange, setFormState, onResetForm, set } = useForm(initialFormState)
 	const {
 		formState: actionState,
 		onInputChange: onInputChange2,
@@ -62,11 +59,16 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 		if (editLead) {
 			let eventlinked = eventsLinked(editLead.id)
 			for (const prop in editLead) {
-				setFormState((prev) => ({ ...prev, [prop]: editLead[prop] }))
+				updateForm(prop as keyof Lead, editLead, setFormState)
 			}
 			if (eventlinked !== null) {
 				let eventData = events.filter((e) => e.id === eventlinked.eventId)[0]
 				if (eventData) {
+					set('email', 'sdasdasd')
+					// for (const prop in eventData){
+
+					// 	updateForm(prop as keyof CalendarEvent, eventData as CalendarEvent, setFormState2)
+					// }
 					setFormState2((prev) => ({
 						...prev,
 						id: eventData.id ?? '',
@@ -78,11 +80,8 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 					}))
 				}
 			}
-		} else {
-			onResetForm()
-			onResetForm2()
 		}
-	}, [open, editLead])
+	}, [])
 
 	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
@@ -90,18 +89,18 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 		let lead = handleSaveLead({
 			id: editLead?.id,
 			name: formState.name.trim(),
-			email: formState.email.trim() || '',
-			phone: formState.phone.trim() || '',
-			company: formState.company.trim() || '',
+			email: formState.email!.trim() || '',
+			phone: formState.phone!.trim() || '',
+			company: formState.company!.trim() || '',
 			status: formState.status,
-			note: formState.note.trim() || '',
-			info: formState.info.trim() || ''
+			note: formState.note!.trim() || '',
+			info: formState.info!.trim() || ''
 		})
 		if (actionState.eventTitle.length >= 1) {
 			let eventData = handleSaveEvent({
 				id: actionState.id,
 				title: actionState.eventTitle,
-				type: actionState.eventType,
+				type: actionState.eventType as EventType,
 				date: new Date(addHour(format(actionState.date, 'YYYY-MM-DDTHH:mm:ssZ', 'en'), 4)),
 				startTime: actionState.startTime || undefined,
 				endTime: actionState.endTime || undefined
