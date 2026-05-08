@@ -11,19 +11,26 @@ import { eventTypeIcons } from './calendar-board'
 import { DayEventCard } from './day-event-card'
 
 const DayGrid = () => {
-	const { getEventsForDate, currentDate, selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
+	const {
+		getEventsForDate,
+		currentDate,
+		selectedTime,
+		setEditingEvent,
+		setSelectedDate,
+		setSelectedTime,
+		setDialogOpen
+	} = useCalendarContext()
 	return (
-		<div className="h-full flex gap-6">
+		<div className="h-full flex gap-6 max-md:gap-2">
 			{/* Day View - Timeline */}
 			<div className="flex-1 flex flex-col">
-				<div className="flex items-center justify-between py-4">
+				<div className="flex max-md:flex-col items-center justify-between py-4">
 					<h3 className="text-sm font-medium text-muted-foreground">{isToday(currentDate) ? "Today's Schedule" : 'Schedule'}</h3>
 					<Badge variant="outline" className="text-xs border-0">
 						{getEventsForDate(currentDate).length} events
 					</Badge>
 				</div>
-				<div className="flex-1 overflow-y-auto pr-2">
-					<div className="relative">
+				<div className="flex-1 overflow-auto pr-2 relative">
 						{dayTimeSlots
 							.filter((_, i) => i % 2 === 0)
 							.map((time) => {
@@ -32,11 +39,11 @@ const DayGrid = () => {
 								)
 
 								return (
-									<div key={time} className="flex gap-4 group/slot">
-										<div className="w-16 py-3 text-xs text-muted-foreground text-right shrink-0">{time}</div>
+									<div key={time} className="flex gap-2 group/slot">
+										<div className="w-16 max-md:w-8 py-3 text-xs text-muted-foreground text-right shrink-0">{time}</div>
 										<div
 											className={cn(
-												'flex-1 min-h-[60px] border-t border-border/50 py-2 relative cursor-pointer  rounded transition-colors',
+												'flex-1 min-h-[60px] border-t border-border/50 p-2 relative cursor-pointer rounded transition-colors',
 												slotEvents.length > 0 ? '' : 'hover:bg-secondary/20'
 											)}
 											onClick={() => {
@@ -80,26 +87,36 @@ const DayGrid = () => {
 									</div>
 								)
 							})}
-					</div>
 				</div>
 			</div>
 
 			{/* Day View - Sidebar with all events */}
-			<div className="w-80 border-l border-border p-6">
+			<div className="w-80 max-md:hidden border-l border-border p-6">
 				<div className="sticky top-0">
-					<h3 className="text-sm font-medium text-muted-foreground mb-4">All Events</h3>
+					<h3 className="text-sm font-medium text-muted-foreground mb-4">
+						All Events
+					</h3>
 					{getEventsForDate(currentDate).length === 0 ? (
 						<div className="text-center py-8">
 							<div className="flex items-center justify-center size-12 rounded-full bg-secondary/50 mx-auto mb-3">
 								<CalendarDays className="size-6 text-muted-foreground" />
 							</div>
-							<p className="text-sm text-muted-foreground">No events scheduled</p>
+							<p className="text-sm text-muted-foreground">
+								No events scheduled
+							</p>
 							<Button
 								variant="outline"
 								size="sm"
 								className="mt-3"
 								onClick={() =>
-									handleAddEvent(currentDate, selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)
+									handleAddEvent(
+										currentDate,
+										selectedTime,
+										setEditingEvent,
+										setSelectedDate,
+										setSelectedTime,
+										setDialogOpen
+									)
 								}
 							>
 								<Plus className="size-3.5 mr-1" />
@@ -134,12 +151,6 @@ const DayGrid = () => {
 													</p>
 												)}
 												{event.description && <p className="text-xs opacity-60 mt-1 line-clamp-2">{event.description}</p>}
-												{/* {(event.leadName || event.kanbanCardTitle) && (
-													<div className="flex items-center gap-1 mt-1.5">
-														<Link2 className="size-2.5 opacity-50" />
-														<span className="text-[10px] opacity-70">{event.leadName || event.kanbanCardTitle}</span>
-													</div>
-												)} */}
 											</div>
 										</div>
 									</div>

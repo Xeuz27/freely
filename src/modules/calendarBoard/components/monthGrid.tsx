@@ -21,7 +21,7 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 			<div className="grid grid-cols-7 gap-0.5 bg-sidebar/20">
 				{days.map((day, idx) => {
 					if (!day) {
-						return <div key={`empty-${idx}`} className="min-h-[120px] bg-card/5" />
+						return <div key={`empty-${idx}`} className="md:min-h-[120px] bg-card/5" />
 					}
 					const dayEvents = getEventsForDate(day)
 					const isCurrentDay = isToday(day)
@@ -31,7 +31,7 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 						<div
 							key={day.toISOString()}
 							className={cn(
-								'min-h-[120px] bg-card/40 p-2 group/day transition-colors border border-transparent hover:border-accent/30 hover:bg-background/10',
+								'md:min-h-[120px] bg-card/40 p-2 group/day transition-colors border border-transparent hover:border-accent/30 hover:bg-background/10',
 								isCurrentDay && 'bg-primary/20'
 							)}
 						>
@@ -42,7 +42,7 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 										setView('day')
 									}}
 									className={cn(
-										'inline-flex items-center  justify-center size-6 text-sm rounded-full transition-colors hover:bg-primary/60',
+										'inline-flex items-center max-md:p-2 max-md:size-4 justify-center size-6 text-sm rounded-full transition-colors hover:bg-primary/60',
 										isCurrentDay ? 'bg-primary text-primary-foreground font-semibold' : ' text-foreground'
 									)}
 								>
@@ -52,12 +52,12 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 									onClick={() => {
 										handleAddEvent(day, selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)
 									}}
-									className="opacity-0 group-hover/day:opacity-100 p-1 hover:bg-secondary rounded-full transition-opacity"
+									className="opacity-0 max-md:hidden group-hover/day:opacity-100 p-1 hover:bg-secondary rounded-full transition-opacity"
 								>
 									<Plus className="size-5 pl-px text-muted-foreground" />
 								</button>
 							</div>
-							<div className="space-y-1">
+							<div className="space-y-1 max-md:hidden">
 								{dayEvents
 									.map((event) => (
 										<div key={event.id}>
@@ -65,8 +65,10 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 										</div>
 									))
 									.slice(0, 3)}
-
 								{dayEvents.length > 3 && <p className="text-xs text-muted-foreground pt-1">+{dayEvents.length - 3} more</p>}
+							</div>
+							<div className="md:hidden">
+								{dayEvents.length >= 1 && <div className='bg-primary size-2 rounded-full'></div> }
 							</div>
 						</div>
 					)

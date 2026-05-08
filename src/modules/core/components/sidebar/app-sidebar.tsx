@@ -143,7 +143,8 @@ const data = {
 // }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const { open } = useSidebar()
+	const { open, isMobile, openMobile } = useSidebar()
+    const isOpen = isMobile ? openMobile : open
 	/* @ts-ignore */
 	const { activeview, setactiveview } = props
 	return (
@@ -160,7 +161,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							{/* @ts-ignore */}
 							<SidebarMenuButton onClick={() => setactiveview(id)}>
 								<Icon className={cn('size-5 shrink-0', activeview === id ? 'text-sidebar-primary' : 'text-muted-foreground')} />
-								{open && (
+								{isOpen && (
 									<span className={cn('text-sm tracking-wide', activeview === id ? '' : 'text-muted-foreground')}>{title}</span>
 								)}
 							</SidebarMenuButton>
