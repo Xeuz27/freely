@@ -25,12 +25,6 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 						{event.endTime && ` - ${event.endTime}`}
 					</p>
 				)}
-				{/* {!compact && (event.leadName || event.kanbanCardTitle) && (
-					<div className="flex items-center gap-1 mt-0.5">
-						<Link2 className="size-2.5 opacity-50" />
-						<span className="text-[10px] opacity-70 truncate">{event.leadName || event.kanbanCardTitle}</span>
-					</div>
-				)} */}
 			</div>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
@@ -42,7 +36,7 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 					<DropdownMenuItem
 						onClick={() => {
 							setEditingEvent(event)
-							setSelectedDate(null)
+							setSelectedDate(undefined)
 							setSelectedTime(undefined)
 							setDialogOpen(true)
 						}}

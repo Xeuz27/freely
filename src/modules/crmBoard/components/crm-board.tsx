@@ -126,7 +126,7 @@ export function CrmBoard() {
 					<LeadTable data={data} />
 				</div>
 			</div>
-			<LeadDialog open={dialogOpen} onOpenChange={setDialogOpen} editLead={editingLead} eventsLinked={eventsLinked} />
+			{dialogOpen && <LeadDialog open={dialogOpen} onOpenChange={setDialogOpen} editLead={editingLead} eventsLinked={eventsLinked} />}
 		</div>
 	)
 }

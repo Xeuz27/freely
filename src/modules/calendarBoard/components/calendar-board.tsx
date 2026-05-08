@@ -9,7 +9,7 @@ import { type KanbanCard } from '@/types/kanban-types'
 import { AlertCircle, Bell, CalendarDays, CheckSquare, ChevronLeft, ChevronRight, Phone, Plus, Users } from 'lucide-react'
 import useCalendarContext from '../hooks/useCalendarContext'
 import { formatDateHeader } from '../utils/formatDateHeader'
-import { handleAddEvent, handleNext, handlePrev, handleSaveEvent } from '../utils/handlers'
+import { handleNext, handlePrev } from '../utils/handlers'
 import { DayGrid } from './dayGrid'
 import { EventDialog } from './event-dialog'
 import { MonthGrid } from './monthGrid'
@@ -27,13 +27,14 @@ interface CalendarBoardProps {
 	leads?: Lead[]
 	kanbanCards?: KanbanCard[]
 }
-const Btn = ({ view, onClick, text }: { view: string; onClick: () => void; text: string }) => {
+const Btn = ({ view, onClick, text, classname='' }: { view: string; onClick: () => void; text: string, classname?: string }) => {
 	return (
 		<button
 			onClick={() => onClick()}
 			className={cn(
 				'px-3 py-1.5 text-sm rounded-md transition-colors',
-				view === text ? 'bg-background text-foreground shadow-sm border border-accent/30' : 'text-muted-foreground hover:text-foreground'
+				view === text ? 'bg-background text-foreground shadow-sm border border-accent/30' : 'text-muted-foreground hover:text-foreground',
+				classname
 			)}
 		>
 			{text}
@@ -68,35 +69,42 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 					</div>
 					<div>
 						<h1 className="text-lg font-semibold text-foreground">Calendar</h1>
-						<p className="text-xs text-muted-foreground">Schedule meetings and track deadlines</p>
+						<p className="text-xs text-muted-foreground hidden md:block">Schedule meetings and track deadlines</p>
 					</div>
 				</div>
 
 				<div className="flex items-center gap-3">
-					<div className="flex items-center bg-secondary/50 rounded-lg p-1">
+					<div className="flex items-center max-md:hidden bg-secondary/50 rounded-lg p-1">
 						<Btn view={view} onClick={() => setView('month')} text="month" />
-						<Btn view={view} onClick={() => setView('week')} text="week" />
+						<Btn classname='max-md:hidden' view={view} onClick={() => setView('week')} text="week" />
 						<Btn view={view} onClick={() => setView('day')} text="day" />
 					</div>
 					<Button
-						className="hover:bg-accent/20"
+						className="hover:bg-accent/20 px-1.5 sm:px-4 gap-0 rounded-full md:rounded-sm"
 						onClick={() => {
-							handleAddEvent(new Date(), selectedTime, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)
+							setEditingEvent(undefined)
+							setDialogOpen(true)
 						}}
 					>
-						<Plus className="size-4 mr-1" />
+						<Plus className="size-5" />
+						<span className='hidden md:block'>
 						Add Event
+						</span>
 					</Button>
 				</div>
 			</WorkspaceHeader>
-
-			<div className="px-6 py-3 border-b border-border">
+			<div className="py-3 border-b md:hidden border-border grid grid-cols-3 max-md:grid-cols-2 gap-2">
+				<Btn view={view} onClick={() => setView('month')} text="month" />
+				<Btn classname='max-md:hidden' view={view} onClick={() => setView('week')} text="week" />
+				<Btn view={view} onClick={() => setView('day')} text="day" />
+			</div>
+			<div className="py-3 border-b border-border">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-2">
 						<Button variant="ghost" size="icon" onClick={() => handlePrev(view, year, month, currentDate, setCurrentDate)}>
 							<ChevronLeft className="size-4" />
 						</Button>
-						<h2 className="text-lg font-semibold min-w-[280px] text-center">{formatDateHeader(view, currentDate, month, year)}</h2>
+						<h2 className="text-lg font-semibold lg:min-w-[280px]  text-center">{formatDateHeader(view, currentDate, month, year)}</h2>
 						<Button variant="ghost" size="icon" onClick={() => handleNext(view, currentDate, setCurrentDate, year, month)}>
 							<ChevronRight className="size-4" />
 						</Button>
@@ -122,7 +130,6 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 			{dialogOpen && (
 				<EventDialog
 					onOpenChange={setDialogOpen}
-					onSave={handleSaveEvent}
 					editEvent={editingEvent}
 					initialDate={selectedDate || undefined}
 					initialTime={selectedTime}

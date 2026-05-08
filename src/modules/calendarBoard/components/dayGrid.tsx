@@ -30,7 +30,7 @@ const DayGrid = () => {
 						{getEventsForDate(currentDate).length} events
 					</Badge>
 				</div>
-				<div className="flex-1 overflow-auto pr-2 relative">
+				<div className="flex-1 overflow-y-auto pr-2 relative">
 						{dayTimeSlots
 							.filter((_, i) => i % 2 === 0)
 							.map((time) => {
@@ -191,3 +191,4 @@ const DayGrid = () => {
 }
 
 export { DayGrid }
+
