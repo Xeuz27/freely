@@ -1,11 +1,10 @@
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { WorkspaceHeader } from '@/modules/core/components/workspace-Header'
 import { state } from '@/store/store'
 import { type ContactStatus, statusConfig } from '@/types/crm-types'
 import { useStore } from '@nanostores/react'
-import { Filter, Plus, Search, Users } from 'lucide-react'
+import { Filter, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import useCrmContext from '../hooks/useCrmContext'
 import { LeadDialog } from './lead-dialog'
@@ -56,39 +55,26 @@ export function CrmBoard() {
 		return eventslinked[0] ?? null
 	}
 	return (
-		<div className="flex flex-1 flex-col h-screen bg-background">
-			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
-				<div className="flex items-center gap-3">
-					<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10">
-						<Users className="size-5 text-primary" />
-					</div>
-					<div>
-						<h1 className="text-lg font-semibold text-foreground">CRM</h1>
-						<p className="text-xs text-muted-foreground">Manage your leads and contacts</p>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-3">
-					<div className="relative">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-						<Input
-							placeholder="Search leads..."
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-							className="pl-9 w-64 bg-secondary/50"
-						/>
-					</div>
-					<Button
+		<div className="flex flex-1 flex-col px-4 h-screen bg-background">
+			<WorkspaceHeader>
+				<WorkspaceHeader.Content 
+					title="CRM" 
+					description="Manage your leads and contacts" 
+					Icon={User} />
+				<WorkspaceHeader.Actions>
+					<WorkspaceHeader.Search 
+						placeholder="Search Leads..." 
+						onSearch={setSearchQuery} 
+						value={searchQuery} />
+					<WorkspaceHeader.Button
+						text="Add Lead"
 						onClick={() => {
 							setEditingLead(null)
 							setDialogOpen(true)
 						}}
-					>
-						<Plus className="size-4 mr-1" />
-						Add Lead
-					</Button>
-				</div>
-			</header>
+					/>
+				</WorkspaceHeader.Actions>
+			</WorkspaceHeader>
 
 			<div className="px-6 py-4 border-b border-border">
 				<div className="flex items-center gap-3">
