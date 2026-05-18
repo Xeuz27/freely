@@ -22,6 +22,7 @@ import { AddCardDialog } from './add-card-dialog.tsx'
 import { AddColumnDialog } from './add-column-dialog.tsx'
 import { KanbanCard } from './kanban-card.tsx'
 import { KanbanColumn } from './kanban-column.tsx'
+import { WorkspaceHeader } from '@/modules/core/components/workspace-Header.tsx'
 
 const initialColumns: KanbanColumnType[] = [
 	{
@@ -241,34 +242,25 @@ export function KanbanBoard() {
 		return `grid-cols-${n + 1}`
 	}
 	return (
-		<div className="flex flex-col flex-1 p-6 h-screen bg-background">
-			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
-				<div className="flex items-center gap-3">
-					<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10">
-						<LayoutGrid className="size-5 text-primary" />
-					</div>
-					<div>
-						<h1 className="text-lg font-semibold text-foreground">Workspace</h1>
-						<p className="text-xs text-muted-foreground">Organize your tasks, notes, and ideas</p>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-3">
-					<div className="relative ">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-						<Input
-							placeholder="Search items..."
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-							className="pl-9 w-64 bg-secondary/50"
-						/>
-					</div>
-					<Button onClick={() => setAddColumnDialogOpen(true)}>
-						<Plus className="size-4 mr-1" />
-						Add Column
-					</Button>
-				</div>
-			</header>
+		<div className="flex flex-col flex-1 px-4 h-screen bg-background">
+			<WorkspaceHeader>
+				<WorkspaceHeader.Content
+					title='Workspace'
+					description='Organize your tasks, notes, and ideas'
+					Icon={LayoutGrid}
+				/>
+				<WorkspaceHeader.Actions>
+					<WorkspaceHeader.Search
+						placeholder='Search Items'
+						value={searchQuery}
+						onSearch={setSearchQuery}
+					/>
+					<WorkspaceHeader.Button
+						text='Add Column'
+						onClick={()=> setAddColumnDialogOpen}
+					/>
+				</WorkspaceHeader.Actions>
+			</WorkspaceHeader>
 
 			<div className="flex-1">
 				<DndContext
@@ -278,7 +270,7 @@ export function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-					<div className={cn('grid gap-4 h-full border border-red-100/50', cols(filteredColumns.length))}>
+					<div className={cn('grid gap-4 h-full', cols(filteredColumns.length))}>
 						{filteredColumns.map((column) => (
 							<KanbanColumn
 								key={column.id}

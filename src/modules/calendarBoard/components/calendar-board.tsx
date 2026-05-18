@@ -69,13 +69,24 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 					Icon={CalendarDays} 
 				/>
 				<WorkspaceHeader.Actions>
-					<div className="flex items-center gap-3">
-						<div className="flex items-center max-md:hidden bg-secondary/50 rounded-lg p-1">
-							<Btn view={view} onClick={() => setView('month')} text="month" />
-							<Btn classname="max-md:hidden" view={view} onClick={() => setView('week')} text="week" />
-							<Btn view={view} onClick={() => setView('day')} text="day" />
-						</div>
-					</div>
+					<WorkspaceHeader.Tabs>
+						<WorkspaceHeader.Tab 
+							text='month'
+							onClick={()=>setView('month')}
+							isActive={view}
+						/>
+						<WorkspaceHeader.Tab 
+							text='week'
+							onClick={()=>setView('week')}
+							className='max-md:hidden'
+							isActive={view}
+						/>
+						<WorkspaceHeader.Tab 
+							text='day'
+							onClick={()=>setView('day')}
+							isActive={view}
+						/>
+					</WorkspaceHeader.Tabs>
 					<WorkspaceHeader.Button
 						text="Add Event"
 						onClick={() => {

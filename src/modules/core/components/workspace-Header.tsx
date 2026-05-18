@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
 import { Plus, Search, type LucideIcon } from 'lucide-react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 
@@ -10,6 +11,8 @@ interface WorkspaceHeaderComponent extends React.FC<WorkspaceHeaderprops> {
 	Actions: typeof Actions
 	Search: typeof SearchBar
 	Button: typeof Btn
+	Tabs: typeof Tabs
+	Tab: typeof Tab
 }
 interface WorkspaceHeaderprops {
 	children: ReactNode
@@ -19,6 +22,7 @@ interface ContentProps {
 	title: string
 	description: string
 	Icon: LucideIcon
+	children?: ReactNode
 }
 interface ActionProps {
 	children: ReactNode
@@ -27,6 +31,15 @@ interface SearchBarProps {
 	placeholder: string
 	value: string
 	onSearch: Dispatch<SetStateAction<string>>
+}
+interface TabsProps {
+	children: ReactNode
+}
+interface TabProps {
+	text: string
+	isActive: string
+	className?: string
+	onClick: () => void
 }
 interface BtnProps {
 	text: string
@@ -45,16 +58,17 @@ const WorkspaceHeader: WorkspaceHeaderComponent = ({ children }: WorkspaceHeader
 	)
 }
 
-const Content = ({ title, description, Icon }: ContentProps) => {
+const Content = ({ title, description, Icon, children }: ContentProps) => {
 	return (
 		<div className="flex items-center gap-3">
-			<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10">
+			<div className="flex items-center justify-center size-9 rounded-lg bg-primary/30">
 				<Icon className="size-5 text-primary" />
 			</div>
 			<div>
 				<h1 className="text-lg font-semibold text-foreground">{title}</h1>
 				<p className="text-xs text-muted-foreground hidden md:block">{description}</p>
 			</div>
+			{children && <div className="">{children}</div>}
 		</div>
 	)
 }
@@ -75,7 +89,25 @@ const SearchBar = ({ placeholder, value, onSearch }: SearchBarProps) => {
 		</div>
 	)
 }
-
+const Tabs = ({ children }: TabsProps) => {
+	return <div className="flex justify-center items-center gap-1 rounded-lg p-1 bg-border">{children}</div>
+}
+const Tab = ({ text, isActive, className, onClick }: TabProps) => {
+	return (
+		<button
+			onClick={() => onClick()}
+			className={cn(
+				'px-3 py-1.5 text-sm rounded-md transition-colors border capitalize',
+				isActive === text
+					? 'bg-foreground/10 text-foreground shadow-sm border-accent/60'
+					: 'text-muted-foreground hover:text-foreground border-transparent',
+				className
+			)}
+		>
+			{text}
+		</button>
+	)
+}
 const Btn = ({ text, onClick }: BtnProps) => {
 	return (
 		<Button
@@ -94,5 +126,7 @@ WorkspaceHeader.Content = Content
 WorkspaceHeader.Actions = Actions
 WorkspaceHeader.Search = SearchBar
 WorkspaceHeader.Button = Btn
+WorkspaceHeader.Tabs = Tabs
+WorkspaceHeader.Tab = Tab
 export { WorkspaceHeader }
 

@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils'
 import { type Lead } from '@/types/crm-types'
 import { type Project, projectPriorityConfig, projectStatusConfig } from '@/types/project-types'
-import { Calendar, Flag, Link2, MoreHorizontal, User } from 'lucide-react'
+import { Calendar, Flag, MoreHorizontal, User } from 'lucide-react'
 
 interface ProjectRowProps {
 	project: Project
@@ -76,7 +76,7 @@ export function ProjectRow({ project, lead, onEdit, onDelete }: ProjectRowProps)
 				</TooltipProvider>
 			</TableCell>
 
-			<TableCell>
+			{/* <TableCell>
 				{lead ? (
 					<div className="flex items-center gap-2">
 						<Link2 className="size-3 text-muted-foreground" />
@@ -86,7 +86,7 @@ export function ProjectRow({ project, lead, onEdit, onDelete }: ProjectRowProps)
 				) : (
 					<span className="text-muted-foreground text-sm">-</span>
 				)}
-			</TableCell>
+			</TableCell> */}
 
 			<TableCell>
 				{project.ownerId ? (

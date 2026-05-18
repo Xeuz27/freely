@@ -2,12 +2,12 @@
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { WorkspaceHeader } from '@/modules/core/components/workspace-Header.tsx'
 import { type Lead } from '@/types/crm-types'
 import { type Project, type ProjectPriority, projectPriorityConfig, type ProjectStatus, projectStatusConfig } from '@/types/project-types'
-import { ArrowUpDown, Filter, FolderKanban, Plus, Search } from 'lucide-react'
+import { ArrowUpDown, Filter, FolderKanban, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { ProjectRow } from './project-row.tsx'
 import { ProjectSheet } from './project-sheet.tsx'
@@ -207,41 +207,28 @@ export function ProjectBoard() {
 	const activeProjects = projects.filter((p) => p.status !== 'completed' && p.status !== 'cancelled').length
 
 	return (
-		<div className="flex flex-col h-screen bg-background">
-			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
-				<div className="flex items-center gap-3">
-					<div className="flex items-center justify-center size-9 rounded-lg bg-primary/10">
-						<FolderKanban className="size-5 text-primary" />
-					</div>
-					<div>
-						<h1 className="text-lg font-semibold text-foreground">Projects</h1>
-						<p className="text-xs text-muted-foreground">
-							{activeProjects} active project{activeProjects !== 1 ? 's' : ''}
-						</p>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-3">
-					<div className="relative">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-						<Input
-							placeholder="Search projects..."
-							value={searchQuery}
-							onChange={(e) => setSearchQuery(e.target.value)}
-							className="pl-9 w-64 bg-secondary/50"
-						/>
-					</div>
-					<Button
+		<div className="flex flex-1 px-4 flex-col h-screen bg-background">
+			<WorkspaceHeader>
+				<WorkspaceHeader.Content
+					title="Projects"
+					description={`${ activeProjects } active project${activeProjects > 1 ? 's' : ''}`}
+					Icon={FolderKanban}
+				/>
+				<WorkspaceHeader.Actions>
+					<WorkspaceHeader.Search
+						placeholder="Search Projects..." 
+						value={searchQuery} 
+						onSearch={setSearchQuery}
+					/>
+					<WorkspaceHeader.Button
+						text="Add Project"
 						onClick={() => {
 							setEditingProject(null)
 							setSheetOpen(true)
 						}}
-					>
-						<Plus className="size-4 mr-1" />
-						New Project
-					</Button>
-				</div>
-			</header>
+					/>
+				</WorkspaceHeader.Actions>
+			</WorkspaceHeader>
 
 			<div className="px-6 py-4 border-b border-border">
 				<div className="flex items-center gap-3">
@@ -316,7 +303,7 @@ export function ProjectBoard() {
 										<ArrowUpDown className="size-3" />
 									</button>
 								</TableHead>
-								<TableHead>Linked Lead</TableHead>
+								{/* <TableHead>Linked Lead</TableHead> */}
 								<TableHead>Owner</TableHead>
 								<TableHead>
 									<button onClick={() => handleSort('startDate')} className="flex items-center gap-1 hover:text-foreground">

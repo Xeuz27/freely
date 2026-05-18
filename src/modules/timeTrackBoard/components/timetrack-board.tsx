@@ -3,7 +3,9 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { dayTimeSlots } from '@/data/dayTimeSlots'
 import { cn } from '@/lib/utils'
+import { WorkspaceHeader } from '@/modules/core/components/workspace-Header'
 import { type KanbanCard, cardTypeColors } from '@/types/kanban-types'
 import { type Project, projectStatusConfig } from '@/types/project-types'
 import { type TimeEntry, calculateDuration, formatDuration, formatTimeRange } from '@/types/timetrack-types'
@@ -282,57 +284,47 @@ export function TimetrackBoard() {
 		)
 	}
 
-	const timeSlots = [
-		'06:00',
-		'07:00',
-		'08:00',
-		'09:00',
-		'10:00',
-		'11:00',
-		'12:00',
-		'13:00',
-		'14:00',
-		'15:00',
-		'16:00',
-		'17:00',
-		'18:00',
-		'19:00',
-		'20:00',
-		'21:00'
-	]
-
 	return (
-		<div className="h-full flex flex-col">
-			<header className="flex items-center justify-between px-6 py-4 border-b border-border">
-				<div className="flex items-center gap-4">
-					<div className="flex items-center gap-2">
-						<Clock className="size-5 text-primary" />
-						<h1 className="text-xl font-semibold">Time Tracker</h1>
-					</div>
-					<div className="flex items-center gap-1 bg-secondary rounded-lg p-1">
-						<Button variant={viewMode === 'day' ? 'default' : 'ghost'} size="sm" onClick={() => setViewMode('day')}>
-							Day
-						</Button>
-						<Button variant={viewMode === 'week' ? 'default' : 'ghost'} size="sm" onClick={() => setViewMode('week')}>
-							Week
-						</Button>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-3">
-					<div className="flex items-center gap-2 bg-secondary/50 px-3 py-1.5 rounded-lg">
+		<div className="h-full flex-1 px-4 flex flex-col">
+			<WorkspaceHeader>
+				<WorkspaceHeader.Content 
+					title="Time Tracker" 
+					description={'log spent hours'} 
+					Icon={Clock}
+				>
+					<WorkspaceHeader.Tabs>
+						<WorkspaceHeader.Tab 
+							text="day" 
+							isActive={viewMode} 
+							onClick={
+								() => setViewMode('day')
+							} 
+						/>
+						<WorkspaceHeader.Tab 
+							text="week" 
+							isActive={viewMode} 
+							onClick={
+								() => setViewMode('week')
+							} 
+						/>
+					</WorkspaceHeader.Tabs>
+				</WorkspaceHeader.Content>
+				<WorkspaceHeader.Actions>
+					<div className="flex items-center gap-2 bg-border px-3 py-1.5 rounded-lg">
 						<Timer className="size-4 text-muted-foreground" />
 						<span className="text-sm text-muted-foreground">{viewMode === 'day' ? 'Today:' : 'This week:'}</span>
-						<span className="font-semibold text-primary">
+						<span className="font-semibold text-accent/40">
 							{formatDuration(viewMode === 'day' ? todayTotalMinutes : weekTotalMinutes)}
 						</span>
 					</div>
-					<Button onClick={() => handleAddEntry()}>
-						<Plus className="size-4 mr-2" />
-						Log Time
-					</Button>
-				</div>
-			</header>
+					<WorkspaceHeader.Button 
+						text="Add Entry" 
+						onClick={
+							() => handleAddEntry()
+						} 
+					/>
+				</WorkspaceHeader.Actions>
+			</WorkspaceHeader>
 
 			<div className="flex items-center justify-between px-6 py-3 border-b border-border bg-card/50">
 				<div className="flex items-center gap-2">
@@ -386,8 +378,8 @@ export function TimetrackBoard() {
 						<aside className="w-64 border-l border-border p-4 bg-card/30">
 							<h3 className="font-medium mb-4 text-sm text-muted-foreground uppercase tracking-wide">Quick Add</h3>
 							<div className="space-y-1 max-h-[calc(100vh-300px)] overflow-y-auto">
-								{timeSlots.map((time, index) => {
-									const nextTime = timeSlots[index + 1]
+								{dayTimeSlots.map((time, index) => {
+									const nextTime = dayTimeSlots[index + 1]
 									const hasEntry = todayEntries.some((e) => (e.startTime <= time && e.endTime > time) || e.startTime === time)
 									return (
 										<button

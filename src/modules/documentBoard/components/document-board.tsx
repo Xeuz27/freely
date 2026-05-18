@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { WorkspaceHeader } from '@/modules/core/components/workspace-Header'
 import { Bold, FileText, Italic, List, ListOrdered, Type, Underline } from 'lucide-react'
 import { useMemo, useRef, useState } from 'react'
 
@@ -62,9 +63,22 @@ export function DocumentBoard() {
 	}
 
 	return (
-		<section className="h-full min-h-0 rounded-md border bg-background">
-			<div className="grid h-full min-h-0 grid-cols-1 md:grid-cols-[280px_1fr]">
-				<aside className="border-b p-3 md:border-r md:border-b-0">
+		<section className="h-full flex flex-col flex-1 px-4">
+			<WorkspaceHeader>
+				<WorkspaceHeader.Content
+					title='Documents Board'
+					description='Add, create, edit your document templates'
+					Icon={FileText}
+				/>
+				{/* <WorkspaceHeader.Actions>
+					<WorkspaceHeader.Button
+						text='Add Template'
+						onClick={()=> console.log('asd')}
+					/>
+				</WorkspaceHeader.Actions> */}
+			</WorkspaceHeader>
+			<div className="flex h-full flex-1 min-h-0 ">
+				<aside className="border-b w-[280px] p-3 md:border-r md:border-b-0">
 					<div className="mb-3 flex items-center gap-2">
 						<FileText className="size-4 text-muted-foreground" />
 						<h2 className="text-sm font-semibold tracking-wide">Documents Board</h2>
@@ -87,7 +101,7 @@ export function DocumentBoard() {
 					</div>
 				</aside>
 
-				<div className="flex min-h-0 flex-col">
+				<div className="flex flex-1 flex-col">
 					<div className="flex flex-wrap items-center gap-2 border-b p-2">
 						<Button variant="outline" size="sm" onClick={() => applyFormat('bold')}>
 							<Bold />
