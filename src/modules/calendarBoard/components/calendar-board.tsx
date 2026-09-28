@@ -77,7 +77,7 @@ const Grid = () => {
 export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanCards }: CalendarBoardProps) {
 	const { view, setView, selectedTime, setEditingEvent, selectedDate, setDialogOpen, editingEvent, dialogOpen } = useCalendarContext()
 	useEventReminders()
-
+	console.log('CalendarBoard rendered')
 	return (
 		<div className="flex flex-1 flex-col h-screen px-4">
 			<WorkspaceHeader>

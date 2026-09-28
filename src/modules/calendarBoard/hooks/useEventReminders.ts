@@ -5,7 +5,7 @@ import { wToast } from '@yidev/wtoast'
 import '@yidev/wtoast/index.css'
 
 const REMINDER_WINDOW_MS = 30 * 60 * 1000
-const CHECK_INTERVAL_MS = 30 * 1000
+const CHECK_INTERVAL_MS = 15 * 1000
 const STORAGE_KEY = 'freely-notified-events'
 
 const {show} = wToast()
@@ -32,11 +32,13 @@ export const useEventReminders = () => {
 	const { events } = $Store
 	const notifiedIdsRef = useRef<Set<string>>(new Set())
 
+	console.log('useEventReminders rendered')
+	console.log('useEventReminders rendered')
 	if (!window.Notification) {
 			console.warn('This browser does not support desktop notification')
 			return
 		}
-		if (Notification.permission === 'default') {
+		if (Notification.permission !== 'granted') {
 			Notification.requestPermission().then((permission) => {
 				if (permission !== 'granted') {
 					console.warn('Notification permission denied')
@@ -67,7 +69,7 @@ export const useEventReminders = () => {
                 //     )
                     if (isPastDue && (diffMinutes > -60)) {
 						setTimeout(() => {
-							
+							console.log(`Event "${event.title}" is past due!, in settimeout notification`)
 							const notification = new Notification("Hello!", {
 								body: `Event "${event.title}" is past due!`,
 								// icon: "/path/to/icon.png"
@@ -118,8 +120,8 @@ export const useEventReminders = () => {
 		
 
 		checkReminders()
-		// const timer = window.setInterval(checkReminders, CHECK_INTERVAL_MS)
+		const timer = window.setInterval(checkReminders, CHECK_INTERVAL_MS)
 
-		// return () => window.clearInterval(timer)
+		return () => window.clearInterval(timer)
 	}, [events])
 }
