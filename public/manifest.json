@@ -1,0 +1,28 @@
+{
+	"name": "freely",
+	"short_name": "freely",
+	"description": "registra eventos y recordatorios de manera sencilla y rapida",
+	"categories": ["productivity", "utilities", "lifestyle"],
+	"lang": "es-ES",
+
+	"display": "standalone",
+	"display_override": ["standalone", "fullscreen"],
+	"orientation": "portrait",
+
+	"start_url": ".",
+
+	"theme_color": "#006045",
+	"background_color": "#050e05",
+
+	"prefer_related_application": "false",
+
+	"icons": [
+		{
+			"src": "favicon.svg",
+			"sizes": "36x36",
+			"type": "image/svg+xml",
+			"density": "0.75"
+		}
+	]
+	
+}
