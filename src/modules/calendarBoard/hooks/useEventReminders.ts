@@ -77,19 +77,19 @@ export const useEventReminders = () => {
 								body: `Event "${event.title}" is past due!`,
 								// icon: "/path/to/icon.png"
 								});
-								notification.onshow = () => {
-									setTimeout(() => {
-										notification.close();
-									}, 5000);
-								};
-								console.log(notification, "Notification object")
+								// notification.onshow = () => {
+								// 	setTimeout(() => {
+								// 		notification.close();
+								// 	}, 5000);
+								// };
+								// console.log(notification, "Notification object")
 						},5000)
                         show(`${event.title} is past due!`, {
                             icon: ' ',
                             close: 'both',
                             title: 'Event reminder (Overdue)',
                             type: 'error',
-                            duration: 60000,
+                            duration: 15000,
                             className: 'bg-card! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-accent-foreground/20!',
                         }
                     )
@@ -98,7 +98,7 @@ export const useEventReminders = () => {
 				show(`${event.title} starts at ${event.startTime}`, {
 					title: 'Event reminder',
 					type: 'default',
-					duration: 60000,
+					duration: 15000,
                     className: 'bg-card! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-accent-foreground/20!',
                 })
 
