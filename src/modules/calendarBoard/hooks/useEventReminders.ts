@@ -33,13 +33,14 @@ export const useEventReminders = () => {
 	const notifiedIdsRef = useRef<Set<string>>(new Set())
 
 	console.log('useEventReminders rendered')
-	console.log('useEventReminders rendered')
 	if (!window.Notification) {
 			console.warn('This browser does not support desktop notification')
 			return
 		}
 		if (Notification.permission !== 'granted') {
+			console.log('Requesting notification permission...')	
 			Notification.requestPermission().then((permission) => {
+				console.log(permission)	
 				if (permission !== 'granted') {
 					console.warn('Notification permission denied')
 				}
