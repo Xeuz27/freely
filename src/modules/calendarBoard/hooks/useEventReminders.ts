@@ -37,6 +37,7 @@ export const useEventReminders = () => {
 			console.warn('This browser does not support desktop notification')
 			return
 		}
+		console.log('Notification permission status:', Notification.permission)
 		if (Notification.permission !== 'granted') {
 			console.log('Requesting notification permission...')	
 			
