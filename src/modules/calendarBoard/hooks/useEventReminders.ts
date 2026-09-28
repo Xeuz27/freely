@@ -39,8 +39,9 @@ export const useEventReminders = () => {
 		}
 		if (Notification.permission !== 'granted') {
 			console.log('Requesting notification permission...')	
+			
 			Notification.requestPermission().then((permission) => {
-				console.log(permission)	
+				console.log(permission, "Notification permission status")	
 				if (permission !== 'granted') {
 					console.warn('Notification permission denied')
 				}
@@ -80,6 +81,7 @@ export const useEventReminders = () => {
 										notification.close();
 									}, 5000);
 								};
+								console.log(notification, "Notification object")
 						},5000)
                         show(`${event.title} is past due!`, {
                             icon: ' ',
