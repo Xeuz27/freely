@@ -33,6 +33,7 @@ interface SearchBarProps {
 	onSearch: Dispatch<SetStateAction<string>>
 }
 interface TabsProps {
+	className?: string
 	children: ReactNode
 }
 interface TabProps {
@@ -66,7 +67,7 @@ const Content = ({ title, description, Icon, children }: ContentProps) => {
 			</div>
 			<div>
 				<h1 className="text-lg font-semibold text-foreground">{title}</h1>
-				<p className="text-xs text-muted-foreground hidden md:block">{description}</p>
+				<p className="text-xs text-muted-foreground hidden sm:block">{description}</p>
 			</div>
 			{children && <div className="">{children}</div>}
 		</div>
@@ -89,8 +90,17 @@ const SearchBar = ({ placeholder, value, onSearch }: SearchBarProps) => {
 		</div>
 	)
 }
-const Tabs = ({ children }: TabsProps) => {
-	return <div className="flex justify-center items-center gap-1 rounded-lg p-1 bg-border">{children}</div>
+const Tabs = ({ className = '', children }: TabsProps) => {
+	return (
+		<div
+	 		className={cn(
+				'flex justify-center items-center gap-1 rounded-lg p-1 bg-border',
+				className
+			)}
+		>
+			{children}
+		</div>
+	)
 }
 const Tab = ({ text, isActive, className, onClick }: TabProps) => {
 	return (

@@ -1,13 +1,11 @@
-import usePersist from '@/modules/core/hooks/usePersist'
-import { state } from '@/store/store'
-import type { CalendarEvent, eventLink } from '@/types/calendar-types'
-import { useStore } from '@nanostores/react'
-import { useMemo, useState } from 'react'
-import { setState } from './../../../store/store'
+import type { CalendarEvent } from '@/types/calendar-types'
+import { format } from '@formkit/tempo'
+import { useEffect, useMemo, useState } from 'react'
+import { getMonthDays } from '../utils/calendarDates'
+import useCalendarEvents from './useCalendarEvents'
 
 const useCalendar = () => {
-	const $Store = useStore(state)
-	const { events, eventLinks } = $Store
+	const { getEventsForDate, getTodayEvents } = useCalendarEvents()
 
 	const [currentDate, setCurrentDate] = useState(new Date())
 	const today = new Date()
@@ -19,62 +17,26 @@ const useCalendar = () => {
 	const [editingEvent, setEditingEvent] = useState<CalendarEvent | undefined>(undefined)
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [view, setView] = useState<'month' | 'week' | 'day'>('month')
+	const [range, setRange] = useState([])
+	const days = useMemo(() => getMonthDays(year, month), [year, month])
 
-	usePersist('events', events, (events: CalendarEvent[]) => {
-		setState({
-			events: events.map((event) => ({
-				...event,
-				createdAt: new Date(event.createdAt),
-				date: new Date(event.date)
-			}))
+	let rangeEventsMap = new Map()
+
+	// let range = days.filter((day) => day !== null).map((day) => format(day, 'YYYY-MM-DD'))
+	useEffect(() => {
+		// console.log('r')
+		days.filter((day) => day !== null).map((day) => {
+			let dayFormat = format(day, 'YYYY-MM-DD')
+			//@ts-ignore
+			if (rangeEventsMap.has(dayFormat)) {
+				console.log('exists', dayFormat)
+			} else {
+				//@ts-ignore
+				rangeEventsMap.set(dayFormat, { key: dayFormat })
+			}
 		})
-	})
-	usePersist('eventLinks', eventLinks, (values: eventLink[]) => {
-		setState({ eventLinks: values })
-	})
-
-	const daysInMonth = new Date(year, month + 1, 0).getDate()
-	const firstDayOfMonth = new Date(year, month, 1).getDay()
-
-	const days = useMemo(() => {
-		const result: (Date | null)[] = []
-		for (let i = 0; i < firstDayOfMonth; i++) {
-			result.push(null)
-		}
-		for (let i = 1; i <= daysInMonth; i++) {
-			result.push(new Date(year, month, i))
-		}
-		return result
-	}, [year, month, daysInMonth, firstDayOfMonth])
-
-	const getWeekDays = useMemo(() => {
-		const startOfWeek = new Date(currentDate)
-		const day = startOfWeek.getDay()
-		startOfWeek.setDate(startOfWeek.getDate() - day)
-
-		const weekDays: Date[] = []
-		for (let i = 0; i < 7; i++) {
-			weekDays.push(new Date(startOfWeek))
-			startOfWeek.setDate(startOfWeek.getDate() + 1)
-		}
-		return weekDays
-	}, [currentDate])
-
-	const getEventsForDate = (date: Date) => {
-		return events.filter(
-			(event) =>
-				event.date.getFullYear() === date.getFullYear() &&
-				event.date.getMonth() === date.getMonth() &&
-				event.date.getDate() === date.getDate()
-		)
-	}
-	const getTodayEvents = useMemo(() => {
-		return getEventsForDate(today).sort((a, b) => {
-			if (!a.startTime) return 1
-			if (!b.startTime) return -1
-			return a.startTime.localeCompare(b.startTime)
-		})
-	}, [events, today])
+		// console.log(rangeEventsMap)
+	}, [days])
 
 	return {
 		currentDate,
@@ -89,7 +51,7 @@ const useCalendar = () => {
 
 		editingEvent,
 		setEditingEvent,
-		// events,
+
 		selectedDate,
 		setSelectedDate,
 		selectedTime,
@@ -99,8 +61,7 @@ const useCalendar = () => {
 		setView,
 
 		getEventsForDate,
-		getTodayEvents,
-		getWeekDays
+		getTodayEvents
 	}
 }
 

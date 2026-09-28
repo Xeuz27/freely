@@ -13,7 +13,7 @@ import { KanbanBoard } from '../modules/kanbanBoard/components/kanban-board.tsx'
 export type View = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
 
 export function Workspace() {
-	const [activeView, setActiveView] = useState<View>('crm')
+	const [activeView, setActiveView] = useState<View>('calendar')
 
 	return (
 		<SidebarProvider>

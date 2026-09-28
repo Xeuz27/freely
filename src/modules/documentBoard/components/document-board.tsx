@@ -70,12 +70,12 @@ export function DocumentBoard() {
 					description='Add, create, edit your document templates'
 					Icon={FileText}
 				/>
-				{/* <WorkspaceHeader.Actions>
+				<WorkspaceHeader.Actions>
 					<WorkspaceHeader.Button
 						text='Add Template'
 						onClick={()=> console.log('asd')}
 					/>
-				</WorkspaceHeader.Actions> */}
+				</WorkspaceHeader.Actions>
 			</WorkspaceHeader>
 			<div className="flex h-full flex-1 min-h-0 ">
 				<aside className="border-b w-[280px] p-3 md:border-r md:border-b-0">

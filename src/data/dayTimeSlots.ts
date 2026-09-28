@@ -1,4 +1,4 @@
-export const dayTimeSlots: string[] = [
+export const dayTimeSlots = [
 	'04:00',
 	'04:30',
 	'05:00',
@@ -38,4 +38,4 @@ export const dayTimeSlots: string[] = [
 	'22:00',
 	'22:30',
 	'23:00'
-]
+] as const

@@ -2,6 +2,8 @@ import { cn } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 import useCalendarContext from '../hooks/useCalendarContext.ts'
 // import { getEventsFromLeads } from '../utils/getEventsFromLeads'
+import { format } from '@formkit/tempo'
+import GenEvents from '../hooks/useGenEbents.ts'
 import { handleAddEvent } from '../utils/handlers.ts'
 import { isToday } from '../utils/isToday.ts'
 import EventCard from './event-card.tsx'
@@ -9,8 +11,14 @@ import EventCard from './event-card.tsx'
 const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 	const { getEventsForDate, setCurrentDate, setView, setEditingEvent, setDialogOpen, selectedTime, setSelectedDate, setSelectedTime } =
 		useCalendarContext()
+	// console.log(days.map((day) => day && format(day, 'YYYY-MM-DD')))
 	return (
 		<div className="">
+			<div className="w-full">
+				<button onClick={() => GenEvents()} className="p-4 border-2 border-red-400 px-8 text-white font-bold text-lg">
+					click here!
+				</button>
+			</div>
 			<div className="grid grid-cols-7 sticky top-0 bg-background gap-px mb-px">
 				{['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
 					<div key={day} className="py-2 text-center text-sm font-medium text-muted-foreground">
@@ -67,9 +75,7 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 									.slice(0, 3)}
 								{dayEvents.length > 3 && <p className="text-xs text-muted-foreground pt-1">+{dayEvents.length - 3} more</p>}
 							</div>
-							<div className="md:hidden">
-								{dayEvents.length >= 1 && <div className='bg-primary size-2 rounded-full'></div> }
-							</div>
+							<div className="md:hidden">{dayEvents.length >= 1 && <div className="bg-primary size-2 rounded-full"></div>}</div>
 						</div>
 					)
 				})}

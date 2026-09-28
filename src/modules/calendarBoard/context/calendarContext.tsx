@@ -27,7 +27,6 @@ type CalendarContext = {
 
 	getEventsForDate: (date: Date) => CalendarEvent[]
 	getTodayEvents: CalendarEvent[]
-	getWeekDays: Date[]
 }
 type props = {
 	children: ReactNode
