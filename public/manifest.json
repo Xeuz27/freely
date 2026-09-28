@@ -18,11 +18,24 @@
 
 	"icons": [
 		{
-			"src": "favicon.svg",
+			"src": "/android-icon-36x36.png",
 			"sizes": "36x36",
-			"type": "image/svg+xml",
+			"type": "image/png",
 			"density": "0.75"
 		}
+	],
+	"screenshots": [
+		{
+			"src": "/shop-wide.png",
+			"type": "image/png",
+			"sizes": "1065x665",
+			"form_factor": "wide"
+		},
+		{
+			"src": "/shop-narrow.png",
+			"type": "image/png",
+			"sizes": "360x779",
+			"form_factor": "narrow"
+		}
 	]
-	
 }
