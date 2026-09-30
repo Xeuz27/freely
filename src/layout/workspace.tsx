@@ -10,25 +10,29 @@ import { useState } from 'react'
 import { CrmBoard } from '../modules/crmBoard/components/crm-board.tsx'
 import { KanbanBoard } from '../modules/kanbanBoard/components/kanban-board.tsx'
 
-export type View = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
+export type Board = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
 
 export function Workspace() {
-	const [activeView, setActiveView] = useState<View>('calendar')
+	const [activeBoard, setActiveBoard] = useState<Board>('calendar')
+
+	const boards = {
+		kanban: KanbanBoard,
+		crm: CrmBoard,
+		calendar: CalendarBoard,
+		projects: ProjectBoard,
+		timetrack: TimetrackBoard,
+		document: DocumentBoard
+	}
+	const ActiveBoard = boards[activeBoard]
 
 	return (
 		<SidebarProvider>
 			<CalendarContextProvider>
 				<CrmContextProvider>
-					{/*@ts-ignore */}
-					<AppSidebar setactiveview={setActiveView} activeview={activeView} />
+					<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 					<SidebarInset>
 						<main className="flex-1 flex overflow-hidden">
-							{activeView === 'kanban' && <KanbanBoard />}
-							{activeView === 'crm' && <CrmBoard />}
-							{activeView === 'projects' && <ProjectBoard />}
-							{activeView === 'calendar' && <CalendarBoard />}
-							{activeView === 'timetrack' && <TimetrackBoard />}
-							{activeView === 'document' && <DocumentBoard />}
+							<ActiveBoard />
 						</main>
 					</SidebarInset>
 				</CrmContextProvider>

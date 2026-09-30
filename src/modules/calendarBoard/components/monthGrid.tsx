@@ -1,15 +1,15 @@
 import { cn } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 import useCalendarContext from '../hooks/useCalendarContext.ts'
-// import { getEventsFromLeads } from '../utils/getEventsFromLeads'
-import { format } from '@formkit/tempo'
+import useMonthEvents from '../hooks/useMonthEvents.ts'
 import GenEvents from '../hooks/useGenEbents.ts'
 import { handleAddEvent } from '../utils/handlers.ts'
 import { isToday } from '../utils/isToday.ts'
 import EventCard from './event-card.tsx'
 
-const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
-	const { getEventsForDate, setCurrentDate, setView, setEditingEvent, setDialogOpen, selectedTime, setSelectedDate, setSelectedTime } =
+const MonthGrid = () => {
+	const monthDays = useMonthEvents()
+	const { setCurrentDate, setView, setEditingEvent, setDialogOpen, selectedTime, setSelectedDate, setSelectedTime } =
 		useCalendarContext()
 	// console.log(days.map((day) => day && format(day, 'YYYY-MM-DD')))
 	return (
@@ -27,11 +27,10 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 				))}
 			</div>
 			<div className="grid grid-cols-7 gap-0.5 bg-sidebar/20">
-				{days.map((day, idx) => {
+				{monthDays.map(({ day, events: dayEvents }, idx) => {
 					if (!day) {
-						return <div key={`empty-${idx}`} className="md:min-h-[120px] bg-card/5" />
+						return <div key={`empty-${idx}`} className="md:min-h-30 bg-card/5" />
 					}
-					const dayEvents = getEventsForDate(day)
 					const isCurrentDay = isToday(day)
 					// const allEvents = [...dayEvents, getEventsFromLeads().filter((item) => format(item.date, 'D') === format(day, 'D'))].flat()
 
@@ -39,7 +38,7 @@ const MonthGrid = ({ days }: { days: (Date | null)[] }) => {
 						<div
 							key={day.toISOString()}
 							className={cn(
-								'md:min-h-[120px] bg-card/40 p-2 group/day transition-colors border border-transparent hover:border-accent/30 hover:bg-background/10',
+								'md:min-h-30 bg-card/40 p-2 group/day transition-colors border border-transparent hover:border-accent/30 hover:bg-background/10',
 								isCurrentDay && 'bg-primary/20'
 							)}
 						>

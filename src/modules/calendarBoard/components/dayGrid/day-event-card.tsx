@@ -5,7 +5,11 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { eventTypeConfig, type CalendarEvent } from "@/types/calendar-types";
+import {
+  eventTypeConfig,
+  type CalendarEvent,
+  type EventType
+} from "@/types/calendar-types";
 import {
   AlertCircle,
   Bell,
@@ -18,86 +22,119 @@ import {
   Trash2,
   Users
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import useCalendarContext from "../../hooks/useCalendarContext";
 import { handleDeleteEvent, handleEditEvent } from "../../utils/handlers";
 
-const DayEventCard = ({ event }: { event: CalendarEvent }) => {
+const eventIcons: Record<EventType, LucideIcon> = {
+  meeting: Users,
+  call: Phone,
+  task: CheckSquare,
+  reminder: Bell,
+  deadline: AlertCircle
+};
+
+type DayEventCardProps = {
+  event: CalendarEvent;
+  onClick?: () => void;
+  showActions?: boolean;
+  className?: string;
+};
+
+const DayEventCard = ({
+  event,
+  onClick,
+  showActions = onClick === undefined,
+  className
+}: DayEventCardProps) => {
   const { setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } =
     useCalendarContext();
-
-  return (
-    <div
-      className={cn(
-        "group flex justify-start items-center gap-2 p-1 px-2 md:gap-3 md:p-3 rounded-lg border text-sm cursor-pointer transition-all md:hover:scale-[1.01]",
-        eventTypeConfig[event.type].color
-      )}
-    >
-      <div
-        className={cn(
-          "flex items-center justify-center size-6 md:size-10 rounded-full shrink-0",
-          "bg-white/10"
-        )}
-      >
-        {event.type === "meeting" && <Users className="size-4 md:size-5" />}
-        {event.type === "call" && <Phone className="size-4 md:size-5" />}
-        {event.type === "task" && <CheckSquare className="size-4 md:size-5" />}
-        {event.type === "reminder" && <Bell className="size-4 md:size-5" />}
-        {event.type === "deadline" && (
-          <AlertCircle className="size-4 md:size-5" />
-        )}
+  const EventIcon = eventIcons[event.type];
+  const content = (
+    <>
+      <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/10">
+        <EventIcon className="size-4" />
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold truncate max-md:w-32">{event.title}</p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate wrap-break-word font-semibold">{event.title}</p>
         {event.startTime && (
-          <div className="flex items-center gap-1.5 mt-1 text-xs opacity-80">
-            <Clock className="size-3" />
-            <span>
+          <div className="mt-1 flex min-w-0 items-center gap-1.5 text-xs opacity-80">
+            <Clock className="size-3 shrink-0" />
+            <span className="truncate">
               {event.startTime}
               {event.endTime && ` - ${event.endTime}`}
             </span>
           </div>
         )}
         {event.description && (
-          <p className="text-xs max-md:w-32 opacity-70 mt-1 truncate">
+          <p className="mt-1 line-clamp-2 wrap-break-word text-xs opacity-70">
             {event.description}
           </p>
         )}
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <div className="flex items-center">
-            <button className="md:hidden">
-              <MoreVertical className="size-6" />
+    </>
+  );
+
+  return (
+    <div
+      className={cn(
+        "group flex min-w-0 items-center gap-2 rounded-lg border p-2 text-sm",
+        eventTypeConfig[event.type].color,
+        className
+      )}
+    >
+      {onClick ? (
+        <button
+          type="button"
+          className="flex min-w-0 flex-1 items-center gap-2 text-left"
+          onClick={onClick}
+        >
+          {content}
+        </button>
+      ) : (
+        <div className="flex min-w-0 flex-1 items-center gap-2">{content}</div>
+      )}
+      {showActions && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              aria-label="Event actions"
+              className="shrink-0 rounded p-1 hover:bg-white/10"
+              onClick={(clickEvent) => clickEvent.stopPropagation()}
+            >
+              {/* wrapear el contenido o romper las palabras de las cartas en today schedule cuando la barra de movil esta abierta en 768px
+              solucion cambiar las clases sgun open de use sidebar y cambiar el max-md a max-[769px] en la columna de schedule?°
+              */}
+              <MoreHorizontal className="hidden size-4 md:block" />
+              <MoreVertical className="size-5 md:hidden" />
             </button>
-            <button className="opacity-0 max-md:hidden group-hover:opacity-100 p-1 hover:bg-white/10 rounded transition-opacity">
-              <MoreHorizontal className="size-4" />
-            </button>
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={() =>
-              handleEditEvent(
-                event,
-                setEditingEvent,
-                setSelectedDate,
-                setSelectedTime,
-                setDialogOpen
-              )
-            }
-          >
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() =>
+                handleEditEvent(
+                  event,
+                  setEditingEvent,
+                  setSelectedDate,
+                  setSelectedTime,
+                  setDialogOpen
+                )
+              }
+            >
             <Edit2 className="size-4 mr-2" />
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleDeleteEvent(event)}
-            className="text-red-400"
-          >
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleDeleteEvent(event)}
+              className="text-red-400"
+            >
             <Trash2 className="size-4 mr-2" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </div>
   );
 };

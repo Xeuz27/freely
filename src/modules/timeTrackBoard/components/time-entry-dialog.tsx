@@ -90,7 +90,7 @@ export function TimeEntryDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px]">
+			<DialogContent className="sm:max-w-125">
 				<DialogHeader>
 					<DialogTitle>{editEntry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
 					<DialogDescription>{editEntry ? 'Update your time entry details.' : 'Record what you worked on.'}</DialogDescription>

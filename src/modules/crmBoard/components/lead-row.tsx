@@ -57,7 +57,7 @@ export function LeadRow({ lead }: LeadRowProps) {
 
 			<TableCell>
 				<Select value={lead.status} onValueChange={handleStatusChange}>
-					<SelectTrigger className={`w-[130px] border ${statusInfo.color}`}>
+					<SelectTrigger className={`w-32.5 border ${statusInfo.color}`}>
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
@@ -72,11 +72,11 @@ export function LeadRow({ lead }: LeadRowProps) {
 				</Select>
 			</TableCell>
 
-			<TableCell className="max-w-[80px]">
+			<TableCell className="max-w-20">
 				<p className="text-sm text-muted-foreground truncate">{lead.note || '—'}</p>
 			</TableCell>
 
-			<TableCell className="max-w-[80px]">
+			<TableCell className="max-w-20">
 				<p className="text-sm text-muted-foreground  truncate">{lead.info || '—'}</p>
 			</TableCell>
 

@@ -1,6 +1,5 @@
 import type { CalendarEvent } from '@/types/calendar-types'
-import { format } from '@formkit/tempo'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { getMonthDays } from '../utils/calendarDates'
 import useCalendarEvents from './useCalendarEvents'
 
@@ -17,26 +16,7 @@ const useCalendar = () => {
 	const [editingEvent, setEditingEvent] = useState<CalendarEvent | undefined>(undefined)
 	const [dialogOpen, setDialogOpen] = useState(false)
 	const [view, setView] = useState<'month' | 'week' | 'day'>('month')
-	const [range, setRange] = useState([])
 	const days = useMemo(() => getMonthDays(year, month), [year, month])
-
-	let rangeEventsMap = new Map()
-
-	// let range = days.filter((day) => day !== null).map((day) => format(day, 'YYYY-MM-DD'))
-	useEffect(() => {
-		// console.log('r')
-		days.filter((day) => day !== null).map((day) => {
-			let dayFormat = format(day, 'YYYY-MM-DD')
-			//@ts-ignore
-			if (rangeEventsMap.has(dayFormat)) {
-				console.log('exists', dayFormat)
-			} else {
-				//@ts-ignore
-				rangeEventsMap.set(dayFormat, { key: dayFormat })
-			}
-		})
-		// console.log(rangeEventsMap)
-	}, [days])
 
 	return {
 		currentDate,

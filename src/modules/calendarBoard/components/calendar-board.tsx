@@ -5,7 +5,7 @@ import { WorkspaceHeader } from '@/modules/core/components/workspace-Header'
 import { type EventType } from '@/types/calendar-types.ts'
 import { type Lead } from '@/types/crm-types'
 import { type KanbanCard } from '@/types/kanban-types'
-import { AlertCircle, Bell, CalendarDays, CheckSquare, ChevronLeft, ChevronRight, Phone, Users } from 'lucide-react'
+import { AlertCircle, Bell, CalendarDays, CheckSquare, ChevronLeft, ChevronRight, Phone, Users, type LucideIcon } from 'lucide-react'
 import { Activity } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext'
 import { useEventReminders } from '../hooks/useEventReminders'
@@ -16,12 +16,12 @@ import { EventDialog } from './event-dialog'
 import { MonthGrid } from './monthGrid'
 import { WeekGrid } from './weekGrid/weekGrid'
 
-export const eventTypeIcons: Record<EventType, React.ReactNode> = {
-	meeting: <Users className="size-3" />,
-	call: <Phone className="size-3" />,
-	task: <CheckSquare className="size-3" />,
-	reminder: <Bell className="size-3" />,
-	deadline: <AlertCircle className="size-3" />
+export const eventTypeIcons: Record<EventType, LucideIcon> = {
+	meeting: Users,
+	call: Phone,
+	task: CheckSquare,
+	reminder: Bell,
+	deadline: AlertCircle
 }
 
 interface CalendarBoardProps {
@@ -30,7 +30,7 @@ interface CalendarBoardProps {
 }
 
 const Grid = () => {
-	const { days, year, currentDate, setCurrentDate, month, view, setView } = useCalendarContext()
+	const { year, currentDate, setCurrentDate, month, view, setView } = useCalendarContext()
 
 	return (
 		<>
@@ -59,9 +59,9 @@ const Grid = () => {
 				</div>
 			</div>
 
-			<div className="flex-1 overflow-auto relative">
+			<div className="flex-1 overflow-y-hidden relative">
 				<Activity mode={view === 'month' ? 'visible' : 'hidden'}>
-					<MonthGrid days={days} />
+					<MonthGrid />
 				</Activity>
 				<Activity mode={view === 'week' ? 'visible' : 'hidden'}>
 					<WeekGrid />

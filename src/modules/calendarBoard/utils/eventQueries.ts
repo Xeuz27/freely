@@ -31,6 +31,12 @@ export const sortEventsByStartTime = (events: CalendarEvent[]) =>
 		return a.startTime.localeCompare(b.startTime)
 	})
 
+export const buildMonthEvents = (days: (Date | null)[], getEventsForDay: (day: Date) => CalendarEvent[]) =>
+	days.map((day) => ({
+		day,
+		events: day ? sortEventsByStartTime(getEventsForDay(day)) : []
+	}))
+
 export const mapDayEventsToTimeSlots = (events: CalendarEvent[]): Record<TimeSlot, CalendarEvent | null> =>
 	Object.fromEntries(dayTimeSlots.map((ts) => [ts, events.find((e) => e.startTime === ts) ?? null])) as Record<TimeSlot, CalendarEvent | null>
 
