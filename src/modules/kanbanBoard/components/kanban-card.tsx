@@ -1,23 +1,22 @@
-'use client'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { type KanbanCard as KanbanCardType, cardTypeColors } from '@/types/kanban-types'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { CheckSquare, Database, FileText, GripVertical, Lightbulb, Trash2 } from 'lucide-react'
+import { CheckSquare, Database, FileText, GripVertical, Lightbulb, Trash2, ContactIcon, type LucideIcon } from 'lucide-react'
 
 interface KanbanCardProps {
 	card: KanbanCardType
 	onDelete: (cardId: string) => void
 }
 
-const iconMap = {
+const iconMap: Record<KanbanCardType['type'], LucideIcon> = {
 	task: CheckSquare,
 	note: FileText,
 	idea: Lightbulb,
-	data: Database
+	data: Database,
+	lead: ContactIcon
 }
 
 export function KanbanCard({ card, onDelete }: KanbanCardProps) {

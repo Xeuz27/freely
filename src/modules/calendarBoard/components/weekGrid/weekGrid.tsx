@@ -16,20 +16,20 @@ const WeekGrid = () => {
 			<div className="grid grid-cols-8 gap-0.5 mb-px">
 				<div className="py-2 text-center text-sm font-medium text-muted-foreground" />
 				{weekDays.map((day) => (
-					<DayLabel day={day} />
+					<DayLabel key={day.toISOString()} day={day} />
 				))}
 			</div>
 			<div className="grid grid-cols-8 gap-0.5 bg-background/10 rounded-lg overflow-hidden max-h-[calc(100vh-220px)] overflow-y-auto">
 				{Object.entries(eventsHourDay).map(([time, events]) => {
 					return (
 						<Fragment key={`row-${time}`}>
-							<div className="py-4 px-2 text-xs text-muted-foreground text-right bg-card/60">{time}</div>
+							<div key={`time-${time}`} className="py-4 px-2 text-xs text-muted-foreground text-right bg-card/60">{time}</div>
 							{events.map(({ day, event }) => {
 								return (
 									<div
 										key={`${day}-${time}`}
 										className={cn(
-											'min-h-[60px] bg-card/40 p-1 gap-2 flex flex-col group/time cursor-pointer  border border-transparent',
+											'min-h-15 bg-card/40 p-1 gap-2 flex flex-col group/time cursor-pointer border border-transparent',
 											day !== null ? '' : 'hover:bg-background/40 hover:border-accent/20',
 											isToday(new Date(addHour(day, 4))) && 'bg-primary/5'
 										)}

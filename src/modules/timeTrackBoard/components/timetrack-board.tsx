@@ -1,5 +1,3 @@
-'use client'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -436,7 +434,7 @@ export function TimetrackBoard() {
 											</div>
 											{dayTotal > 0 && <div className="text-xs text-muted-foreground mt-1">{formatDuration(dayTotal)}</div>}
 										</div>
-										<div className="p-2 space-y-1 min-h-[150px] max-h-[300px] overflow-y-auto bg-background">
+										<div className="p-2 space-y-1 min-h-37.5 max-h-75 overflow-y-auto bg-background">
 											{dayEntries.map((entry) => {
 												const project = getProjectById(entry.projectId)
 												return (

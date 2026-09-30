@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { WorkspaceHeader } from '@/modules/core/components/workspace-Header'
@@ -53,6 +51,7 @@ export function DocumentBoard() {
 
 	const applyFormat = (command: string, value?: string) => {
 		editorRef.current?.focus()
+		//@ts-ignore
 		document.execCommand(command, false, value)
 	}
 
@@ -78,7 +77,7 @@ export function DocumentBoard() {
 				</WorkspaceHeader.Actions>
 			</WorkspaceHeader>
 			<div className="flex h-full flex-1 min-h-0 ">
-				<aside className="border-b w-[280px] p-3 md:border-r md:border-b-0">
+				<aside className="border-b w-70 p-3 md:border-r md:border-b-0">
 					<div className="mb-3 flex items-center gap-2">
 						<FileText className="size-4 text-muted-foreground" />
 						<h2 className="text-sm font-semibold tracking-wide">Documents Board</h2>
@@ -131,7 +130,7 @@ export function DocumentBoard() {
 							suppressContentEditableWarning
 							onInput={handleEditorInput}
 							dangerouslySetInnerHTML={{ __html: selectedDocument.content }}
-							className="h-full min-h-[360px] overflow-auto rounded-md border bg-card p-4 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+							className="h-full min-h-90 overflow-auto rounded-md border bg-card p-4 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-ring"
 						/>
 					</div>
 				</div>

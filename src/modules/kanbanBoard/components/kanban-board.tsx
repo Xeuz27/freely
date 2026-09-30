@@ -1,7 +1,3 @@
-'use client'
-
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils.ts'
 import type { CardType, KanbanCard as KanbanCardType, KanbanColumn as KanbanColumnType } from '@/types/kanban-types'
 import {
@@ -16,7 +12,7 @@ import {
 	useSensors
 } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
-import { LayoutGrid, Plus, Search } from 'lucide-react'
+import { LayoutGrid, Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { AddCardDialog } from './add-card-dialog.tsx'
 import { AddColumnDialog } from './add-column-dialog.tsx'
@@ -283,7 +279,7 @@ export function KanbanBoard() {
 
 						<button
 							onClick={() => setAddColumnDialogOpen(true)}
-							className="flex items-center justify-center min-h-[200px] shrink-0 rounded-xl border-2 border-dashed border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+							className="flex items-center justify-center min-h-50 shrink-0 rounded-xl border-2 border-dashed border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
 						>
 							<div className="flex flex-col items-center gap-2">
 								<Plus className="size-6" />

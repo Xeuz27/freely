@@ -1,5 +1,3 @@
-'use client'
-
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -17,7 +15,7 @@ interface ProjectRowProps {
 	onDelete: (id: string) => void
 }
 
-export function ProjectRow({ project, lead, onEdit, onDelete }: ProjectRowProps) {
+export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 	const statusConfig = projectStatusConfig[project.status]
 	const priorityConfig = projectPriorityConfig[project.priority]
 
@@ -40,7 +38,7 @@ export function ProjectRow({ project, lead, onEdit, onDelete }: ProjectRowProps)
 			<TableCell>
 				<div className="flex flex-col gap-1">
 					<span className="font-medium text-foreground">{project.name}</span>
-					{project.description && <span className="text-xs text-muted-foreground line-clamp-1 max-w-[200px]">{project.description}</span>}
+					{project.description && <span className="text-xs text-muted-foreground line-clamp-1 max-w-50">{project.description}</span>}
 				</div>
 			</TableCell>
 

@@ -16,8 +16,8 @@ const data = {
 		{ id: 'calendar', title: 'Calendar', Icon: CalendarDays },
 		{ id: 'timetrack', title: 'Time Tracker', Icon: Clock },
 		{ id: 'document', title: 'Documents', Icon: FileText }
-	]
-}
+	] as const
+} 
 // {
 // 	title: 'Build Your Application',
 // 	url: '#',
@@ -142,14 +142,19 @@ const data = {
 // 	]
 // }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type boardId = (typeof data.navMain)[number]['id']
+type appSidebarProps = React.ComponentProps<typeof Sidebar> & {
+	activeBoard: boardId
+	setActiveBoard: (board: boardId) => void
+}
+
+export function AppSidebar({ activeBoard, setActiveBoard,...props }: appSidebarProps) {
 	const { open, isMobile, openMobile } = useSidebar()
     const isOpen = isMobile ? openMobile : open
-	/* @ts-ignore */
-	const { activeview, setactiveview } = props
+	
 	return (
 		<Sidebar {...props}>
-			<ul className={cn(' flex flex-col flex-1', open ? 'divide-y-1 divide-accent/40' : '')}>
+			<ul className={cn(' flex flex-col flex-1', open ? 'divide-y divide-accent/40' : '')}>
 				<SidebarHeader className="px-2 pb-3">
 					<VersionSwitcher versions={data.versions} defaultVersion={data.versions[0]} />
 					<SearchForm />
@@ -159,10 +164,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					{data.navMain.map(({ title, Icon, id }) => (
 						<SidebarMenuItem key={title} className="list-none">
 							{/* @ts-ignore */}
-							<SidebarMenuButton onClick={() => setactiveview(id)}>
-								<Icon className={cn('size-5 shrink-0', activeview === id ? 'text-sidebar-primary' : 'text-muted-foreground')} />
+							<SidebarMenuButton onClick={() => setActiveBoard(id)}>
+								<Icon className={cn('size-5 shrink-0', activeBoard === id ? 'text-sidebar-primary' : 'text-muted-foreground')} />
 								{isOpen && (
-									<span className={cn('text-sm tracking-wide', activeview === id ? '' : 'text-muted-foreground')}>{title}</span>
+									<span className={cn('text-sm tracking-wide', activeBoard === id ? '' : 'text-muted-foreground')}>{title}</span>
 								)}
 							</SidebarMenuButton>
 						</SidebarMenuItem>

@@ -11,7 +11,7 @@ import { sampleLeads } from '@/data/sampleLeads'
 import { cn } from '@/lib/utils'
 import { sampleProjects } from '@/modules/timeTrackBoard/components/timetrack-board'
 import { type CardType, cardTypeColors } from '@/types/kanban-types'
-import { CheckSquare, Database, FileText, FolderKanban, Lightbulb, UserRoundPlus } from 'lucide-react'
+import { CheckSquare, Database, FileText, FolderKanban, Lightbulb, UserRoundPlus, type LucideIcon } from 'lucide-react'
 
 interface AddCardDialogProps {
 	open: boolean
@@ -19,7 +19,7 @@ interface AddCardDialogProps {
 	onAddCard: (card: { title: string; description: string; type: CardType; tags: string[] }) => void
 }
 
-const typeOptions: { value: CardType; label: string; icon: typeof CheckSquare }[] = [
+const typeOptions: { value: CardType; label: string; icon: LucideIcon }[] = [
 	{ value: 'task', label: 'Task', icon: CheckSquare },
 	{ value: 'note', label: 'Note', icon: FileText },
 	{ value: 'idea', label: 'Idea', icon: Lightbulb },
@@ -34,7 +34,7 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
 	const [tagsInput, setTagsInput] = useState('')
 	const [linkedProjectId, setLinkedProjectId] = useState('')
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		if (!title.trim()) return
 

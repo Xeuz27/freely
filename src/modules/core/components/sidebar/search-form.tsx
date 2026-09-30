@@ -1,5 +1,3 @@
-'use client'
-
 import { Label } from '@/components/ui/label'
 import { SidebarGroup, SidebarGroupContent, SidebarInput, useSidebar } from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'

@@ -1,5 +1,3 @@
-'use client'
-
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -68,7 +66,7 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 		}
 	}, [editProject, open])
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		if (!name.trim() || !startDate || !deliveryDate) return
 
@@ -105,7 +103,7 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 					</SheetDescription>
 				</SheetHeader>
 
-				<form onSubmit={handleSubmit} className="flex flex-col gap-6 py-6 px-4">
+				<form id="project-form" onSubmit={handleSubmit} className="flex flex-col gap-6 py-6 px-4">
 					<div className="space-y-2">
 						<Label htmlFor="name">Project Name</Label>
 						<Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter project name" required />
@@ -230,7 +228,6 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 						</div>
 					)}
 				</form>
-
 				<SheetFooter className="border-t border-border">
 					<div className="flex items-center justify-between w-full">
 						{editProject && onDelete ? (
@@ -261,7 +258,9 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 							<Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
 								Cancel
 							</Button>
-							<Button onClick={handleSubmit}>{editProject ? 'Save Changes' : 'Create Project'}</Button>
+							<Button form="project-form" type="submit">
+								{editProject ? 'Save Changes' : 'Create Project'}
+							</Button>
 						</div>
 					</div>
 				</SheetFooter>

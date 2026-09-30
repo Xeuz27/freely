@@ -9,7 +9,7 @@ import { handleSaveEvent, handleSaveEventLink } from '@/modules/calendarBoard/ut
 import { updateForm, useForm } from '@/modules/core/hooks/useForm'
 import { state } from '@/store/store'
 import { timeSlots, type eventLink, type formify } from '@/types/calendar-types'
-import { statusConfig, type ContactStatus, type Lead } from '@/types/crm-types'
+import { statusConfig, type Lead } from '@/types/crm-types'
 import { addHour, format } from '@formkit/tempo'
 import { useStore } from '@nanostores/react'
 import { useEffect } from 'react'
@@ -30,13 +30,13 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 	const initialFormState: formify<Lead> = {
 		id: '',
 		name: '',
-		email: '',
-		phone: '',
+		email: '', //TYPE of email shloud end with @domain.com
+		phone: '', //TYPE of phone should be in format +1 (555) 000-0000 or any other valid phone number format
 		company: '',
 		status: 'new',
 		note: '',
 		info: '',
-		createdAt: '',
+		createdAt: '', //type of createdAt should be a valid date string in format YYYY-MM-DDTHH:mm:ssZ
 		updatedAt: ''
 	}
 	const initialActionState = {
@@ -117,7 +117,7 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px]">
+			<DialogContent className="sm:max-w-125">
 				<DialogHeader>
 					<DialogTitle>{editLead ? 'Edit Lead' : 'Add New Lead'}</DialogTitle>
 				</DialogHeader>

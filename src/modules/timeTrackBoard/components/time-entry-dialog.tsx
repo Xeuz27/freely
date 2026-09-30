@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -66,7 +64,7 @@ export function TimeEntryDialog({
 		}
 	}, [editEntry, initialDate, initialStartTime, initialEndTime, open])
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		if (!title.trim() || !startTime || !endTime) return
 

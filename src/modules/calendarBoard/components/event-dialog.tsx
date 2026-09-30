@@ -30,7 +30,10 @@ interface EventDialogProps {
 	kanbanCards?: KanbanCard[]
 }
 
-export function EventDialog({ onOpenChange, initialDate, initialTime, leads = [], kanbanCards = [] }: EventDialogProps) {
+export function EventDialog({ onOpenChange, initialDate, initialTime,
+	// todo: add leads and kanbanCards to the form state if needed
+	//  leads = [], kanbanCards = []
+	}: EventDialogProps) {
 	const initialForm : formify<CalendarEvent>= {
 		id:'',
 		title: '',
@@ -42,7 +45,7 @@ export function EventDialog({ onOpenChange, initialDate, initialTime, leads = []
 		endTime: '',
 		type: 'meeting',
 	}
-	const {formState, setFormState, onInputChange, onResetForm }= useForm(initialForm)
+	const {formState, setFormState, onInputChange }= useForm(initialForm)
 	const { editingEvent, dialogOpen } = useCalendarContext()
 	
 	useEffect(() => {
@@ -79,7 +82,7 @@ export function EventDialog({ onOpenChange, initialDate, initialTime, leads = []
 
 	return (
 		<Dialog open={dialogOpen} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-[500px]">
+			<DialogContent className="sm:max-w-125">
 				<DialogHeader>
 					<DialogTitle>{editingEvent ? 'Edit Event' : 'New Event'}</DialogTitle>
 					<DialogDescription>{editingEvent ? 'Update the event details below.' : 'Add a new event to your calendar.'}</DialogDescription>

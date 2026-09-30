@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -15,7 +13,7 @@ interface AddColumnDialogProps {
 export function AddColumnDialog({ open, onOpenChange, onAddColumn }: AddColumnDialogProps) {
 	const [title, setTitle] = useState('')
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		if (!title.trim()) return
 
