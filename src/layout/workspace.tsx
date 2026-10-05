@@ -14,7 +14,6 @@ export type Board = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | '
 
 export function Workspace() {
 	const [activeBoard, setActiveBoard] = useState<Board>('calendar')
-	const [defferredPrompt, setDefferredPrompt] = useState<any>(null);
 	const boards = {
 		kanban: KanbanBoard,
 		crm: CrmBoard,
@@ -26,13 +25,13 @@ export function Workspace() {
 	const ActiveBoard = boards[activeBoard]
 
 	useEffect(() => {
-
     	window.addEventListener("beforeinstallprompt", (event) => {
 	  	// @ts-ignore
-		window.deferredPrompt = event;
-
+		  window.deferredPrompt = event;
+		  
     	});
-console.log("window.deferredPrompt", window);
+		// @ts-ignore
+		console.log("window.deferredPrompt", window.deferredPrompt);
   	}, []);
 
 	async function downloadApp() {
