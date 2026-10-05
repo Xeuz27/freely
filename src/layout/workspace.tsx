@@ -41,6 +41,7 @@ export function Workspace() {
   }, []);
   useEffect(() => {
 	window.addEventListener("appinstalled", (event) => {
+		console.log("appinstalled");
 		setInstalled(true);
 	})
   }, [])
@@ -71,6 +72,11 @@ export function Workspace() {
 				<CrmContextProvider>
 					<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 					<SidebarInset>
+						<div className="flex divide-x divide-accent items-center justify-center gap-4 border border-border rounded-md p-4">
+								<button className='dialog border-accent px-4 py-2 border rounded-sm ' onClick={() => setInstalled(true)}>dialog</button>
+
+								<button className='install border-accent px-4 py-2 border rounded-sm' onClick={downloadApp}>install</button>
+							</div>
 						<main className="flex-1 flex overflow-hidden">
 							<Dialog open={installed} onOpenChange={() => setInstalled(false)}>
 								<DialogContent>
@@ -82,7 +88,7 @@ export function Workspace() {
 									</DialogHeader>
 								</DialogContent>
 							</Dialog>
-							<button className='install' onClick={downloadApp}>install</button>
+							
 							<ActiveBoard />
 						</main>
 					</SidebarInset>
