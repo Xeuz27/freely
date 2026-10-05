@@ -14,7 +14,7 @@ export type Board = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | '
 
 export function Workspace() {
 	const [activeBoard, setActiveBoard] = useState<Board>('calendar')
-
+	const [defferredPrompt, setDefferredPrompt] = useState<any>(null);
 	const boards = {
 		kanban: KanbanBoard,
 		crm: CrmBoard,
@@ -26,18 +26,21 @@ export function Workspace() {
 	const ActiveBoard = boards[activeBoard]
 
 	useEffect(() => {
+
     	window.addEventListener("beforeinstallprompt", (event) => {
-      	// Prevent the mini-infobar from appearing on mobile.
-      
-      	console.log("👍", "beforeinstallprompt", event);
+		// Prevent the mini-infobar from appearing on mobile.
+			let defferredPrompt = event;
+      	console.log(defferredPrompt);
       	// Stash the event so it can be triggered later.
 	  	// @ts-ignore
-
-	  	event.prompt();
+		setDefferredPrompt(defferredPrompt);
       	// Remove the 'hidden' class from the install button container.
-    	//   setIsReadyForInstall(true);
+    	// setIsReadyForInstall(true);
     	});
-  	}, []);
+		if(defferredPrompt) {
+			defferredPrompt.prompt();
+		}
+  	}, [defferredPrompt, setDefferredPrompt]);
 
 	return (
 		<SidebarProvider>
@@ -46,6 +49,7 @@ export function Workspace() {
 					<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 					<SidebarInset>
 						<main className="flex-1 flex overflow-hidden">
+							<button className='install' onClick={() => defferredPrompt.prompt()}>install</button>
 							<ActiveBoard />
 						</main>
 					</SidebarInset>
