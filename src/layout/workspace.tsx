@@ -32,7 +32,8 @@ export function Workspace() {
       	console.log("👍", "beforeinstallprompt", event);
       	// Stash the event so it can be triggered later.
 	  	// @ts-ignore
-      	window.deferredPrompt = event;
+
+	  	event.prompt();
       	// Remove the 'hidden' class from the install button container.
     	//   setIsReadyForInstall(true);
     	});
