@@ -32,7 +32,7 @@ export function Workspace() {
 		window.deferredPrompt = event;
 
     	});
-
+console.log("window.deferredPrompt", window);
   	}, []);
 
 	async function downloadApp() {
