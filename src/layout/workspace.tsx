@@ -62,7 +62,7 @@ export function Workspace() {
 					<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 					<SidebarInset>
 						<main className="flex-1 flex overflow-hidden">
-							<button className='install' onClick={() => downloadApp()}>install</button>
+							<button className='install' onClick={downloadApp}>install</button>
 							<ActiveBoard />
 						</main>
 					</SidebarInset>
