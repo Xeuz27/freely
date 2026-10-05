@@ -9,11 +9,13 @@ import { TimetrackBoard } from '@/modules/timeTrackBoard/components/timetrack-bo
 import { useEffect, useState } from 'react'
 import { CrmBoard } from '../modules/crmBoard/components/crm-board.tsx'
 import { KanbanBoard } from '../modules/kanbanBoard/components/kanban-board.tsx'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
 
 export type Board = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
 
 export function Workspace() {
 	const [activeBoard, setActiveBoard] = useState<Board>('calendar')
+	const [installed, setInstalled] = useState(false)
 	const boards = {
 		kanban: KanbanBoard,
 		crm: CrmBoard,
@@ -39,7 +41,7 @@ export function Workspace() {
   }, []);
   useEffect(() => {
 	window.addEventListener("appinstalled", (event) => {
-		console.log("👍", "appinstalled", event);
+		setInstalled(true);
 	})
   }, [])
   async function downloadApp() {
@@ -70,6 +72,16 @@ export function Workspace() {
 					<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 					<SidebarInset>
 						<main className="flex-1 flex overflow-hidden">
+							<Dialog open={installed} onOpenChange={() => setInstalled(false)}>
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle>App installed</DialogTitle>
+										<DialogDescription>
+											The app has been installed successfully.
+										</DialogDescription>
+									</DialogHeader>
+								</DialogContent>
+							</Dialog>
 							<button className='install' onClick={downloadApp}>install</button>
 							<ActiveBoard />
 						</main>
