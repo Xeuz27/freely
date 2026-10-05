@@ -28,14 +28,13 @@ export function Workspace() {
 	useEffect(() => {
 
     	window.addEventListener("beforeinstallprompt", (event) => {
-		// Prevent the mini-infobar from appearing on mobile.
-      	// Stash the event so it can be triggered later.
 	  	// @ts-ignore
 		window.deferredPrompt = event;
-      	// Remove the 'hidden' class from the install button container.
-    	// setIsReadyForInstall(true);
+
     	});
-  	}, [defferredPrompt, setDefferredPrompt]);
+
+  	}, []);
+
 	async function downloadApp() {
     console.log("👍", "butInstall-clicked");
 	  	// @ts-ignore
@@ -45,6 +44,7 @@ export function Workspace() {
       console.log("oops, no prompt event guardado en window");
       return;
     }
+	console.log("promptEvent", promptEvent);
     // Show the install prompt.
     promptEvent.prompt();
     // Log the result
