@@ -6,7 +6,7 @@ import CrmContextProvider from '@/modules/crmBoard/context/crmContext.tsx'
 import { DocumentBoard } from '@/modules/documentBoard/components/document-board.tsx'
 import { ProjectBoard } from '@/modules/projectBoard/components/project-board.tsx'
 import { TimetrackBoard } from '@/modules/timeTrackBoard/components/timetrack-board.tsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CrmBoard } from '../modules/crmBoard/components/crm-board.tsx'
 import { KanbanBoard } from '../modules/kanbanBoard/components/kanban-board.tsx'
 
@@ -24,6 +24,19 @@ export function Workspace() {
 		document: DocumentBoard
 	}
 	const ActiveBoard = boards[activeBoard]
+
+	useEffect(() => {
+    	window.addEventListener("beforeinstallprompt", (event) => {
+      	// Prevent the mini-infobar from appearing on mobile.
+      
+      	console.log("👍", "beforeinstallprompt", event);
+      	// Stash the event so it can be triggered later.
+	  	// @ts-ignore
+      	window.deferredPrompt = event;
+      	// Remove the 'hidden' class from the install button container.
+    	//   setIsReadyForInstall(true);
+    	});
+  	}, []);
 
 	return (
 		<SidebarProvider>
