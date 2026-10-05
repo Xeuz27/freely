@@ -35,25 +35,22 @@ export function Workspace() {
     });
   }, []);
   async function downloadApp() {
-	// @ts-ignore	
-	const promptEvent = window.deferredPrompt;
-    console.log("button-Install clicked");
-	// @ts-ignore	
-	console.log("window.deferredPrompt", window.deferredPrompt);
+    console.log("button-install clicked");
+	//	@ts-ignore
+    const promptEvent = window.deferredPrompt;
     if (!promptEvent) {
       // The deferred prompt isn't available.
       console.log("oops, no prompt event guardado en window");
       return;
     }
     // Show the install prompt.
-	console.log("promptEvent", promptEvent);
     promptEvent.prompt();
     // Log the result
     const result = await promptEvent.userChoice;
-    console.log("userChoice", result);
+    console.log("👍", "userChoice", result);
     // Reset the deferred prompt variable, since
     // prompt() can only be called once.
-	// @ts-ignore
+	//	@ts-ignore
     window.deferredPrompt = null;
     // Hide the install button.
   }
