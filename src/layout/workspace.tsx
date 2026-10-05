@@ -35,11 +35,11 @@ export function Workspace() {
     });
   }, []);
   async function downloadApp() {
+	// @ts-ignore	
+	const promptEvent = window.deferredPrompt;
     console.log("button-Install clicked");
 	// @ts-ignore	
 	console.log("window.deferredPrompt", window.deferredPrompt);
-	// @ts-ignore	
-    const promptEvent = window.deferredPrompt;
     if (!promptEvent) {
       // The deferred prompt isn't available.
       console.log("oops, no prompt event guardado en window");
