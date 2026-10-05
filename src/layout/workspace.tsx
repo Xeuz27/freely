@@ -29,18 +29,32 @@ export function Workspace() {
 
     	window.addEventListener("beforeinstallprompt", (event) => {
 		// Prevent the mini-infobar from appearing on mobile.
-			let defferredPrompt = event;
-      	console.log(defferredPrompt);
       	// Stash the event so it can be triggered later.
 	  	// @ts-ignore
-		setDefferredPrompt(defferredPrompt);
+		window.deferredPrompt = event;
       	// Remove the 'hidden' class from the install button container.
     	// setIsReadyForInstall(true);
     	});
-		if(defferredPrompt) {
-			defferredPrompt.prompt();
-		}
   	}, [defferredPrompt, setDefferredPrompt]);
+	async function downloadApp() {
+    console.log("👍", "butInstall-clicked");
+	  	// @ts-ignore
+    const promptEvent = window.deferredPrompt;
+    if (!promptEvent) {
+      // The deferred prompt isn't available.
+      console.log("oops, no prompt event guardado en window");
+      return;
+    }
+    // Show the install prompt.
+    promptEvent.prompt();
+    // Log the result
+    const result = await promptEvent.userChoice;
+    console.log("👍", "userChoice", result);
+    // Reset the deferred prompt variable, since
+    // prompt() can only be called once.
+	//@ts-ignore
+    window.deferredPrompt = null;
+  }
 
 	return (
 		<SidebarProvider>
@@ -49,7 +63,7 @@ export function Workspace() {
 					<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 					<SidebarInset>
 						<main className="flex-1 flex overflow-hidden">
-							<button className='install' onClick={() => defferredPrompt.prompt()}>install</button>
+							<button className='install' onClick={() => downloadApp()}>install</button>
 							<ActiveBoard />
 						</main>
 					</SidebarInset>
