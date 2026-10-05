@@ -37,6 +37,11 @@ export function Workspace() {
       // Remove the 'hidden' class from the install button container.
     });
   }, []);
+  useEffect(() => {
+	window.addEventListener("appinstalled", (event) => {
+		console.log("👍", "appinstalled", event);
+	})
+  }, [])
   async function downloadApp() {
     console.log("button-install clicked");
 	//	@ts-ignore
