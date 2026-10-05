@@ -27,10 +27,13 @@ export function Workspace() {
 	 useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) => {
       // Prevent the mini-infobar from appearing on mobile.
+	  console.log(event)
       event.preventDefault();
       // Stash the event so it can be triggered later.
 	  // @ts-ignore
       window.deferredPrompt = event;
+	  // @ts-ignore
+	  console.log(window.deferredPrompt)
       // Remove the 'hidden' class from the install button container.
     });
   }, []);
