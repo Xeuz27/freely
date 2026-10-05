@@ -92,7 +92,7 @@ const AllEventsColumn = () => {
                       eventTypeConfig[type].color
                     )}
                   >
-                    <Icon className="size-4 lg:size-5" />
+                    {Icon && <Icon className="size-4 lg:size-5" />}
                     <span className="capitalize w-fit">{type}</span>
                     <span className="ml-auto font-medium">{count}</span>
                   </div>

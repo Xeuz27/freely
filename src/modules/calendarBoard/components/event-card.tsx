@@ -8,6 +8,7 @@ import { eventTypeIcons } from './calendar-board'
 
 const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean }) => {
 	const { setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
+	const EventIcon = eventTypeIcons[event.type]
 	return (
 		<div
 			key={event.id}
@@ -16,7 +17,9 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 				event.type ? eventTypeConfig[event.type].color : ''
 			)}
 		>
-			<span className="mt-0.5 shrink-0">{eventTypeIcons[event.type]}</span>
+			<span className="mt-0.5 shrink-0">
+				<EventIcon className="size-3" />
+				</span>
 			<div className="flex-1 min-w-0">
 				<p className="font-medium truncate">{event.title}</p>
 				{!compact && event.startTime && (

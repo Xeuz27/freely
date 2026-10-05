@@ -11,7 +11,6 @@ const MonthGrid = () => {
 	const monthDays = useMonthEvents()
 	const { setCurrentDate, setView, setEditingEvent, setDialogOpen, selectedTime, setSelectedDate, setSelectedTime } =
 		useCalendarContext()
-	// console.log(days.map((day) => day && format(day, 'YYYY-MM-DD')))
 	return (
 		<div className="">
 			<div className="w-full">
@@ -32,7 +31,6 @@ const MonthGrid = () => {
 						return <div key={`empty-${idx}`} className="md:min-h-30 bg-card/5" />
 					}
 					const isCurrentDay = isToday(day)
-					// const allEvents = [...dayEvents, getEventsFromLeads().filter((item) => format(item.date, 'D') === format(day, 'D'))].flat()
 
 					return (
 						<div
