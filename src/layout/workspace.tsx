@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { CrmBoard } from '../modules/crmBoard/components/crm-board.tsx'
 import { KanbanBoard } from '../modules/kanbanBoard/components/kanban-board.tsx'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog.tsx'
-
+import { MonitorDown } from 'lucide-react'
 export type Board = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
 
 export function Workspace() {
@@ -72,13 +72,19 @@ export function Workspace() {
 				<CrmContextProvider>
 					<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 					<SidebarInset>
-						<div className="flex divide-x divide-accent items-center justify-center gap-4 border border-border rounded-md p-4">
+						{/* <div className="flex divide-x divide-accent items-center justify-center gap-4 border border-border rounded-md p-4">
 								<button className='dialog border-accent px-4 py-2 border rounded-sm ' onClick={() => setInstalled(true)}>dialog</button>
 
-								<button className='install border-accent px-4 py-2 border rounded-sm' onClick={downloadApp}>install</button>
-							</div>
+								<button className='install bg-primary flex items-center px-4 gap-2 py-2 border rounded-sm' onClick={downloadApp}>
+									<span className="sm:inline tracking-wide">Install</span>
+									<span>
+										<MonitorDown className="size-5" />
+									</span>
+									
+									</button>
+							</div> */}
 						<main className="flex-1 flex overflow-hidden">
-							<Dialog open={installed} onOpenChange={() => setInstalled(false)}>
+							{/* <Dialog open={installed} onOpenChange={() => setInstalled(false)}>
 								<DialogContent>
 									<DialogHeader>
 										<DialogTitle>App installed</DialogTitle>
@@ -87,7 +93,7 @@ export function Workspace() {
 										</DialogDescription>
 									</DialogHeader>
 								</DialogContent>
-							</Dialog>
+							</Dialog> */}
 							
 							<ActiveBoard />
 						</main>
