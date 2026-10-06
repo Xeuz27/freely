@@ -12,7 +12,7 @@ import { addHour, format } from '@formkit/tempo'
 import { AlertCircle, Bell, CheckSquare, Phone, Users } from 'lucide-react'
 import { useEffect } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext'
-import { handleSaveEvent } from '../utils/handlers'
+import { handleDeleteEvent, handleSaveEvent } from '../utils/handlers'
 
 const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	meeting: <Users className="size-4" />,
@@ -191,6 +191,14 @@ export function EventDialog({ onOpenChange, initialDate, initialTime,
 						/>
 					</div>
 					<div className="flex justify-end gap-2 pt-4">
+						<Button type="button" disabled={!editingEvent} className='mr-auto' variant="destructive" onClick={() =>
+						{
+							handleDeleteEvent(editingEvent!)
+							onOpenChange(false)}
+						}
+						>
+							Delete
+						</Button>
 						<Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
 							Cancel
 						</Button>

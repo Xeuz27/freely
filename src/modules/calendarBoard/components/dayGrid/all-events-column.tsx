@@ -30,7 +30,7 @@ const AllEventsColumn = () => {
       <div className="py-4">
         <h3 className="text-sm font-medium text-muted-foreground">All Events</h3>
       </div>
-      <div className="flex-1 pr-2 overflow-y-auto">
+      <div className="flex-1 pr-2 pb-8 overflow-y-auto">
         {dayEvents.length === 0 ? (
           <div className="text-center py-8">
             <div className="flex items-center justify-center size-12 rounded-full bg-secondary/50 mx-auto mb-3">
@@ -62,23 +62,13 @@ const AllEventsColumn = () => {
               key={event.id}
               event={event}
               className="mb-2"
-              onClick={() =>
-                handleEditEvent(
-                  event,
-                  setEditingEvent,
-                  setSelectedDate,
-                  setSelectedTime,
-                  setDialogOpen
-                )
-              }
-              showActions={false}
             />
           ))
         )}
 
         {dayEvents.length > 0 && (
-          <div className="mt-6 pt-4 border-t border-border">
-            <h4 className="text-xs font-medium text-muted-foreground mb-3">
+          <div className="mt-8 border-t border-border">
+            <h4 className="text-xs font-medium text-muted-foreground py-4">
               By Type
             </h4>
             <div className="flex flex-col flex-wrap gap-2">

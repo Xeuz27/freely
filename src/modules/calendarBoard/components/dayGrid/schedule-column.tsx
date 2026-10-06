@@ -33,7 +33,7 @@ const ScheduleColumn = () => {
       </div>
       <div className={`
       ${open ? '' : ''}
-      flex-1 min-w-0 overflow-y-auto transition-[width] duration-200 ease-linear overflow-x-hidden pr-2 relative
+      flex-1 min-w-0 overflow-y-auto pb-8 transition-[width] duration-200 ease-linear overflow-x-hidden pr-2 gap-2 flex flex-col relative
       `}>
         {dayTimeSlots
           .filter((_, index) => index % 2 === 0)
@@ -51,7 +51,7 @@ const ScheduleColumn = () => {
                 </div>
                 <div
                   className={cn(
-                    "flex-1 min-h-15 border-t border-border/50 p-2 relative cursor-pointer rounded transition-colors",
+                    "flex-1 min-h-15 sm:max-[769px]:max-w-69 border-t border-border/50 relative cursor-pointer rounded transition-colors",
                     slotEvents.length > 0 ? "" : "hover:bg-secondary/20"
                   )}
                   onClick={() => {
@@ -85,7 +85,7 @@ const ScheduleColumn = () => {
                       <Plus className="size-3.5 text-muted-foreground" />
                     </button>
                   )}
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-6 px-2">
                     {slotEvents.map((event) => (
                       <DayEventCard key={event.id} event={event} />
                     ))}
