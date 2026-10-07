@@ -57,7 +57,7 @@ const DayEventCard = ({
           </div>
         )}
         {event.description && (
-          <p className="mt-1 line-clamp-3 wrap-break-word text-xs opacity-70">
+          <p className="mt-1 truncate sm:max-[1025px]:group-has-data-[state=expanded]/sidebar-wrapper:max-w-24 line-clamp-3 whitespace-break-spaces wrap-break-word text-xs opacity-70">
             {event.description}
           </p>
         )}
