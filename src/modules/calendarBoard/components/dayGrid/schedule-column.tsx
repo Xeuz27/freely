@@ -51,7 +51,7 @@ const ScheduleColumn = () => {
                 </div>
                 <div
                   className={cn(
-                    "flex-1 min-h-15 sm:max-[769px]:max-w-69 border-t border-border/50 relative cursor-pointer rounded transition-colors",
+                    "flex-1 min-h-15 sm:max-[769px]:max-w-60 border-t border-border/50 relative cursor-pointer rounded transition-colors",
                     slotEvents.length > 0 ? "" : "hover:bg-secondary/20"
                   )}
                   onClick={() => {
