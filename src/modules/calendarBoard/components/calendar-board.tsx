@@ -59,7 +59,7 @@ const Grid = () => {
 				</div>
 			</div>
 
-			<div className="flex-1 overflow-y-hidden relative">
+			<div className="flex-1 h-full overflow-y-hidden pb-8 relative">
 				<Activity mode={view === 'month' ? 'visible' : 'hidden'}>
 					<MonthGrid />
 				</Activity>
@@ -67,7 +67,7 @@ const Grid = () => {
 					<WeekGrid />
 				</Activity>
 				<Activity mode={view === 'day' ? 'visible' : 'hidden'}>
-					<DayGrid />
+				<DayGrid />
 				</Activity>
 			</div>
 		</>
@@ -77,9 +77,9 @@ const Grid = () => {
 export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanCards }: CalendarBoardProps) {
 	const { view, setView, selectedTime, setEditingEvent, selectedDate, setDialogOpen, editingEvent, dialogOpen } = useCalendarContext()
 	useEventReminders()
-	console.log('CalendarBoard rendered')
+
 	return (
-		<div className="flex flex-1 flex-col h-screen px-4">
+		<div className="flex flex-1 flex-col h-screen overflow-hidden px-4">
 			<WorkspaceHeader>
 				<WorkspaceHeader.Content title="Calendar" description="Schedule meetings and track deadlines" Icon={CalendarDays} />
 				<WorkspaceHeader.Actions>

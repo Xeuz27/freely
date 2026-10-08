@@ -12,14 +12,14 @@ const WeekGrid = () => {
 	const { currentDate, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
 	const { weekDays, eventsHourDay } = useWeekEvents(currentDate)
 	return (
-		<div className="h-full overflow-y-hidden">
+		<div className="h-full overflow-y-hidden pb-8">
 			<div className="grid grid-cols-8 gap-0.5 mb-px">
 				<div className="py-2 text-center text-sm font-medium text-muted-foreground" />
 				{weekDays.map((day) => (
 					<DayLabel key={day.toISOString()} day={day} />
 				))}
 			</div>
-			<div className="grid grid-cols-8 gap-0.5 bg-background/10 rounded-lg overflow-hidden max-h-[calc(100vh-220px)] overflow-y-auto">
+			<div className="grid grid-cols-8 gap-0.5 bg-background/10 rounded-lg h-full pb-8 overflow-y-auto">
 				{Object.entries(eventsHourDay).map(([time, events]) => {
 					return (
 						<Fragment key={`row-${time}`}>

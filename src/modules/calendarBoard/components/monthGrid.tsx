@@ -12,20 +12,22 @@ const MonthGrid = () => {
 	const { setCurrentDate, setView, setEditingEvent, setDialogOpen, selectedTime, setSelectedDate, setSelectedTime } =
 		useCalendarContext()
 	return (
-		<div className="">
-			<div className="w-full">
+		<div className="h-full overflow-y-hidden pb-2">
+			
+			{/* <div className="w-full hidden">
 				<button onClick={() => GenEvents()} className="p-4 border-2 border-red-400 px-8 text-white font-bold text-lg">
 					click here!
 				</button>
-			</div>
-			<div className="grid grid-cols-7 sticky top-0 bg-background gap-px mb-px">
+			</div> */}
+			<div className="grid grid-cols-7 gap-px mb-px">
 				{['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
 					<div key={day} className="py-2 text-center text-sm font-medium text-muted-foreground">
 						{day}
 					</div>
 				))}
 			</div>
-			<div className="grid grid-cols-7 gap-0.5 bg-sidebar/20">
+	
+			<div className="grid grid-cols-7 h-full pb-8 overflow-y-auto gap-0.5 bg-sidebar/20">
 				{monthDays.map(({ day, events: dayEvents }, idx) => {
 					if (!day) {
 						return <div key={`empty-${idx}`} className="md:min-h-30 bg-card/5" />
