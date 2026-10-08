@@ -1,16 +1,35 @@
 import { cn } from '@/lib/utils'
 import { Plus } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext.ts'
 import useMonthEvents from '../hooks/useMonthEvents.ts'
-import GenEvents from '../hooks/useGenEbents.ts'
 import { handleAddEvent } from '../utils/handlers.ts'
 import { isToday } from '../utils/isToday.ts'
 import EventCard from './event-card.tsx'
 
 const MonthGrid = () => {
 	const monthDays = useMonthEvents()
+	const [visibleEventCount, setVisibleEventCount] = useState(1)
 	const { setCurrentDate, setView, setEditingEvent, setDialogOpen, selectedTime, setSelectedDate, setSelectedTime } =
 		useCalendarContext()
+
+	useEffect(() => {
+		const compactScreen = window.matchMedia('(max-width: 769px)')
+		const tinyScreen = window.matchMedia('(max-width: 419px)')
+		const updateVisibleEventCount = () => {
+			setVisibleEventCount(tinyScreen.matches ? 0 : compactScreen.matches ? 2 : 3)
+		}
+
+		updateVisibleEventCount()
+		compactScreen.addEventListener('change', updateVisibleEventCount)
+		tinyScreen.addEventListener('change', updateVisibleEventCount)
+
+		return () => {
+			compactScreen.removeEventListener('change', updateVisibleEventCount)
+			tinyScreen.removeEventListener('change', updateVisibleEventCount)
+		}
+	}, [])
+
 	return (
 		<div className="h-full overflow-y-hidden pb-2">
 			
@@ -30,7 +49,7 @@ const MonthGrid = () => {
 			<div className="grid grid-cols-7 h-full pb-8 overflow-y-auto gap-0.5 bg-sidebar/20">
 				{monthDays.map(({ day, events: dayEvents }, idx) => {
 					if (!day) {
-						return <div key={`empty-${idx}`} className="md:min-h-30 bg-card/5" />
+						return <div key={`empty-${idx}`} className="min-h-48  bg-card/5" />
 					}
 					const isCurrentDay = isToday(day)
 
@@ -38,11 +57,11 @@ const MonthGrid = () => {
 						<div
 							key={day.toISOString()}
 							className={cn(
-								'md:min-h-30 bg-card/40 p-2 group/day transition-colors border border-transparent hover:border-accent/30 hover:bg-background/10',
+								'bg-card/40 p-2 min-h-48 group/day transition-colors border border-transparent hover:border-accent/30 hover:bg-background/10',
 								isCurrentDay && 'bg-primary/20'
 							)}
 						>
-							<div className="flex items-center justify-between mb-1">
+							<div className="flex items-center justify-between mb-4">
 								<button
 									onClick={() => {
 										setCurrentDate(day)
@@ -64,17 +83,16 @@ const MonthGrid = () => {
 									<Plus className="size-5 pl-px text-muted-foreground" />
 								</button>
 							</div>
-							<div className="space-y-1 max-md:hidden">
-								{dayEvents
-									.map((event) => (
-										<div key={event.id}>
-											<EventCard event={event} compact />
-										</div>
-									))
-									.slice(0, 3)}
-								{dayEvents.length > 3 && <p className="text-xs text-muted-foreground pt-1">+{dayEvents.length - 3} more</p>}
+							<div className="space-y-1">
+								{dayEvents.slice(0, visibleEventCount).map((event) => (
+									<div key={event.id}>
+										<EventCard event={event} compact />
+									</div>
+								))}
+								{dayEvents.length > visibleEventCount && (
+									<p className="text-xs text-muted-foreground pt-1">+{dayEvents.length - visibleEventCount} more</p>
+								)}
 							</div>
-							<div className="md:hidden">{dayEvents.length >= 1 && <div className="bg-primary size-2 rounded-full"></div>}</div>
 						</div>
 					)
 				})}

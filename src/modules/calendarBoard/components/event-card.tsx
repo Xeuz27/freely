@@ -13,15 +13,15 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 		<div
 			key={event.id}
 			className={cn(
-				'group flex items-start gap-1.5 p-1.5 rounded-md border text-xs hover:scale-[1.02]  transition-all cursor-pointer',
+				'group flex items-center justify-center gap-1.5 p-1.5 rounded-md border text-xs hover:scale-[1.02]  transition-all cursor-pointer',
 				event.type ? eventTypeConfig[event.type].color : ''
 			)}
 		>
 			<span className="mt-0.5 shrink-0">
 				<EventIcon className="size-3" />
 				</span>
-			<div className="flex-1 min-w-0">
-				<p className="font-medium truncate">{event.title}</p>
+			<div className="flex-1 min-w-0 max-sm:hidden">
+				<p className="font-medium truncate max-w-28">{event.title}</p>
 				{!compact && event.startTime && (
 					<p className="text-[10px] opacity-70">
 						{event.startTime}
@@ -31,7 +31,7 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 			</div>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<button className="opacity-0 group-hover:opacity-100 p-0.5 hover:bg-white/10 rounded transition-opacity">
+					<button className="opacity-0 max-sm:hidden group-hover:opacity-100 p-0.5 hover:bg-white/10 rounded transition-opacity">
 						<MoreHorizontal className="size-3" />
 					</button>
 				</DropdownMenuTrigger>

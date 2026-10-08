@@ -44,8 +44,7 @@ const DayEventCard = ({
         <EventIcon className="size-4" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="sm:max-[1025px]:group-has-data-[state=expanded]/sidebar-wrapper:max-w-24 whitespace-break-spaces truncate wrap-break-word font-semibold line-clamp-3">{event.title}
-        </p>
+        <p className="sm:max-[1025px]:group-has-data-[state=expanded]/sidebar-wrapper:max-w-24 whitespace-break-spaces truncate wrap-break-word font-semibold line-clamp-3">{event.title}</p>
         {event.startTime && (
           <div className="mt-1 flex min-w-0 items-center gap-1.5 text-xs opacity-80">  
             <Clock className="size-3 shrink-0" />
