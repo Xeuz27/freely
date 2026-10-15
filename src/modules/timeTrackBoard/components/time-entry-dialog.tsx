@@ -9,6 +9,7 @@ import { type Project } from '@/types/project-types'
 import { type TimeEntry } from '@/types/timetrack-types'
 import { FolderKanban, LayoutGrid } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { addHour, format } from '@formkit/tempo'
 
 interface TimeEntryDialogProps {
 	open: boolean
@@ -77,7 +78,7 @@ export function TimeEntryDialog({
 			id: editEntry?.id,
 			title: title.trim(),
 			description: description.trim() || undefined,
-			date: new Date(date),
+			date: new Date(addHour(format(date, 'YYYY-MM-DD', 'en'), 4)),
 			startTime,
 			endTime,
 			projectId: linkedProjectId || undefined,

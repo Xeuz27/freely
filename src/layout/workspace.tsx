@@ -14,8 +14,8 @@ import { MonitorDown } from 'lucide-react'
 export type Board = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
 
 export function Workspace() {
-	const [activeBoard, setActiveBoard] = useState<Board>('calendar')
-	const [installed, setInstalled] = useState(false)
+	const [activeBoard, setActiveBoard] = useState<Board>('timetrack')
+	// const [installed, setInstalled] = useState(false)
 	const boards = {
 		kanban: KanbanBoard,
 		crm: CrmBoard,
@@ -26,25 +26,25 @@ export function Workspace() {
 	}
 	const ActiveBoard = boards[activeBoard]
 
-	 useEffect(() => {
-    window.addEventListener("beforeinstallprompt", (event) => {
-      // Prevent the mini-infobar from appearing on mobile.
-	  console.log(event)
-      event.preventDefault();
-      // Stash the event so it can be triggered later.
-	  // @ts-ignore
-      window.deferredPrompt = event;
-	  // @ts-ignore
-	  console.log(window.deferredPrompt)
-      // Remove the 'hidden' class from the install button container.
-    });
-  }, []);
-  useEffect(() => {
-	window.addEventListener("appinstalled", (event) => {
-		console.log("appinstalled");
-		setInstalled(true);
-	})
-  }, [])
+// 	 useEffect(() => {
+//     window.addEventListener("beforeinstallprompt", (event) => {
+//       // Prevent the mini-infobar from appearing on mobile.
+// 	  console.log(event)
+//       event.preventDefault();
+//       // Stash the event so it can be triggered later.
+// 	  // @ts-ignore
+//       window.deferredPrompt = event;
+// 	  // @ts-ignore
+// 	  console.log(window.deferredPrompt)
+//       // Remove the 'hidden' class from the install button container.
+//     });
+//   }, []);
+//   useEffect(() => {
+// 	window.addEventListener("appinstalled", (event) => {
+// 		console.log("appinstalled");
+// 		setInstalled(true);
+// 	})
+//   }, [])
   async function downloadApp() {
     console.log("button-install clicked");
 	//	@ts-ignore

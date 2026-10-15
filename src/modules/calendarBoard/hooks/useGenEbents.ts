@@ -2,84 +2,59 @@ import { timeSlots, type EventType } from '@/types/calendar-types'
 import { addHour, format } from '@formkit/tempo'
 import { handleSaveEvent } from '../utils/handlers'
 
-const fizzbuzzName = (index: number) => {
-	if (index % 3 === 0 && index % 5 === 0) {
-		return 'sara johnson'
-	} else if (index % 3 === 0) {
-		return 'pepe perez'
-	} else if (index % 5 === 0) {
-		return 'jose jose'
-	} else {
-		return 'mad max'
-	}
-}
-const fizzbuzzTitle = (index: number) => {
-	if (index % 3 === 0 && index % 5 === 0) {
-		return 'deadline'
-	} else if (index % 3 === 0) {
-		return 'Call'
-	} else if (index % 5 === 0) {
-		return 'meet'
-	} else {
-		return 'reminder'
-	}
-}
-const fizzbuzzEType = (index: number) => {
-	if (index % 3 === 0 && index % 5 === 0) {
-		return 'deadline'
-	} else if (index % 3 === 0) {
-		return 'call'
-	} else if (index % 5 === 0) {
-		return 'meeting'
-	} else {
-		return 'reminder'
-	}
+const eventOptions: Record<EventType, string[]> = {
+	meeting: ['Project sync', 'Design review', 'Team check-in', 'Planning session'],
+	call: ['Client call', 'Quick catch-up', 'Follow-up call', 'Intro call'],
+	task: ['Review proposal', 'Update roadmap', 'Prepare presentation', 'Send project update'],
+	reminder: ['Submit timesheet', 'Renew subscription', 'Check in with Alex', 'Review notes'],
+	deadline: ['Proposal due', 'Submit final report', 'Launch milestone', 'Invoice due']
 }
 
-const getIncrement = (index: number) => {
-	if (index % 3 === 0 && index % 5 === 0) return index
-	if (index % 3 === 0) return index - 1
-	if (index % 5 === 0) return index + 2
-	return index + 1
-}
-const getTime = (index: number) => {
-	if (index % 3 === 0 && index % 5 === 0) return 8
-	if (index % 3 === 0) return 16
-	if (index % 5 === 0) return 10
-	return 12
-}
+const eventTypes: EventType[] = [
+	'meeting',
+	'meeting',
+	'meeting',
+	'call',
+	'call',
+	'task',
+	'task',
+	'reminder',
+	'reminder',
+	'deadline'
+]
 
-// date: new Date(addHour(format(formState.date!, 'YYYY-MM-DD', 'en'), 4)),
-// 				startTime: formState.startTime || undefined,
-// 				endTime: formState.endTime || undefined,
+const workTimeSlots = timeSlots.filter((time) => time >= '09:00' && time <= '16:30')
+const startTimeSlots = workTimeSlots.slice(0, -2)
+
+const randomItem = <T,>(items: readonly T[]) => items[Math.floor(Math.random() * items.length)]
+
+const getRandomDate = (start: Date) => {
+	const date = new Date(start)
+	date.setDate(date.getDate() + Math.floor(Math.random() * 90) + 1)
+
+	if (date.getDay() === 0) date.setDate(date.getDate() + 1)
+	if (date.getDay() === 6) date.setDate(date.getDate() + 2)
+
+	return new Date(addHour(format(date, 'YYYY-MM-DD'), 4))
+}
 
 const GenEvents = () => {
-    console.log("run")
-	let start = new Date('2026-06-05')
+	const today = new Date()
 
-	const dates = Array.from({ length: 120 }, (_, i) => {
-		const date = new Date(start)
-		date.setDate(start.getDate() + getIncrement(i))
+	for (let index = 0; index < 120; index++) {
+		const type = randomItem(eventTypes)
+		const startIndex = Math.floor(Math.random() * startTimeSlots.length)
+		const startTime = startTimeSlots[startIndex]
+		const endTime = workTimeSlots[startIndex + (Math.random() < 0.5 ? 1 : 2)]
 
-		return date
-	})
-
-	let Arr = Array.from({ length: 120 }, (_, index) => ({
-		title: fizzbuzzTitle(index),
-		type: fizzbuzzEType(index),
-		name: fizzbuzzName(index),
-		date: new Date(addHour(format(dates[index], 'YYYY-MM-DD'), 4)),
-		startTime: timeSlots[getTime(index)]
-	}))
-
-	Arr.map((event) => {
 		handleSaveEvent({
-			id: window.crypto.randomUUID(),
-			title: event.title,
-			date: event.date,
-			startTime: event.startTime,
-			type: event.type as EventType
+			title: randomItem(eventOptions[type]),
+			type,
+			date: getRandomDate(today),
+			startTime,
+			endTime
 		})
-	})
+	}
 }
+
 export default GenEvents
