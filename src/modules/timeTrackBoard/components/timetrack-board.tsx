@@ -6,7 +6,7 @@ import { Calendar, ChevronLeft, ChevronRight, Clock, Timer } from 'lucide-react'
 import { TimeEntryDialog } from './time-entry-dialog'
 import { DayGrid } from './dayGrid'
 import useTimeTrackContext from '../hooks/useTimeTrackContext'
-import { WeekGrid } from 'src/modules/calendarBoard/components/weekGrid/weekGrid'
+import { WeekGrid } from '@/modules/timeTrackBoard/components/weekGrid'
 import { Activity } from 'react'
 
 export function TimetrackBoard() {

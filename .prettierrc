@@ -3,9 +3,10 @@
 	"useTabs": true,
 	"tabWidth": 4,
 	"trailingComma": "none",
-	"semi": true,
+	"semi": false,
 	"printWidth": 120,
-	"singleQuote": false,
+	"singleQuote": true,
+	"jsxSingleQuote": false,
 	"overrides": [
 		{
 			"files": "*.astro",

@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react'
 import { projectStatusConfig } from 'src/types/project-types'
 import useTimeLogger from '../hooks/useTimeLogger'
 
-export const weekGrid = () => {
+export const WeekGrid = () => {
 	const {
 		getWeekDates,
 		currentDate,
