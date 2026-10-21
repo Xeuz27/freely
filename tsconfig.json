@@ -1,15 +1,30 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"],
-  "compilerOptions": {
-    "paths": {
-      "*": ["./*"],
-      "@/*": ["./src/*"],
-      "@/types/*": ["./src/types/*"]
-    },
-    "allowImportingTsExtensions": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
-  }
+	"extends": "astro/tsconfigs/strict",
+	"include": [".astro/types.d.ts", "**/*"],
+	"exclude": ["dist"],
+	"compilerOptions": {
+		"ignoreDeprecations": "6.0",
+		"baseUrl": "./",
+		"paths": {
+			"*": ["./*"],
+			"@/*": ["./src/*"],
+			"@/lib/*": ["./src/lib/*"],
+			"@/data/*": ["./src/data/*"],
+			"@/components/*": ["./src/components/*"],
+			"@/types/*": ["./src/types/*"],
+			"@/store/*": ["./src/store/*"],
+			"@/styles/*": ["./src/styles/*"],
+			"@/modules/calendarBoard/*": ["./src/modules/calendarBoard/*"],
+			"@/modules/core/*": ["./src/modules/core/*"],
+			"@/modules/crmBoard/*": ["./src/modules/crmBoard/*"],
+			"@/modules/documentBoard/*": ["./src/modules/documentBoard/*"],
+			"@/modules/kanbanBoard/*": ["./src/modules/kanbanBoard/*"],
+			"@/modules/projectBoard/*": ["./src/modules/projectBoard/*"],
+			"@/modules/timetrackBoard/*": ["./src/modules/timetrackBoard/*"]
+		},
+		"allowUnusedLabels": false,
+		"allowImportingTsExtensions": true,
+		"jsx": "react-jsx",
+		"jsxImportSource": "react"
+	}
 }
