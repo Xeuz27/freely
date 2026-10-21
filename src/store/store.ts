@@ -1,15 +1,12 @@
 import { sampleEventLinks } from '@/data/sampleEventLinks'
 import { sampleEvents } from '@/data/sampleEvents'
 import { sampleLeads } from '@/data/sampleLeads'
-import type {
-	CalendarEvent,
-	eventLink,
-	linkHandlerParams
-} from '@/types/calendar-types'
+import type { CalendarEvent, eventLink, linkHandlerParams } from '@/types/calendar-types'
 import type { Lead } from '@/types/crm-types'
 import { atom } from 'nanostores'
 
-const removeByPredicate = (list: eventLink[] | Lead[], predicate: (l: eventLink | Lead) => boolean ) => list.filter((l) => !predicate(l))
+const removeByPredicate = (list: eventLink[] | Lead[], predicate: (l: eventLink | Lead) => boolean) =>
+	list.filter((l) => !predicate(l))
 
 export const state = atom({
 	events: [...sampleEvents],
@@ -40,7 +37,7 @@ export const eventHandler = (event: CalendarEvent, toDelete = false) => {
 					...events[eventIndex],
 					...event,
 					updatedAt: new Date()
-			  })
+				})
 			: events.push({ ...event })
 	}
 	setState({ events: events })
@@ -63,9 +60,7 @@ export function linksHandler(params: linkHandlerParams) {
 			links = removeByPredicate(links, (l) => l.id === link.id)
 		} else {
 			LinkIndex = links.findIndex((l) => l.id === link.id)
-			LinkIndex >= 0
-				? (links[LinkIndex] = { ...links[LinkIndex], ...link })
-				: links.push({ ...link })
+			LinkIndex >= 0 ? (links[LinkIndex] = { ...links[LinkIndex], ...link }) : links.push({ ...link })
 		}
 	}
 	setState({ eventLinks: links })
@@ -86,7 +81,7 @@ export const leadsHandler = (lead: Lead, toDelete = false) => {
 					...leads[leadIndex],
 					...lead,
 					updatedAt: new Date()
-			  })
+				})
 			: leads.push({ ...lead })
 	}
 

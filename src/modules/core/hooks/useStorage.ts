@@ -8,7 +8,11 @@ export function useSessionStorage<T>(key: string, defaultValue: T | (() => T)) {
 	return useStorage<T>(key, defaultValue, window.sessionStorage)
 }
 
-function useStorage<T>(key: string, defaultValue: T | (() => T), storageObject: Storage): [T, Dispatch<SetStateAction<T>>, () => void] {
+function useStorage<T>(
+	key: string,
+	defaultValue: T | (() => T),
+	storageObject: Storage
+): [T, Dispatch<SetStateAction<T>>, () => void] {
 	const [value, setValue] = useState<T>(() => {
 		const jsonValue = storageObject.getItem(key)
 		if (jsonValue != null) return JSON.parse(jsonValue)
@@ -21,7 +25,7 @@ function useStorage<T>(key: string, defaultValue: T | (() => T), storageObject: 
 	})
 
 	useEffect(() => {
-		console.log(value, 'value en useStorage', '-------', key , 'key')
+		console.log(value, 'value en useStorage', '-------', key, 'key')
 		if (value === undefined) return storageObject.removeItem(key)
 		storageObject.setItem(key, JSON.stringify(value))
 	}, [key, value, storageObject])

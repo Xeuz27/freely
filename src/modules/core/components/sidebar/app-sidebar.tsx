@@ -1,6 +1,14 @@
 import * as React from 'react'
 
-import { Sidebar, SidebarContent, SidebarHeader, SidebarMenuButton, SidebarMenuItem, SidebarRail, useSidebar } from '@/components/ui/sidebar'
+import {
+	Sidebar,
+	SidebarContent,
+	SidebarHeader,
+	SidebarMenuButton,
+	SidebarMenuItem,
+	SidebarRail,
+	useSidebar
+} from '@/components/ui/sidebar'
 import { cn } from '@/lib/utils'
 import { SearchForm } from '@/modules/core/components/sidebar/search-form'
 import { VersionSwitcher } from '@/modules/core/components/sidebar/version-switcher'
@@ -17,7 +25,7 @@ const data = {
 		{ id: 'timetrack', title: 'Time Tracker', Icon: Clock },
 		{ id: 'document', title: 'Documents', Icon: FileText }
 	] as const
-} 
+}
 // {
 // 	title: 'Build Your Application',
 // 	url: '#',
@@ -148,26 +156,38 @@ type appSidebarProps = React.ComponentProps<typeof Sidebar> & {
 	setActiveBoard: (board: boardId) => void
 }
 
-export function AppSidebar({ activeBoard, setActiveBoard,...props }: appSidebarProps) {
+export function AppSidebar({ activeBoard, setActiveBoard, ...props }: appSidebarProps) {
 	const { open, isMobile, openMobile } = useSidebar()
-    const isOpen = isMobile ? openMobile : open
-	
+	const isOpen = isMobile ? openMobile : open
+
 	return (
 		<Sidebar {...props}>
-			<ul className={cn(' flex flex-col flex-1', open ? 'divide-y divide-accent/40' : '')}>
+			<ul className={cn('flex flex-1 flex-col', open ? 'divide-accent/40 divide-y' : '')}>
 				<SidebarHeader className="px-2 pb-3">
 					<VersionSwitcher versions={data.versions} defaultVersion={data.versions[0]} />
 					<SearchForm />
 				</SidebarHeader>
-				<SidebarContent className={cn('py-1 border-transparent', open ? '' : 'px-1.5')}>
+				<SidebarContent className={cn('border-transparent py-1', open ? '' : 'px-1.5')}>
 					{/* We create a collapsible SidebarGroup for each parent. */}
 					{data.navMain.map(({ title, Icon, id }) => (
 						<SidebarMenuItem key={title} className="list-none">
 							{/* @ts-ignore */}
 							<SidebarMenuButton onClick={() => setActiveBoard(id)}>
-								<Icon className={cn('size-5 shrink-0', activeBoard === id ? 'text-sidebar-primary' : 'text-muted-foreground')} />
+								<Icon
+									className={cn(
+										'size-5 shrink-0',
+										activeBoard === id ? 'text-sidebar-primary' : 'text-muted-foreground'
+									)}
+								/>
 								{isOpen && (
-									<span className={cn('text-sm tracking-wide', activeBoard === id ? '' : 'text-muted-foreground')}>{title}</span>
+									<span
+										className={cn(
+											'text-sm tracking-wide',
+											activeBoard === id ? '' : 'text-muted-foreground'
+										)}
+									>
+										{title}
+									</span>
 								)}
 							</SidebarMenuButton>
 						</SidebarMenuItem>

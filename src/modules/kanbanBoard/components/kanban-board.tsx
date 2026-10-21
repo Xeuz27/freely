@@ -238,23 +238,16 @@ export function KanbanBoard() {
 		return `grid-cols-${n + 1}`
 	}
 	return (
-		<div className="flex flex-col flex-1 px-4 h-screen bg-background">
+		<div className="bg-background flex h-screen flex-1 flex-col px-4">
 			<WorkspaceHeader>
 				<WorkspaceHeader.Content
-					title='Workspace'
-					description='Organize your tasks, notes, and ideas'
+					title="Workspace"
+					description="Organize your tasks, notes, and ideas"
 					Icon={LayoutGrid}
 				/>
 				<WorkspaceHeader.Actions>
-					<WorkspaceHeader.Search
-						placeholder='Search Items'
-						value={searchQuery}
-						onSearch={setSearchQuery}
-					/>
-					<WorkspaceHeader.Button
-						text='Add Column'
-						onClick={()=> setAddColumnDialogOpen}
-					/>
+					<WorkspaceHeader.Search placeholder="Search Items" value={searchQuery} onSearch={setSearchQuery} />
+					<WorkspaceHeader.Button text="Add Column" onClick={() => setAddColumnDialogOpen} />
 				</WorkspaceHeader.Actions>
 			</WorkspaceHeader>
 
@@ -266,7 +259,7 @@ export function KanbanBoard() {
 					onDragOver={handleDragOver}
 					onDragEnd={handleDragEnd}
 				>
-					<div className={cn('grid gap-4 h-full', cols(filteredColumns.length))}>
+					<div className={cn('grid h-full gap-4', cols(filteredColumns.length))}>
 						{filteredColumns.map((column) => (
 							<KanbanColumn
 								key={column.id}
@@ -279,7 +272,7 @@ export function KanbanBoard() {
 
 						<button
 							onClick={() => setAddColumnDialogOpen(true)}
-							className="flex items-center justify-center min-h-50 shrink-0 rounded-xl border-2 border-dashed border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+							className="border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary flex min-h-50 shrink-0 items-center justify-center rounded-xl border-2 border-dashed transition-colors"
 						>
 							<div className="flex flex-col items-center gap-2">
 								<Plus className="size-6" />
@@ -300,7 +293,11 @@ export function KanbanBoard() {
 
 			<AddCardDialog open={addCardDialogOpen} onOpenChange={setAddCardDialogOpen} onAddCard={handleCreateCard} />
 
-			<AddColumnDialog open={addColumnDialogOpen} onOpenChange={setAddColumnDialogOpen} onAddColumn={handleAddColumn} />
+			<AddColumnDialog
+				open={addColumnDialogOpen}
+				onOpenChange={setAddColumnDialogOpen}
+				onAddColumn={handleAddColumn}
+			/>
 		</div>
 	)
 }

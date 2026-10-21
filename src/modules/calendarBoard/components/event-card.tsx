@@ -13,15 +13,15 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 		<div
 			key={event.id}
 			className={cn(
-				'group flex items-center justify-center gap-1.5 p-1.5 rounded-md border text-xs hover:scale-[1.02]  transition-all cursor-pointer',
+				'group flex cursor-pointer items-center justify-center gap-1.5 rounded-md border p-1.5 text-xs transition-all hover:scale-[1.02]',
 				event.type ? eventTypeConfig[event.type].color : ''
 			)}
 		>
 			<span className="mt-0.5 shrink-0">
 				<EventIcon className="size-3" />
-				</span>
-			<div className="flex-1 min-w-0 max-sm:hidden">
-				<p className="font-medium truncate max-w-28">{event.title}</p>
+			</span>
+			<div className="min-w-0 flex-1 max-sm:hidden">
+				<p className="max-w-28 truncate font-medium">{event.title}</p>
 				{!compact && event.startTime && (
 					<p className="text-[10px] opacity-70">
 						{event.startTime}
@@ -31,7 +31,7 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 			</div>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<button className="opacity-0 max-sm:hidden group-hover:opacity-100 p-0.5 hover:bg-white/10 rounded transition-opacity">
+					<button className="rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white/10 max-sm:hidden">
 						<MoreHorizontal className="size-3" />
 					</button>
 				</DropdownMenuTrigger>
@@ -44,11 +44,11 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 							setDialogOpen(true)
 						}}
 					>
-						<Edit2 className="size-3 mr-2" />
+						<Edit2 className="mr-2 size-3" />
 						Edit
 					</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => handleDeleteEvent(event)} className="text-red-400">
-						<Trash2 className="size-3 mr-2" />
+						<Trash2 className="mr-2 size-3" />
 						Delete
 					</DropdownMenuItem>
 				</DropdownMenuContent>

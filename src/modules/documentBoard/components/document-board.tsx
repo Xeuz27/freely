@@ -47,7 +47,10 @@ export function DocumentBoard() {
 	const [documents, setDocuments] = useState<DocTemplate[]>(initialTemplates)
 	const [selectedId, setSelectedId] = useState(initialTemplates[0].id)
 
-	const selectedDocument = useMemo(() => documents.find((item) => item.id === selectedId) ?? documents[0], [documents, selectedId])
+	const selectedDocument = useMemo(
+		() => documents.find((item) => item.id === selectedId) ?? documents[0],
+		[documents, selectedId]
+	)
 
 	const applyFormat = (command: string, value?: string) => {
 		editorRef.current?.focus()
@@ -62,24 +65,21 @@ export function DocumentBoard() {
 	}
 
 	return (
-		<section className="h-full flex flex-col flex-1 px-4">
+		<section className="flex h-full flex-1 flex-col px-4">
 			<WorkspaceHeader>
 				<WorkspaceHeader.Content
-					title='Documents Board'
-					description='Add, create, edit your document templates'
+					title="Documents Board"
+					description="Add, create, edit your document templates"
 					Icon={FileText}
 				/>
 				<WorkspaceHeader.Actions>
-					<WorkspaceHeader.Button
-						text='Add Template'
-						onClick={()=> console.log('asd')}
-					/>
+					<WorkspaceHeader.Button text="Add Template" onClick={() => console.log('asd')} />
 				</WorkspaceHeader.Actions>
 			</WorkspaceHeader>
-			<div className="flex h-full flex-1 min-h-0 ">
-				<aside className="border-b w-70 p-3 md:border-r md:border-b-0">
+			<div className="flex h-full min-h-0 flex-1">
+				<aside className="w-70 border-b p-3 md:border-r md:border-b-0">
 					<div className="mb-3 flex items-center gap-2">
-						<FileText className="size-4 text-muted-foreground" />
+						<FileText className="text-muted-foreground size-4" />
 						<h2 className="text-sm font-semibold tracking-wide">Documents Board</h2>
 					</div>
 					<div className="space-y-2">
@@ -94,7 +94,7 @@ export function DocumentBoard() {
 								)}
 							>
 								<p className="text-sm font-medium">{item.title}</p>
-								<p className="mt-1 text-xs text-muted-foreground">{item.description}</p>
+								<p className="text-muted-foreground mt-1 text-xs">{item.description}</p>
 							</button>
 						))}
 					</div>
@@ -130,7 +130,7 @@ export function DocumentBoard() {
 							suppressContentEditableWarning
 							onInput={handleEditorInput}
 							dangerouslySetInnerHTML={{ __html: selectedDocument.content }}
-							className="h-full min-h-90 overflow-auto rounded-md border bg-card p-4 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+							className="bg-card focus-visible:ring-ring h-full min-h-90 overflow-auto rounded-md border p-4 text-sm leading-6 outline-none focus-visible:ring-2"
 						/>
 					</div>
 				</div>

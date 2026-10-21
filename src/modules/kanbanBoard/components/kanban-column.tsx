@@ -20,14 +20,25 @@ export function KanbanColumn({ column, onAddCard, onDeleteCard, onDeleteColumn }
 	})
 
 	return (
-		<div className={cn('flex flex-col h-full min-h-[500px] shrink-0 rounded-xl bg-secondary/30 border border-border/50')}>
-			<div className="flex items-center justify-between p-4 border-b border-border/50">
+		<div
+			className={cn(
+				'bg-secondary/30 border-border/50 flex h-full min-h-[500px] shrink-0 flex-col rounded-xl border'
+			)}
+		>
+			<div className="border-border/50 flex items-center justify-between border-b p-4">
 				<div className="flex items-center gap-2">
-					<h3 className="font-semibold text-sm text-foreground">{column.title}</h3>
-					<span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{column.cards.length}</span>
+					<h3 className="text-foreground text-sm font-semibold">{column.title}</h3>
+					<span className="text-muted-foreground bg-muted rounded-full px-2 py-0.5 text-xs">
+						{column.cards.length}
+					</span>
 				</div>
 				<div className="flex items-center gap-1">
-					<Button variant="ghost" size="icon-sm" onClick={() => onAddCard(column.id)} className="hover:bg-primary/10 hover:text-primary">
+					<Button
+						variant="ghost"
+						size="icon-sm"
+						onClick={() => onAddCard(column.id)}
+						className="hover:bg-primary/10 hover:text-primary"
+					>
 						<Plus className="size-4" />
 					</Button>
 					<DropdownMenu>
@@ -37,8 +48,11 @@ export function KanbanColumn({ column, onAddCard, onDeleteCard, onDeleteColumn }
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end">
-							<DropdownMenuItem onClick={() => onDeleteColumn(column.id)} className="text-destructive focus:text-destructive">
-								<Trash2 className="size-4 mr-2" />
+							<DropdownMenuItem
+								onClick={() => onDeleteColumn(column.id)}
+								className="text-destructive focus:text-destructive"
+							>
+								<Trash2 className="mr-2 size-4" />
 								Delete Column
 							</DropdownMenuItem>
 						</DropdownMenuContent>
@@ -46,7 +60,10 @@ export function KanbanColumn({ column, onAddCard, onDeleteCard, onDeleteColumn }
 				</div>
 			</div>
 
-			<div ref={setNodeRef} className={cn('flex-1 p-3 space-y-3 overflow-y-auto transition-colors', isOver && 'bg-primary/5')}>
+			<div
+				ref={setNodeRef}
+				className={cn('flex-1 space-y-3 overflow-y-auto p-3 transition-colors', isOver && 'bg-primary/5')}
+			>
 				<SortableContext items={column.cards.map((c) => c.id)} strategy={verticalListSortingStrategy}>
 					{column.cards.map((card) => (
 						<KanbanCard key={card.id} card={card} onDelete={onDeleteCard} />
@@ -55,9 +72,9 @@ export function KanbanColumn({ column, onAddCard, onDeleteCard, onDeleteColumn }
 
 				{column.cards.length === 0 && (
 					<div className="flex flex-col items-center justify-center py-12 text-center">
-						<p className="text-xs text-muted-foreground mb-3">No items yet</p>
+						<p className="text-muted-foreground mb-3 text-xs">No items yet</p>
 						<Button variant="outline" size="sm" onClick={() => onAddCard(column.id)} className="text-xs">
-							<Plus className="size-3 mr-1" />
+							<Plus className="mr-1 size-3" />
 							Add Item
 						</Button>
 					</div>

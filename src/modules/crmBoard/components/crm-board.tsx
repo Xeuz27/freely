@@ -18,13 +18,7 @@ export function CrmBoard() {
 	const [statusFilter, setStatusFilter] = useState<ContactStatus | 'all'>('all')
 	const [data, setData] = useState(leads)
 
-	const {
-		dialogOpen,
-		setDialogOpen,
-		editingLead,
-		setEditingLead,
-		statusCounts
-	} = useCrmContext()
+	const { dialogOpen, setDialogOpen, editingLead, setEditingLead, statusCounts } = useCrmContext()
 
 	useEffect(() => {
 		setData(leads)
@@ -38,13 +32,10 @@ export function CrmBoard() {
 			const matchesSearch =
 				lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				lead.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				lead.company
-					?.toLowerCase()
-					.includes(searchQuery.toLowerCase()) ||
+				lead.company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				lead.note?.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				lead.info?.toLowerCase().includes(searchQuery.toLowerCase())
-			const matchesStatus =
-				statusFilter === 'all' || lead.status === statusFilter
+			const matchesStatus = statusFilter === 'all' || lead.status === statusFilter
 			return matchesSearch && matchesStatus
 		})
 		setData(d)
@@ -55,17 +46,15 @@ export function CrmBoard() {
 		return eventslinked[0] ?? null
 	}
 	return (
-		<div className="flex flex-1 flex-col px-4 h-screen bg-background">
+		<div className="bg-background flex h-screen flex-1 flex-col px-4">
 			<WorkspaceHeader>
-				<WorkspaceHeader.Content 
-					title="CRM" 
-					description="Manage your leads and contacts" 
-					Icon={User} />
+				<WorkspaceHeader.Content title="CRM" description="Manage your leads and contacts" Icon={User} />
 				<WorkspaceHeader.Actions>
-					<WorkspaceHeader.Search 
-						placeholder="Search Leads..." 
-						onSearch={setSearchQuery} 
-						value={searchQuery} />
+					<WorkspaceHeader.Search
+						placeholder="Search Leads..."
+						onSearch={setSearchQuery}
+						value={searchQuery}
+					/>
 					<WorkspaceHeader.Button
 						text="Add Lead"
 						onClick={() => {
@@ -76,14 +65,14 @@ export function CrmBoard() {
 				</WorkspaceHeader.Actions>
 			</WorkspaceHeader>
 
-			<div className="px-6 py-4 border-b border-border">
+			<div className="border-border border-b px-6 py-4">
 				<div className="flex items-center gap-3">
 					<div className="flex items-center gap-2">
-						<Filter className="size-4 text-muted-foreground" />
-						<span className="text-sm text-muted-foreground">Filter:</span>
+						<Filter className="text-muted-foreground size-4" />
+						<span className="text-muted-foreground text-sm">Filter:</span>
 					</div>
 					<Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as ContactStatus | 'all')}>
-						<SelectTrigger className="w-[150px]">
+						<SelectTrigger className="w-37.5">
 							<SelectValue placeholder="All statuses" />
 						</SelectTrigger>
 						<SelectContent>
@@ -94,25 +83,34 @@ export function CrmBoard() {
 										<Badge variant="outline" className={`${config.color} border`}>
 											{config.label}
 										</Badge>
-										<span className="text-muted-foreground text-xs">({statusCounts[key as ContactStatus] || 0})</span>
+										<span className="text-muted-foreground text-xs">
+											({statusCounts[key as ContactStatus] || 0})
+										</span>
 									</div>
 								</SelectItem>
 							))}
 						</SelectContent>
 					</Select>
 
-					<div className="ml-auto flex items-center gap-2 text-sm text-muted-foreground">
+					<div className="text-muted-foreground ml-auto flex items-center gap-2 text-sm">
 						<span>{data.length} leads</span>
 					</div>
 				</div>
 			</div>
 
 			<div className="flex-1 overflow-auto p-6">
-				<div className="rounded-lg border border-border bg-card">
+				<div className="border-border bg-card rounded-lg border">
 					<LeadTable data={data} />
 				</div>
 			</div>
-			{dialogOpen && <LeadDialog open={dialogOpen} onOpenChange={setDialogOpen} editLead={editingLead} eventsLinked={eventsLinked} />}
+			{dialogOpen && (
+				<LeadDialog
+					open={dialogOpen}
+					onOpenChange={setDialogOpen}
+					editLead={editingLead}
+					eventsLinked={eventsLinked}
+				/>
+			)}
 		</div>
 	)
 }

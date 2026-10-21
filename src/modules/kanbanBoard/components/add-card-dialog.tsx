@@ -1,7 +1,14 @@
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -9,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea'
 
 import { sampleLeads } from '@/data/sampleLeads'
 import { cn } from '@/lib/utils'
-import { sampleProjects } from '@/modules/timeTrackBoard/components/timetrack-board'
+import { sampleProjects } from '@/data/sampleProjects'
 import { type CardType, cardTypeColors } from '@/types/kanban-types'
 import { CheckSquare, Database, FileText, FolderKanban, Lightbulb, UserRoundPlus, type LucideIcon } from 'lucide-react'
 
@@ -77,13 +84,22 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
 											type="button"
 											onClick={() => setType(option.value)}
 											className={cn(
-												'flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all',
+												'flex flex-col items-center gap-1.5 rounded-lg border p-3 transition-all',
 												type === option.value
-													? cn(colors.bg, colors.border, colors.text.replace('text-', 'ring-'))
+													? cn(
+															colors.bg,
+															colors.border,
+															colors.text.replace('text-', 'ring-')
+														)
 													: 'border-border hover:bg-secondary/50'
 											)}
 										>
-											<Icon className={cn('size-4', type === option.value ? colors.text : 'text-muted-foreground')} />
+											<Icon
+												className={cn(
+													'size-4',
+													type === option.value ? colors.text : 'text-muted-foreground'
+												)}
+											/>
 											<span
 												className={cn(
 													'text-[10px] font-medium',
@@ -100,7 +116,13 @@ export function AddCardDialog({ open, onOpenChange, onAddCard }: AddCardDialogPr
 
 						<div className="space-y-2">
 							<Label htmlFor="title">Title</Label>
-							<Input id="title" placeholder="Enter a title..." value={title} onChange={(e) => setTitle(e.target.value)} autoFocus />
+							<Input
+								id="title"
+								placeholder="Enter a title..."
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+								autoFocus
+							/>
 						</div>
 
 						<div className="space-y-2">

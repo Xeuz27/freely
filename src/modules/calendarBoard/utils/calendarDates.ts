@@ -14,7 +14,7 @@ export const getWeekDays = (currentDate: Date): Date[] => {
 export const getMonthDays = (year: number, month: number): (Date | null)[] => {
 	const daysInMonth = new Date(year, month + 1, 0).getDate()
 	const firstDayOfMonth = new Date(year, month, 1).getDay()
-	
+
 	const days: (Date | null)[] = []
 	for (let i = 0; i < firstDayOfMonth; i++) {
 		days.push(null)

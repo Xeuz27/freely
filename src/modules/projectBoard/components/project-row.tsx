@@ -1,6 +1,12 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
@@ -20,10 +26,14 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 	const priorityConfig = projectPriorityConfig[project.priority]
 
 	const today = new Date()
-	const deliveryDate = new Date(project.deliveryDate)
+	const deliveryDate = new Date(project.deliveryDate!)
 	const daysUntilDelivery = Math.ceil((deliveryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 	const isOverdue = daysUntilDelivery < 0 && project.status !== 'completed' && project.status !== 'cancelled'
-	const isNearDeadline = daysUntilDelivery <= 7 && daysUntilDelivery >= 0 && project.status !== 'completed' && project.status !== 'cancelled'
+	const isNearDeadline =
+		daysUntilDelivery <= 7 &&
+		daysUntilDelivery >= 0 &&
+		project.status !== 'completed' &&
+		project.status !== 'cancelled'
 
 	const formatDate = (date: Date) => {
 		return date.toLocaleDateString('en-US', {
@@ -34,11 +44,15 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 	}
 
 	return (
-		<TableRow className="group cursor-pointer hover:bg-secondary/30" onClick={() => onEdit(project)}>
+		<TableRow className="group hover:bg-secondary/30 cursor-pointer" onClick={() => onEdit(project)}>
 			<TableCell>
 				<div className="flex flex-col gap-1">
-					<span className="font-medium text-foreground">{project.name}</span>
-					{project.description && <span className="text-xs text-muted-foreground line-clamp-1 max-w-50">{project.description}</span>}
+					<span className="text-foreground font-medium">{project.name}</span>
+					{project.description && (
+						<span className="text-muted-foreground line-clamp-1 max-w-50 text-xs">
+							{project.description}
+						</span>
+					)}
 				</div>
 			</TableCell>
 
@@ -89,7 +103,7 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 			<TableCell>
 				{project.ownerId ? (
 					<div className="flex items-center gap-2">
-						<User className="size-3 text-muted-foreground" />
+						<User className="text-muted-foreground size-3" />
 						<span className="text-sm">{project.ownerId}</span>
 					</div>
 				) : (
@@ -99,20 +113,30 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 
 			<TableCell>
 				<div className="flex items-center gap-2">
-					<Calendar className="size-3 text-muted-foreground" />
-					<span className="text-sm">{formatDate(project.startDate)}</span>
+					<Calendar className="text-muted-foreground size-3" />
+					<span className="text-sm">{formatDate(project.startDate!)}</span>
 				</div>
 			</TableCell>
 
 			<TableCell>
 				<div className="flex flex-col gap-1">
-					<div className={cn('flex items-center gap-2', isOverdue && 'text-red-400', isNearDeadline && 'text-amber-400')}>
+					<div
+						className={cn(
+							'flex items-center gap-2',
+							isOverdue && 'text-red-400',
+							isNearDeadline && 'text-amber-400'
+						)}
+					>
 						<Calendar className="size-3" />
 						<span className="text-sm">{formatDate(deliveryDate)}</span>
 					</div>
-					{isOverdue && <span className="text-xs text-red-400">{Math.abs(daysUntilDelivery)} days overdue</span>}
+					{isOverdue && (
+						<span className="text-xs text-red-400">{Math.abs(daysUntilDelivery)} days overdue</span>
+					)}
 					{isNearDeadline && (
-						<span className="text-xs text-amber-400">{daysUntilDelivery === 0 ? 'Due today' : `${daysUntilDelivery} days left`}</span>
+						<span className="text-xs text-amber-400">
+							{daysUntilDelivery === 0 ? 'Due today' : `${daysUntilDelivery} days left`}
+						</span>
 					)}
 				</div>
 			</TableCell>
@@ -120,7 +144,11 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 			<TableCell onClick={(e) => e.stopPropagation()}>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="opacity-0 transition-opacity group-hover:opacity-100"
+						>
 							<MoreHorizontal className="size-4" />
 						</Button>
 					</DropdownMenuTrigger>

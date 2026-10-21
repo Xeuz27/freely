@@ -58,7 +58,8 @@ export const useEventReminders = () => {
 					body: `The event scheduled for ${event.startTime} has already started or passed.`,
 					type: 'error',
 					duration: 10000,
-					className: 'bg-background! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-foreground/20!'
+					className:
+						'bg-background! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-foreground/20!'
 				})
 			}
 			if (!isSoonEnough || isPastDue) continue
@@ -68,7 +69,8 @@ export const useEventReminders = () => {
 				body: `Your event is scheduled to start at ${event.startTime}.`,
 				type: 'default',
 				duration: 10000,
-				className: 'bg-card! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-accent-foreground/20!'
+				className:
+					'bg-card! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-accent-foreground/20!'
 			})
 
 			notifiedIdsRef.current.add(event.id)

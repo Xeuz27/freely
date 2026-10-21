@@ -1,6 +1,6 @@
 import { dayTimeSlots } from '@/data/dayTimeSlots'
 
-type TimeSlotHeight = typeof dayTimeSlots[number]
+type TimeSlotHeight = (typeof dayTimeSlots)[number]
 
 export const getTimeSlotHeight = (startTime: TimeSlotHeight, endTime: TimeSlotHeight) => {
 	const start = dayTimeSlots.indexOf(startTime)

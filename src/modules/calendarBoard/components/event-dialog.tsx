@@ -30,12 +30,15 @@ interface EventDialogProps {
 	kanbanCards?: KanbanCard[]
 }
 
-export function EventDialog({ onOpenChange, initialDate, initialTime,
+export function EventDialog({
+	onOpenChange,
+	initialDate,
+	initialTime
 	// todo: add leads and kanbanCards to the form state if needed
 	//  leads = [], kanbanCards = []
-	}: EventDialogProps) {
-	const initialForm : formify<CalendarEvent>= {
-		id:'',
+}: EventDialogProps) {
+	const initialForm: formify<CalendarEvent> = {
+		id: '',
 		title: '',
 		description: '',
 		date: '',
@@ -43,22 +46,20 @@ export function EventDialog({ onOpenChange, initialDate, initialTime,
 		updatedAt: '',
 		startTime: '',
 		endTime: '',
-		type: 'meeting',
+		type: 'meeting'
 	}
-	const {formState, setFormState, onInputChange }= useForm(initialForm)
+	const { formState, setFormState, onInputChange } = useForm(initialForm)
 	const { editingEvent, dialogOpen } = useCalendarContext()
-	
+
 	useEffect(() => {
 		if (editingEvent) {
-			for (const prop in editingEvent){ 
-				updateForm(prop as keyof CalendarEvent, editingEvent , setFormState)
+			for (const prop in editingEvent) {
+				updateForm(prop as keyof CalendarEvent, editingEvent, setFormState)
 			}
 		} else {
 			setFormState((prev) => ({
 				...prev,
-				date: initialDate
-					? format(initialDate, 'YYYY-MM-DD', 'en')
-					: format(new Date(), 'YYYY-MM-DD', 'en'),
+				date: initialDate ? format(initialDate, 'YYYY-MM-DD', 'en') : format(new Date(), 'YYYY-MM-DD', 'en'),
 				startTime: initialTime || ''
 			}))
 		}
@@ -70,12 +71,12 @@ export function EventDialog({ onOpenChange, initialDate, initialTime,
 
 		handleSaveEvent({
 			id: editingEvent?.id,
-				title: formState.title.trim(),
-				description: formState.description!.trim() || undefined, 
-				date: new Date(addHour(format(formState.date!, 'YYYY-MM-DD', 'en'), 4)),
-				startTime: formState.startTime || undefined,
-				endTime: formState.endTime || undefined,
-				type: formState.type
+			title: formState.title.trim(),
+			description: formState.description!.trim() || undefined,
+			date: new Date(addHour(format(formState.date!, 'YYYY-MM-DD', 'en'), 4)),
+			startTime: formState.startTime || undefined,
+			endTime: formState.endTime || undefined,
+			type: formState.type
 		})
 		onOpenChange(false)
 	}
@@ -85,12 +86,20 @@ export function EventDialog({ onOpenChange, initialDate, initialTime,
 			<DialogContent className="sm:max-w-125">
 				<DialogHeader>
 					<DialogTitle>{editingEvent ? 'Edit Event' : 'New Event'}</DialogTitle>
-					<DialogDescription>{editingEvent ? 'Update the event details below.' : 'Add a new event to your calendar.'}</DialogDescription>
+					<DialogDescription>
+						{editingEvent ? 'Update the event details below.' : 'Add a new event to your calendar.'}
+					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="space-y-2">
 						<Label htmlFor="title">Title</Label>
-						<Input name="title" placeholder="Event title" value={formState.title} onChange={onInputChange} required />
+						<Input
+							name="title"
+							placeholder="Event title"
+							value={formState.title}
+							onChange={onInputChange}
+							required
+						/>
 					</div>
 
 					<div className="space-y-2">
@@ -109,7 +118,7 @@ export function EventDialog({ onOpenChange, initialDate, initialTime,
 											}
 										})
 									}
-									className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs md:text-sm transition-colors ${
+									className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs transition-colors md:text-sm ${
 										formState.type === t
 											? eventTypeConfig[t].color + ' border'
 											: 'bg-secondary/50 border-border text-muted-foreground hover:bg-secondary'
@@ -123,66 +132,70 @@ export function EventDialog({ onOpenChange, initialDate, initialTime,
 					</div>
 
 					<div className="grid grid-cols-3 gap-4">
-						<div className="space-y-2 col-span-3">
+						<div className="col-span-3 space-y-2">
 							<Label htmlFor="date">Date</Label>
 							<Input name="date" type="date" value={formState.date} onChange={onInputChange} required />
 						</div>
-						<div className="col-span-3 grid gap-4 grid-cols-2">
-						<div className="space-y-2">
-							<Label htmlFor="startTime">Start Time</Label>
-							<Select value={formState.startTime} 
-							onValueChange={(value) => {
-								onInputChange({
-									target: {
-										name: 'startTime',
-										value: value
-									}
-								})
-							}}
-							>
-								<SelectTrigger className='w-full mb-0'>
-									<SelectValue placeholder="Start" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="none">No time</SelectItem>
-									{timeSlots.map((time) => (
-										<SelectItem key={time} value={time}>
-											{time}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="endTime">End Time</Label>
-							<Select value={formState.endTime} onValueChange={(value) => {
+						<div className="col-span-3 grid grid-cols-2 gap-4">
+							<div className="space-y-2">
+								<Label htmlFor="startTime">Start Time</Label>
+								<Select
+									value={formState.startTime}
+									onValueChange={(value) => {
+										onInputChange({
+											target: {
+												name: 'startTime',
+												value: value
+											}
+										})
+									}}
+								>
+									<SelectTrigger className="mb-0 w-full">
+										<SelectValue placeholder="Start" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="none">No time</SelectItem>
+										{timeSlots.map((time) => (
+											<SelectItem key={time} value={time}>
+												{time}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="endTime">End Time</Label>
+								<Select
+									value={formState.endTime}
+									onValueChange={(value) => {
 										onInputChange({
 											target: {
 												name: 'endTime',
 												value: value
 											}
 										})
-									}}>
-								<SelectTrigger className='w-full mb-0'>
-									<SelectValue placeholder="End" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="none">No time</SelectItem>
-									{timeSlots.map((time) => (
-										<SelectItem key={time} value={time}>
-											{time}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
+									}}
+								>
+									<SelectTrigger className="mb-0 w-full">
+										<SelectValue placeholder="End" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="none">No time</SelectItem>
+										{timeSlots.map((time) => (
+											<SelectItem key={time} value={time}>
+												{time}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
 						</div>
 					</div>
 
-					<div className="space-y-2 mb-0">
+					<div className="mb-0 space-y-2">
 						<Label htmlFor="description">Description</Label>
 						<Textarea
-						className='mb-0'
+							className="mb-0"
 							name="description"
 							placeholder="Add details..."
 							value={formState.description}
@@ -191,11 +204,15 @@ export function EventDialog({ onOpenChange, initialDate, initialTime,
 						/>
 					</div>
 					<div className="flex justify-end gap-2 pt-4">
-						<Button type="button" disabled={!editingEvent} className='mr-auto' variant="destructive" onClick={() =>
-						{
-							handleDeleteEvent(editingEvent!)
-							onOpenChange(false)}
-						}
+						<Button
+							type="button"
+							disabled={!editingEvent}
+							className="mr-auto"
+							variant="destructive"
+							onClick={() => {
+								handleDeleteEvent(editingEvent!)
+								onOpenChange(false)
+							}}
 						>
 							Delete
 						</Button>

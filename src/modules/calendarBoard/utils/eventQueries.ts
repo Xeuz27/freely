@@ -38,10 +38,18 @@ export const buildMonthEvents = (days: (Date | null)[], getEventsForDay: (day: D
 	}))
 
 export const mapDayEventsToTimeSlots = (events: CalendarEvent[]): Record<TimeSlot, CalendarEvent | null> =>
-	Object.fromEntries(dayTimeSlots.map((ts) => [ts, events.find((e) => e.startTime === ts) ?? null])) as Record<TimeSlot, CalendarEvent | null>
+	Object.fromEntries(dayTimeSlots.map((ts) => [ts, events.find((e) => e.startTime === ts) ?? null])) as Record<
+		TimeSlot,
+		CalendarEvent | null
+	>
 
-export const buildEventsDayHour = (weekDays: Date[], getEventsForDay: (day: Date) => CalendarEvent[]): EventsByDayAndHour =>
-	Object.fromEntries(weekDays.map((day) => [format(day, 'YYYY-MM-DD'), mapDayEventsToTimeSlots(getEventsForDay(day))]))
+export const buildEventsDayHour = (
+	weekDays: Date[],
+	getEventsForDay: (day: Date) => CalendarEvent[]
+): EventsByDayAndHour =>
+	Object.fromEntries(
+		weekDays.map((day) => [format(day, 'YYYY-MM-DD'), mapDayEventsToTimeSlots(getEventsForDay(day))])
+	)
 
 export const buildEventsHourDay = (weekDays: Date[], eventsDayHour: EventsByDayAndHour): WeekEventsByHour => {
 	const result = {} as WeekEventsByHour

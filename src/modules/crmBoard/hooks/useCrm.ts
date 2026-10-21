@@ -21,10 +21,13 @@ export const useCrm = () => {
 		})
 	})
 
-	const statusCounts = leads.reduce((acc, lead) => {
-		acc[lead.status] = (acc[lead.status] || 0) + 1
-		return acc
-	}, {} as Record<ContactStatus, number>)
+	const statusCounts = leads.reduce(
+		(acc, lead) => {
+			acc[lead.status] = (acc[lead.status] || 0) + 1
+			return acc
+		},
+		{} as Record<ContactStatus, number>
+	)
 
 	return {
 		leads,

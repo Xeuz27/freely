@@ -17,7 +17,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
 import { type Lead } from '@/types/crm-types'
-import { type Project, type ProjectPriority, projectPriorityConfig, type ProjectStatus, projectStatusConfig } from '@/types/project-types'
+import {
+	type Project,
+	type ProjectPriority,
+	projectPriorityConfig,
+	type ProjectStatus,
+	projectStatusConfig
+} from '@/types/project-types'
 import { AlertCircle, Calendar, Flag, Link2, Trash2, User } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -48,8 +54,8 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 			setPriority(editProject.priority)
 			setOwnerId(editProject.ownerId || '')
 			setLeadId(editProject.leadId || '')
-			setStartDate(editProject.startDate.toISOString().split('T')[0])
-			setDeliveryDate(editProject.deliveryDate.toISOString().split('T')[0])
+			setStartDate(editProject.startDate!.toISOString().split('T')[0])
+			setDeliveryDate(editProject.deliveryDate!.toISOString().split('T')[0])
 		} else {
 			const today = new Date()
 			const nextMonth = new Date(today)
@@ -95,7 +101,7 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 
 	return (
 		<Sheet open={open} onOpenChange={onOpenChange}>
-			<SheetContent className="sm:max-w-lg overflow-y-auto">
+			<SheetContent className="overflow-y-auto sm:max-w-lg">
 				<SheetHeader>
 					<SheetTitle>{editProject ? 'Edit Project' : 'New Project'}</SheetTitle>
 					<SheetDescription>
@@ -103,12 +109,17 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 					</SheetDescription>
 				</SheetHeader>
 
-				<form id="project-form" onSubmit={handleSubmit} className="flex flex-col gap-6 py-6 px-4">
+				<form id="project-form" onSubmit={handleSubmit} className="flex flex-col gap-6 px-4 py-6">
 					<div className="space-y-2">
 						<Label htmlFor="name">Project Name</Label>
-						<Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter project name" required />
+						<Input
+							id="name"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							placeholder="Enter project name"
+							required
+						/>
 					</div>
-
 					<div className="space-y-2">
 						<Label htmlFor="description">Description</Label>
 						<Textarea
@@ -119,7 +130,6 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 							rows={3}
 						/>
 					</div>
-
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<Label>Status</Label>
@@ -162,10 +172,9 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 							</Select>
 						</div>
 					</div>
-
 					<div className="space-y-2">
 						<Label className="flex items-center gap-2">
-							<Link2 className="size-4 text-muted-foreground" />
+							<Link2 className="text-muted-foreground size-4" />
 							Linked Lead
 						</Label>
 						<Select value={leadId} onValueChange={setLeadId}>
@@ -178,63 +187,79 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 									<SelectItem key={lead.id} value={lead.id}>
 										<div className="flex items-center gap-2">
 											<span>{lead.name}</span>
-											{lead.company && <span className="text-muted-foreground text-xs">({lead.company})</span>}
+											{lead.company && (
+												<span className="text-muted-foreground text-xs">({lead.company})</span>
+											)}
 										</div>
 									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
 						{linkedLead && (
-							<div className="flex items-center gap-2 mt-2 p-2 rounded-lg bg-secondary/50 text-sm">
-								<User className="size-4 text-muted-foreground" />
+							<div className="bg-secondary/50 mt-2 flex items-center gap-2 rounded-lg p-2 text-sm">
+								<User className="text-muted-foreground size-4" />
 								<span>{linkedLead.name}</span>
-								{linkedLead.company && <span className="text-muted-foreground">- {linkedLead.company}</span>}
+								{linkedLead.company && (
+									<span className="text-muted-foreground">- {linkedLead.company}</span>
+								)}
 							</div>
 						)}
 					</div>
-
 					<div className="space-y-2">
 						<Label className="flex items-center gap-2">
-							<User className="size-4 text-muted-foreground" />
+							<User className="text-muted-foreground size-4" />
 							Owner
 						</Label>
-						<Input value={ownerId} onChange={(e) => setOwnerId(e.target.value)} placeholder="Project owner name" />
+						<Input
+							value={ownerId}
+							onChange={(e) => setOwnerId(e.target.value)}
+							placeholder="Project owner name"
+						/>
 					</div>
-
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<Label className="flex items-center gap-2">
-								<Calendar className="size-4 text-muted-foreground" />
+								<Calendar className="text-muted-foreground size-4" />
 								Start Date
 							</Label>
-							<Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+							<Input
+								type="date"
+								value={startDate}
+								onChange={(e) => setStartDate(e.target.value)}
+								required
+							/>
 						</div>
 
 						<div className="space-y-2">
 							<Label className="flex items-center gap-2">
-								<AlertCircle className="size-4 text-muted-foreground" />
+								<AlertCircle className="text-muted-foreground size-4" />
 								Delivery Date
 							</Label>
-							<Input type="date" value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} required />
+							<Input
+								type="date"
+								value={deliveryDate}
+								onChange={(e) => setDeliveryDate(e.target.value)}
+								required
+							/>
 						</div>
 					</div>
-
+					!
 					{editProject && (
-						<div className="pt-4 border-t border-border">
-							<div className="flex items-center justify-between text-xs text-muted-foreground">
+						<div className="border-border border-t pt-4">
+							<div className="text-muted-foreground flex items-center justify-between text-xs">
 								<span>Created: {editProject.createdAt.toLocaleDateString()}</span>
-								<span>Updated: {editProject.updatedAt.toLocaleDateString()}</span>
+								<span>Updated: {editProject.updatedAt!.toLocaleDateString()}</span>
 							</div>
 						</div>
 					)}
 				</form>
-				<SheetFooter className="border-t border-border">
-					<div className="flex items-center justify-between w-full">
+				<SheetFooter className="border-border border-t">
+					<div className="flex w-full items-center justify-between">
 						{editProject && onDelete ? (
 							<AlertDialog>
 								<AlertDialogTrigger asChild>
 									<Button variant="destructive" size="sm">
-										<Trash2 className="size-4 mr-1" />
+										<Trash2 className="mr-1 size-4" />
 										Delete
 									</Button>
 								</AlertDialogTrigger>
@@ -242,7 +267,8 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 									<AlertDialogHeader>
 										<AlertDialogTitle>Delete Project</AlertDialogTitle>
 										<AlertDialogDescription>
-											Are you sure you want to delete &quot;{editProject.name}&quot;? This action cannot be undone.
+											Are you sure you want to delete &quot;{editProject.name}&quot;? This action
+											cannot be undone.
 										</AlertDialogDescription>
 									</AlertDialogHeader>
 									<AlertDialogFooter>

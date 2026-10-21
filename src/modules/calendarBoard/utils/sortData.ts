@@ -1,11 +1,7 @@
 import type { Lead } from '@/types/crm-types'
 
 type data = Lead[]
-export const sortData = (
-	Data: data,
-	ascOrDesc: 'asc' | 'desc',
-	propToSort = 'name'
-) => {
+export const sortData = (Data: data, ascOrDesc: 'asc' | 'desc', propToSort = 'name') => {
 	let sorted = [...Data]
 	sorted.sort((a, b) => {
 		let comparison

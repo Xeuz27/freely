@@ -17,9 +17,9 @@ export const canUseBrowserNotifications = (): boolean => typeof window !== 'unde
 
 export const requestNotificationPermission = async (): Promise<NotificationPermission> => {
 	if (!canUseBrowserNotifications()) {
-        console.warn('This browser does not support desktop notification')
-        return 'denied'
-    } 
+		console.warn('This browser does not support desktop notification')
+		return 'denied'
+	}
 
 	if (Notification.permission === 'granted') return 'granted'
 	if (Notification.permission === 'denied') return 'denied'
@@ -27,7 +27,9 @@ export const requestNotificationPermission = async (): Promise<NotificationPermi
 	return await Notification.requestPermission()
 }
 
-export const sendNotification = async (payload: NotificationPayload): Promise<{ mode: NotificationMode; permission: NotificationPermission }> => {
+export const sendNotification = async (
+	payload: NotificationPayload
+): Promise<{ mode: NotificationMode; permission: NotificationPermission }> => {
 	const permission = await requestNotificationPermission()
 
 	if (permission === 'granted' && canUseBrowserNotifications()) {
@@ -38,12 +40,14 @@ export const sendNotification = async (payload: NotificationPayload): Promise<{ 
 	}
 
 	show(payload.body, {
-        title: payload.title,
-        close: 'both',
-        icon: ' ',
+		title: payload.title,
+		close: 'both',
+		icon: ' ',
 		type: payload.type ?? 'default',
 		duration: payload.duration ?? 6000,
-		className: payload.className ?? 'bg-card! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-accent-foreground/20!'
+		className:
+			payload.className ??
+			'bg-card! [&_.timeLeft]:bg-white/40! [&_.timeLeft]:h-[1px]! text-accent-foreground/80! outline-1! rounded-xs! font-light! outline-accent-foreground/20!'
 	})
 
 	return { mode: 'toast', permission }

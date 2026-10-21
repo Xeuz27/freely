@@ -1,5 +1,12 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -94,7 +101,9 @@ export function TimeEntryDialog({
 			<DialogContent className="sm:max-w-125">
 				<DialogHeader>
 					<DialogTitle>{editEntry ? 'Edit Time Entry' : 'Log Time'}</DialogTitle>
-					<DialogDescription>{editEntry ? 'Update your time entry details.' : 'Record what you worked on.'}</DialogDescription>
+					<DialogDescription>
+						{editEntry ? 'Update your time entry details.' : 'Record what you worked on.'}
+					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="space-y-2">
@@ -122,15 +131,33 @@ export function TimeEntryDialog({
 					<div className="grid grid-cols-3 gap-3">
 						<div className="space-y-2">
 							<Label htmlFor="date">Date</Label>
-							<Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+							<Input
+								id="date"
+								type="date"
+								value={date}
+								onChange={(e) => setDate(e.target.value)}
+								required
+							/>
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="startTime">Start</Label>
-							<Input id="startTime" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+							<Input
+								id="startTime"
+								type="time"
+								value={startTime}
+								onChange={(e) => setStartTime(e.target.value)}
+								required
+							/>
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="endTime">End</Label>
-							<Input id="endTime" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+							<Input
+								id="endTime"
+								type="time"
+								value={endTime}
+								onChange={(e) => setEndTime(e.target.value)}
+								required
+							/>
 						</div>
 					</div>
 

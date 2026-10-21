@@ -1,101 +1,91 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { eventTypeConfig, type EventType } from "@/types/calendar-types";
-import { CalendarDays, Plus } from "lucide-react";
-import useCalendarContext from "../../hooks/useCalendarContext";
-import { handleAddEvent, handleEditEvent } from "../../utils/handlers";
-import { sortEventsByStartTime } from "../../utils/eventQueries";
-import { eventTypeIcons } from "../calendar-board";
-import { DayEventCard } from "./day-event-card";
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { eventTypeConfig, type EventType } from '@/types/calendar-types'
+import { CalendarDays, Plus } from 'lucide-react'
+import useCalendarContext from '../../hooks/useCalendarContext'
+import { handleAddEvent } from '../../utils/handlers'
+import { sortEventsByStartTime } from '../../utils/eventQueries'
+import { eventTypeIcons } from '../calendar-board'
+import { DayEventCard } from './day-event-card'
 
 const AllEventsColumn = () => {
-  const {
-    getEventsForDate,
-    currentDate,
-    selectedTime,
-    setEditingEvent,
-    setSelectedDate,
-    setSelectedTime,
-    setDialogOpen
-  } = useCalendarContext();
-  const dayEvents = sortEventsByStartTime(getEventsForDate(currentDate));
-  const eventsByType = (Object.keys(eventTypeConfig) as EventType[])
-    .map((type) => ({
-      type,
-      count: dayEvents.filter((event) => event.type === type).length
-    }))
-    .filter(({ count }) => count > 0);
-  return (
-    <div className="flex flex-col flex-1 max-sm:hidden border-l border-border pl-4 pr-0 relative">
-      <div className="py-4">
-        <h3 className="text-sm font-medium text-muted-foreground">All Events</h3>
-      </div>
-      <div className="flex-1 pr-2 pb-8 overflow-y-auto">
-        {dayEvents.length === 0 ? (
-          <div className="text-center py-8">
-            <div className="flex items-center justify-center size-12 rounded-full bg-secondary/50 mx-auto mb-3">
-              <CalendarDays className="size-6 text-muted-foreground" />
-            </div>
-            <p className="text-sm text-muted-foreground">No events scheduled</p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-3"
-              onClick={() =>
-                handleAddEvent(
-                  currentDate,
-                  selectedTime,
-                  setEditingEvent,
-                  setSelectedDate,
-                  setSelectedTime,
-                  setDialogOpen
-                )
-              }
-            >
-              <Plus className="size-3.5 mr-1" />
-              Add Event
-            </Button>
-          </div>
-        ) : (
-          dayEvents.map((event) => (
-            <DayEventCard
-              key={event.id}
-              event={event}
-              className="mb-2"
-            />
-          ))
-        )}
+	const {
+		getEventsForDate,
+		currentDate,
+		selectedTime,
+		setEditingEvent,
+		setSelectedDate,
+		setSelectedTime,
+		setDialogOpen
+	} = useCalendarContext()
+	const dayEvents = sortEventsByStartTime(getEventsForDate(currentDate))
+	const eventsByType = (Object.keys(eventTypeConfig) as EventType[])
+		.map((type) => ({
+			type,
+			count: dayEvents.filter((event) => event.type === type).length
+		}))
+		.filter(({ count }) => count > 0)
+	return (
+		<div className="border-border relative flex flex-1 flex-col border-l pr-0 pl-4 max-sm:hidden">
+			<div className="py-4">
+				<h3 className="text-muted-foreground text-sm font-medium">All Events</h3>
+			</div>
+			<div className="flex-1 overflow-y-auto pr-2 pb-8">
+				{dayEvents.length === 0 ? (
+					<div className="py-8 text-center">
+						<div className="bg-secondary/50 mx-auto mb-3 flex size-12 items-center justify-center rounded-full">
+							<CalendarDays className="text-muted-foreground size-6" />
+						</div>
+						<p className="text-muted-foreground text-sm">No events scheduled</p>
+						<Button
+							variant="outline"
+							size="sm"
+							className="mt-3"
+							onClick={() =>
+								handleAddEvent(
+									currentDate,
+									selectedTime,
+									setEditingEvent,
+									setSelectedDate,
+									setSelectedTime,
+									setDialogOpen
+								)
+							}
+						>
+							<Plus className="mr-1 size-3.5" />
+							Add Event
+						</Button>
+					</div>
+				) : (
+					dayEvents.map((event) => <DayEventCard key={event.id} event={event} className="mb-2" />)
+				)}
 
-        {dayEvents.length > 0 && (
-          <div className="mt-8 border-t border-border">
-            <h4 className="text-xs font-medium text-muted-foreground py-4">
-              By Type
-            </h4>
-            <div className="flex flex-col flex-wrap gap-2">
-              {eventsByType.map(({ type, count }) => {
-                const Icon = eventTypeIcons[type];
-                return (
-                     <div
-                    key={type}
-                    className={cn(
-                      "flex items-center gap-2 p-2 rounded-md text-xs",
-                      eventTypeConfig[type].color
-                    )}
-                  >
-                    {Icon && <Icon className="size-4 lg:size-5" />}
-                    <span className="capitalize w-fit">{type}</span>
-                    <span className="ml-auto font-medium">{count}</span>
-                  </div>
-                ) }
-              )
-              }
-              </div>
-            </div> 
-            )
-        }
-      </div>
-    </div>
-  );
-};
+				{dayEvents.length > 0 && (
+					<div className="border-border mt-8 border-t">
+						<h4 className="text-muted-foreground py-4 text-xs font-medium">By Type</h4>
+						<div className="flex flex-col flex-wrap gap-2">
+							{eventsByType.map(({ type, count }) => {
+								const Icon = eventTypeIcons[type]
+								return (
+									<div
+										key={type}
+										className={cn(
+											'flex items-center gap-2 rounded-md p-2 text-xs',
+											eventTypeConfig[type].color
+										)}
+									>
+										{Icon && <Icon className="size-4 lg:size-5" />}
+										<span className="w-fit capitalize">{type}</span>
+										<span className="ml-auto font-medium">{count}</span>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	)
+}
 
-export { AllEventsColumn };
+export { AllEventsColumn }

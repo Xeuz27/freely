@@ -20,7 +20,7 @@ export function SearchForm({ ...props }: React.ComponentProps<'form'>) {
 							input?.focus()
 						}
 					}}
-					className="relative cursor-pointer [&_#search]:focus-visible:ring-accent! h-6 flex border-b border-muted-foreground/50 items-center"
+					className="[&_#search]:focus-visible:ring-accent! border-muted-foreground/50 relative flex h-6 cursor-pointer items-center border-b"
 				>
 					<Label htmlFor="search" className="sr-only">
 						Search
@@ -29,9 +29,14 @@ export function SearchForm({ ...props }: React.ComponentProps<'form'>) {
 						id="search"
 						autoComplete="off"
 						placeholder="Search the docs..."
-						className={cn('px-0 border-0 bg-transparent! focus-visible:ring-0', open ? 'px-2' : 'px-0 w-0')}
+						className={cn('border-0 bg-transparent! px-0 focus-visible:ring-0', open ? 'px-2' : 'w-0 px-0')}
 					/>
-					<SearchIcon className={cn('pointer-events-none opacity-50 select-none', open ? 'size-6 mx-auto mr-2' : 'size-5 mx-auto')} />
+					<SearchIcon
+						className={cn(
+							'pointer-events-none opacity-50 select-none',
+							open ? 'mx-auto mr-2 size-6' : 'mx-auto size-5'
+						)}
+					/>
 				</SidebarGroupContent>
 			</SidebarGroup>
 		</form>

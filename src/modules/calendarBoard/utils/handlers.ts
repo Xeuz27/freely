@@ -3,7 +3,13 @@ import type { CalendarEvent } from '@/types/calendar-types'
 import type { Dispatch, SetStateAction } from 'react'
 import { type eventLink } from './../../../types/calendar-types'
 
-const handlePrev = (view: string, year: number, month: number, currentDate: Date, setCurrentDate: Dispatch<SetStateAction<Date>>) => {
+const handlePrev = (
+	view: string,
+	year: number,
+	month: number,
+	currentDate: Date,
+	setCurrentDate: Dispatch<SetStateAction<Date>>
+) => {
 	if (view === 'month') {
 		setCurrentDate(new Date(year, month - 1, 1))
 	} else if (view === 'week') {
@@ -31,14 +37,27 @@ const handleNext = (view: any, currentDate: any, setCurrentDate: any, year: any,
 	}
 }
 
-const handleAddEvent = (date?: Date, time?: string, setEditingEvent?: any, setSelectedDate?: any, setSelectedTime?: any, setDialogOpen?: any) => {
+const handleAddEvent = (
+	date?: Date,
+	time?: string,
+	setEditingEvent?: any,
+	setSelectedDate?: any,
+	setSelectedTime?: any,
+	setDialogOpen?: any
+) => {
 	setEditingEvent(null)
 	setSelectedDate(date || null)
 	setSelectedTime(time)
 	setDialogOpen(true)
 }
 
-const handleEditEvent = (event: CalendarEvent, setEditingEvent?: any, setSelectedDate?: any, setSelectedTime?: any, setDialogOpen?: any) => {
+const handleEditEvent = (
+	event: CalendarEvent,
+	setEditingEvent?: any,
+	setSelectedDate?: any,
+	setSelectedTime?: any,
+	setDialogOpen?: any
+) => {
 	setEditingEvent(event)
 	setSelectedDate(null)
 	setSelectedTime(undefined)
@@ -56,7 +75,7 @@ const handleSaveEventLink = (eventLink: Partial<eventLink>) => {
 			id: crypto.randomUUID().split('-')[0]
 		}
 	}
-	linksHandler({ link: link as eventLink  })
+	linksHandler({ link: link as eventLink })
 	return link
 }
 type eventData = Partial<CalendarEvent>
@@ -68,13 +87,19 @@ const handleSaveEvent = (eventData: eventData) => {
 			id: crypto.randomUUID().split('-')[0],
 			createdAt: new Date()
 		}
-	}else {
-		event ={...eventData,
-			updatedAt: new Date()
-		}
+	} else {
+		event = { ...eventData, updatedAt: new Date() }
 	}
 	eventHandler(event as CalendarEvent)
 	return event as CalendarEvent
 }
 
-export { handleAddEvent, handleDeleteEvent, handleEditEvent, handleNext, handlePrev, handleSaveEvent, handleSaveEventLink }
+export {
+	handleAddEvent,
+	handleDeleteEvent,
+	handleEditEvent,
+	handleNext,
+	handlePrev,
+	handleSaveEvent,
+	handleSaveEventLink
+}

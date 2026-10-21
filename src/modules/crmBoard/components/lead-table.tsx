@@ -1,10 +1,4 @@
-import {
-	Table,
-	TableBody,
-	TableHead,
-	TableHeader,
-	TableRow
-} from '@/components/ui/table'
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { sortData } from '@/modules/calendarBoard/utils/sortData'
 import type { Lead, SortOrder } from '@/types/crm-types'
 import { Users } from 'lucide-react'
@@ -30,7 +24,7 @@ const LeadTable = ({ data }: { data: Lead[] }) => {
 	return (
 		<Table>
 			<TableHeader>
-				<TableRow className="hover:bg-transparent divide-x-2">
+				<TableRow className="divide-x-2 hover:bg-transparent">
 					<TableHead
 						//@ts-ignore
 						sortFn={sortRows}
@@ -65,10 +59,8 @@ const LeadTable = ({ data }: { data: Lead[] }) => {
 					<TableRow>
 						<td colSpan={7} className="py-12 text-center">
 							<div className="flex flex-col items-center gap-2">
-								<Users className="size-8 text-muted-foreground/50" />
-								<p className="text-muted-foreground">
-									No leads found
-								</p>
+								<Users className="text-muted-foreground/50 size-8" />
+								<p className="text-muted-foreground">No leads found</p>
 							</div>
 						</td>
 					</TableRow>

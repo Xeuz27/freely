@@ -26,7 +26,7 @@ const eventTypes: EventType[] = [
 const workTimeSlots = timeSlots.filter((time) => time >= '09:00' && time <= '16:30')
 const startTimeSlots = workTimeSlots.slice(0, -2)
 
-const randomItem = <T,>(items: readonly T[]) => items[Math.floor(Math.random() * items.length)]
+const randomItem = <T>(items: readonly T[]) => items[Math.floor(Math.random() * items.length)]
 
 const getRandomDate = (start: Date) => {
 	const date = new Date(start)

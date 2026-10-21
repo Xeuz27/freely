@@ -1,4 +1,4 @@
-import { dayTimeSlots } from "@/data/dayTimeSlots"
+import { dayTimeSlots } from '@/data/dayTimeSlots'
 
 export type EventType = 'meeting' | 'call' | 'task' | 'reminder' | 'deadline'
 

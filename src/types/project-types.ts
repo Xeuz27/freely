@@ -9,10 +9,10 @@ export interface Project {
 	priority: ProjectPriority
 	ownerId?: string
 	leadId?: string
-	startDate: Date
-	deliveryDate: Date
+	startDate?: Date
+	deliveryDate?: Date
 	createdAt: Date
-	updatedAt: Date
+	updatedAt?: Date
 }
 
 export const projectStatusConfig: Record<ProjectStatus, { label: string; color: string }> = {

@@ -49,8 +49,8 @@ interface BtnProps {
 
 const WorkspaceHeader: WorkspaceHeaderComponent = ({ children }: WorkspaceHeaderprops) => {
 	return (
-		<header className="sticky top-0 shrink-0 border-b h-16 flex gap-4 items-center justify-between">
-			<div className="flex items-center ">
+		<header className="sticky top-0 flex h-16 shrink-0 items-center justify-between gap-4 border-b">
+			<div className="flex items-center">
 				<SidebarTrigger className="size-8 p-1" />
 				<Separator orientation="vertical" className="ml-3.5 h-8" />
 			</div>
@@ -62,12 +62,12 @@ const WorkspaceHeader: WorkspaceHeaderComponent = ({ children }: WorkspaceHeader
 const Content = ({ title, description, Icon, children }: ContentProps) => {
 	return (
 		<div className="flex items-center gap-3">
-			<div className="flex items-center justify-center size-9 rounded-lg bg-primary/30">
-				<Icon className="size-5 text-primary" />
+			<div className="bg-primary/30 flex size-9 items-center justify-center rounded-lg">
+				<Icon className="text-primary size-5" />
 			</div>
 			<div>
-				<h1 className="text-lg font-semibold text-foreground">{title}</h1>
-				<p className="text-xs text-muted-foreground hidden sm:block">{description}</p>
+				<h1 className="text-foreground text-lg font-semibold">{title}</h1>
+				<p className="text-muted-foreground hidden text-xs sm:block">{description}</p>
 			</div>
 			{children && <div className="">{children}</div>}
 		</div>
@@ -81,10 +81,11 @@ const Actions = ({ children }: ActionProps) => {
 const SearchBar = ({ placeholder, value, onSearch }: SearchBarProps) => {
 	return (
 		<div className="relative">
-			<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-			<Input className="pl-9 w-48 bg-secondary/50" 
-				placeholder={placeholder} 
-				value={value} 
+			<Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+			<Input
+				className="bg-secondary/50 w-48 pl-9"
+				placeholder={placeholder}
+				value={value}
 				onChange={(e) => onSearch(e.target.value)}
 			/>
 		</div>
@@ -92,12 +93,7 @@ const SearchBar = ({ placeholder, value, onSearch }: SearchBarProps) => {
 }
 const Tabs = ({ className = '', children }: TabsProps) => {
 	return (
-		<div
-	 		className={cn(
-				'flex justify-center items-center gap-1 rounded-lg p-1 bg-border',
-				className
-			)}
-		>
+		<div className={cn('bg-border flex items-center justify-center gap-1 rounded-lg p-1', className)}>
 			{children}
 		</div>
 	)
@@ -107,9 +103,9 @@ const Tab = ({ text, isActive, className, onClick }: TabProps) => {
 		<button
 			onClick={() => onClick()}
 			className={cn(
-				'px-3 py-1.5 text-sm rounded-md transition-colors border capitalize',
+				'rounded-md border px-3 py-1.5 text-sm capitalize transition-colors',
 				isActive === text
-					? 'bg-foreground/10 text-foreground shadow-sm border-accent/60'
+					? 'bg-foreground/10 text-foreground border-accent/60 shadow-sm'
 					: 'text-muted-foreground hover:text-foreground border-transparent',
 				className
 			)}
@@ -121,7 +117,7 @@ const Tab = ({ text, isActive, className, onClick }: TabProps) => {
 const Btn = ({ text, onClick }: BtnProps) => {
 	return (
 		<Button
-			className="hover:bg-accent/20 px-1.5 md:px-4 gap-0 rounded-full md:rounded-sm"
+			className="hover:bg-accent/20 gap-0 rounded-full px-1.5 md:rounded-sm md:px-4"
 			onClick={() => {
 				onClick()
 			}}
@@ -139,4 +135,3 @@ WorkspaceHeader.Button = Btn
 WorkspaceHeader.Tabs = Tabs
 WorkspaceHeader.Tab = Tab
 export { WorkspaceHeader }
-

@@ -138,19 +138,35 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 
 						<div className="space-y-2">
 							<Label htmlFor="email">Email</Label>
-							<Input name="email" type="email" placeholder="john@example.com" value={formState['email']} onChange={onInputChange} />
+							<Input
+								name="email"
+								type="email"
+								placeholder="john@example.com"
+								value={formState['email']}
+								onChange={onInputChange}
+							/>
 						</div>
 					</div>
 
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="phone">Phone</Label>
-							<Input name="phone" placeholder="+1 (555) 000-0000" value={formState['phone']} onChange={onInputChange} />
+							<Input
+								name="phone"
+								placeholder="+1 (555) 000-0000"
+								value={formState['phone']}
+								onChange={onInputChange}
+							/>
 						</div>
 
 						<div className="space-y-2">
 							<Label htmlFor="company">Company</Label>
-							<Input name="company" placeholder="Acme Inc." value={formState['company']} onChange={onInputChange} />
+							<Input
+								name="company"
+								placeholder="Acme Inc."
+								value={formState['company']}
+								onChange={onInputChange}
+							/>
 						</div>
 					</div>
 
@@ -182,8 +198,8 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 						</Select>
 					</div>
 					<div className="grid grid-rows-2 space-y-6 px-8">
-						<div className="gap-4 grid grid-cols-2">
-							<div className="flex flex-col space-y-2 justify-between">
+						<div className="grid grid-cols-2 gap-4">
+							<div className="flex flex-col justify-between space-y-2">
 								<Label htmlFor="action">Event</Label>
 								<Input
 									name={'eventTitle'}
@@ -193,7 +209,7 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 									onChange={onInputChange2}
 								/>
 							</div>
-							<div className="flex flex-col space-y-2 justify-between">
+							<div className="flex flex-col justify-between space-y-2">
 								<Label htmlFor="eventType">Event Type</Label>
 								<Input
 									name="eventType"
@@ -207,7 +223,13 @@ export function LeadDialog({ open, onOpenChange, editLead, eventsLinked }: LeadD
 						<div className="flex justify-between">
 							<div className="space-y-2">
 								<Label htmlFor="date">Date</Label>
-								<Input name="date" type="date" value={actionState['date']} onChange={onInputChange2} required />
+								<Input
+									name="date"
+									type="date"
+									value={actionState['date']}
+									onChange={onInputChange2}
+									required
+								/>
 							</div>
 							<div className="space-y-2">
 								<Label htmlFor="startTime">Start Time</Label>

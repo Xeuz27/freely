@@ -1,12 +1,12 @@
-import type { formify } from '@/types/calendar-types';
-import { format } from '@formkit/tempo';
-import type { Dispatch, SetStateAction } from 'react';
-import { useState, type ChangeEvent, type ChangeEventHandler } from 'react';
+import type { formify } from '@/types/calendar-types'
+import { format } from '@formkit/tempo'
+import type { Dispatch, SetStateAction } from 'react'
+import { useState, type ChangeEvent, type ChangeEventHandler } from 'react'
 
 type inputChange =
 	| (ChangeEvent<HTMLInputElement, HTMLInputElement> & ChangeEventHandler<HTMLTextAreaElement, HTMLTextAreaElement>)
 	| { target: { name: string; value: any } }
-export const useForm = <Form extends Object>(initialState: Form ) => {
+export const useForm = <Form extends Object>(initialState: Form) => {
 	const [formState, setFormState] = useState<Form>(initialState)
 
 	const onInputChange = ({ target }: inputChange) => {
@@ -20,7 +20,7 @@ export const useForm = <Form extends Object>(initialState: Form ) => {
 		setFormState(initialState)
 	}
 	const set = <Key extends keyof Form>(key: Key, value: Form[Key]) => {
-		return setFormState((p)=>({
+		return setFormState((p) => ({
 			...p,
 			[key]: value
 		}))
