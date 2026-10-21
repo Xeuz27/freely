@@ -1,3 +1,5 @@
+import TimetrackContextProvider from '@/modules/timeTrackBoard/context/timetrackContext.tsx'
+
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 
@@ -72,6 +74,7 @@ export function Workspace() {
 	return (
 		<SidebarProvider>
 			<CalendarContextProvider>
+				<TimetrackContextProvider>
 					<CrmContextProvider>
 						<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
 						<SidebarInset>
@@ -102,6 +105,7 @@ export function Workspace() {
 							</main>
 						</SidebarInset>
 					</CrmContextProvider>
+				</TimetrackContextProvider>
 			</CalendarContextProvider>
 		</SidebarProvider>
 	)
