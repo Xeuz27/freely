@@ -1,0 +1,33 @@
+{
+	"plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+	"useTabs": true,
+	"tabWidth": 4,
+	"trailingComma": "none",
+	"semi": true,
+	"printWidth": 120,
+	"singleQuote": false,
+	"overrides": [
+		{
+			"files": "*.astro",
+			"options": {
+				"parser": "astro"
+			}
+		},
+		{
+			"files": "*.{ts,tsx,js,jsx}",
+			"options": {
+				"parser": "typescript"
+			}
+		},
+		{
+			"files": ["*.yaml"],
+			"options": {
+				"parser": "yaml",
+				"useTabs": false,
+				"tabWidth": 2,
+				"semi": false,
+				"singleQuote": true
+			}
+		}
+	]
+}
