@@ -1,8 +1,10 @@
-export const isToday = (today: Date) => {
-	const date = new Date()
-	return (
-		date.getDate() === today.getDate() &&
-		date.getMonth() === today.getMonth() &&
-		date.getFullYear() === today.getFullYear()
-	)
+const isSameDay = (a: Date, b: Date) => {
+	//prettier-ignore
+	return  a.getFullYear() === b.getFullYear() &&
+			a.getMonth() === b.getMonth() &&
+			a.getDate() === b.getDate()
 }
+
+const isToday = (date: Date) => isSameDay(date, new Date())
+
+export { isSameDay, isToday }

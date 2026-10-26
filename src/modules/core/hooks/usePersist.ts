@@ -8,9 +8,8 @@ const usePersist = <T>(key: string, state: T, setState: (value: T) => void) => {
 	//  on page reload, updates state with localstorage if it exists
 	useEffect(() => {
 		if (values == null) return
-		//@ts-ignore
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 		setState(values)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	// on state changes, update the stage in localstorage

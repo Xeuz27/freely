@@ -25,7 +25,6 @@ function useStorage<T>(
 	})
 
 	useEffect(() => {
-		console.log(value, 'value en useStorage', '-------', key, 'key')
 		if (value === undefined) return storageObject.removeItem(key)
 		storageObject.setItem(key, JSON.stringify(value))
 	}, [key, value, storageObject])

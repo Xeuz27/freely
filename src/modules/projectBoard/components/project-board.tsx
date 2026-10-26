@@ -17,6 +17,7 @@ import { ProjectRow } from './project-row.tsx'
 import { ProjectSheet } from './project-sheet.tsx'
 import { sampleProjects } from 'src/data/sampleProjects.ts'
 import { sampleLeads } from 'src/data/sampleLeads.ts'
+import usePersist from 'src/modules/core/hooks/usePersist.ts'
 
 type SortField = 'name' | 'status' | 'priority' | 'deliveryDate' | 'startDate'
 type SortOrder = 'asc' | 'desc'
@@ -31,6 +32,8 @@ export function ProjectBoard() {
 	const [editingProject, setEditingProject] = useState<Project | null>(null)
 	const [sortField, setSortField] = useState<SortField>('deliveryDate')
 	const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
+
+	usePersist('projects', projects, setProjects)
 
 	const handleSaveProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => {
 		if (projectData.id) {

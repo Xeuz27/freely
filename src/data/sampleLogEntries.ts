@@ -19,7 +19,7 @@ export const sampleLogEntries: TimeEntry[] = [
 		startTime: "09:45",
 		endTime: "12:00",
 		projectId: "proj-1",
-		kanbanCardId: "card-1",
+		kanbanId: "card-1",
 		tags: ["design", "deep work"],
 		createdAt: new Date()
 	},

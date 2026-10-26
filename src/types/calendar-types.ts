@@ -17,7 +17,7 @@ export type linkHandlerParams =
 	| { id: string; key: keyof eventLink }
 	| {
 			link: eventLink
-			toDelete?: Boolean
+			toDelete?: boolean
 	  }
 export interface eventLink {
 	id: string
@@ -58,5 +58,9 @@ export const eventTypeConfig: Record<EventType, { label: string; color: string; 
 export const timeSlots = dayTimeSlots
 
 export type formify<Type> = {
-	[Key in keyof Type]: Type[Key] extends Date | undefined ? string | undefined : Type[Key]
+	[Key in keyof Type]: Type[Key] extends Date | undefined
+		? string | undefined
+		: Type[Key] extends string[] | undefined
+			? string
+			: Type[Key]
 }
