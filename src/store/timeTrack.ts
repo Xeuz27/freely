@@ -1,7 +1,7 @@
 import { atom } from 'nanostores'
 import type { TimeEntry } from '@/types/timetrack-types'
 import { sampleLogEntries } from '@/data/sampleLogEntries'
-// const removeByPredicate = (list: eventLink[] | Lead[], predicate: (l: eventLink | Lead) => boolean ) => list.filter((l) => !predicate(l))
+import { removeByPredicate } from './store'
 
 export const state = atom({
 	entries: [...sampleLogEntries]
@@ -9,28 +9,29 @@ export const state = atom({
 export const getState = () => {
 	return state.get()
 }
-export const setState = (value: Object) => {
-	let currentState = getState()
+export const setState = (value: object) => {
+	const currentState = getState()
 	state.set({ ...currentState, ...value })
 }
 
 export const entriesHandler = (entry: TimeEntry, toDelete = false) => {
-	let currentState = getState()
+	const currentState = getState()
 	let entries = [...currentState.entries]
-	let entriesIndex = entries.findIndex((e) => e.id === entry.id)
+	const entriesIndex = entries.findIndex((e) => e.id === entry.id)
 
 	if (toDelete) {
-		//@ts-ignore
 		entries = removeByPredicate(entries, (ev) => ev.id === entry.id)
-		// linksHandler({ id: entry.id, key: 'eventId' })
+		// to have relations
 	} else {
-		entriesIndex >= 0
-			? (entries[entriesIndex] = {
-					...entries[entriesIndex],
-					...entry,
-					updatedAt: new Date()
-				})
-			: entries.push({ ...entry })
+		if (entriesIndex >= 0) {
+			entries[entriesIndex] = {
+				...entries[entriesIndex],
+				...entry,
+				updatedAt: new Date()
+			}
+		} else {
+			entries.push({ ...entry })
+		}
 	}
 	setState({ entries: entries })
 }

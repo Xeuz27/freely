@@ -1,37 +1,30 @@
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { WorkspaceHeader } from '@/modules/core/components/workspace-Header'
 import { formatDuration } from '@/types/timetrack-types'
-import { Calendar, ChevronLeft, ChevronRight, Clock, Timer } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Clock, Timer } from 'lucide-react'
 import { TimeEntryDialog } from './time-entry-dialog'
 import { DayGrid } from './dayGrid'
 import useTimeTrackContext from '../hooks/useTimeTrackContext'
 import { WeekGrid } from '@/modules/timeTrackBoard/components/weekGrid'
 import { Activity } from 'react'
+import { formatDateHeader } from '@/modules/calendarBoard/utils/formatters'
+import useHandlers from '../hooks/useHandlers'
 
 export function TimetrackBoard() {
 	const {
+		initialDate,
 		viewMode,
 		currentDate,
 		todayTotalMinutes,
 		weekTotalMinutes,
-		getWeekDates,
-		formatShortDate,
-		formatDateHeader,
-		navigateDate,
-		goToToday,
-		handleAddEntry,
 		dialogOpen,
 		setDialogOpen,
-		handleSaveEntry,
 		editEntry,
 		initialStartTime,
 		initialEndTime,
-		setViewMode,
-		projects,
-		kanbanCards
+		setViewMode
 	} = useTimeTrackContext()
-
+	const { handleSaveEntry, navigateDate, goToToday } = useHandlers()
 	return (
 		<div className="flex h-full flex-1 flex-col px-4">
 			<WorkspaceHeader>
@@ -51,7 +44,13 @@ export function TimetrackBoard() {
 						<WorkspaceHeader.Tab text="day" isActive={viewMode} onClick={() => setViewMode('day')} />
 						<WorkspaceHeader.Tab text="week" isActive={viewMode} onClick={() => setViewMode('week')} />
 					</WorkspaceHeader.Tabs>
-					<WorkspaceHeader.Button text="Add Entry" onClick={() => handleAddEntry()} />
+					<WorkspaceHeader.Button
+						text="Start block timer"
+						onClick={() => {
+							// setInitialDate(new Date())
+							// handleAddEntry()
+						}}
+					/>
 				</WorkspaceHeader.Actions>
 			</WorkspaceHeader>
 
@@ -61,11 +60,7 @@ export function TimetrackBoard() {
 						<ChevronLeft className="size-4" />
 					</Button>
 					<div className="flex items-center gap-2 px-2">
-						<span className="text-lg font-semibold">
-							{viewMode === 'day'
-								? formatDateHeader(currentDate)
-								: `${formatShortDate(getWeekDates[0])} - ${formatShortDate(getWeekDates[6])}`}
-						</span>
+						<span className="text-lg font-semibold">{formatDateHeader(currentDate, viewMode)}</span>
 					</div>
 					<Button variant="ghost" size="icon" onClick={() => navigateDate('next')}>
 						<ChevronRight className="size-4" />
@@ -92,11 +87,9 @@ export function TimetrackBoard() {
 				onOpenChange={setDialogOpen}
 				onSave={handleSaveEntry}
 				editEntry={editEntry}
-				initialDate={currentDate}
+				initialDate={initialDate}
 				initialStartTime={initialStartTime}
 				initialEndTime={initialEndTime}
-				projects={projects}
-				kanbanCards={kanbanCards}
 			/>
 		</div>
 	)

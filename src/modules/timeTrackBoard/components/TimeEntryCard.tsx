@@ -4,16 +4,16 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
-import useTimeTrackContext from '../hooks/useTimeTrackContext'
 import { cardTypeColors } from 'src/types/kanban-types'
 import { projectStatusConfig } from 'src/types/project-types'
+import useHandlers from '../hooks/useHandlers'
 
 export const TimeEntryCard = ({ entry }: { entry: TimeEntry }) => {
-	const { getProjectById, getKanbanCardById, handleEditEntry, handleDeleteEntry } = useTimeTrackContext()
+	const { handleEditEntry, handleDeleteEntry, getKanbanCardById, getProjectById } = useHandlers()
 
 	const duration = calculateDuration(entry.startTime, entry.endTime)
 	const project = getProjectById(entry.projectId)
-	const kanbanCard = getKanbanCardById(entry.kanbanCardId)
+	const kanbanCard = getKanbanCardById(entry.kanbanId)
 
 	return (
 		<div className="group bg-card border-border hover:border-primary/30 flex gap-4 rounded-lg border p-4 transition-colors">
@@ -51,10 +51,7 @@ export const TimeEntryCard = ({ entry }: { entry: TimeEntry }) => {
 									<Pencil className="mr-2 size-4" />
 									Edit
 								</DropdownMenuItem>
-								<DropdownMenuItem
-									onClick={() => handleDeleteEntry(entry.id)}
-									className="text-destructive"
-								>
+								<DropdownMenuItem onClick={() => handleDeleteEntry(entry)} className="text-destructive">
 									<Trash2 className="mr-2 size-4" />
 									Delete
 								</DropdownMenuItem>

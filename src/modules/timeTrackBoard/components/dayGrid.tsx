@@ -5,21 +5,13 @@ import { cn } from 'src/lib/utils'
 import useTimeTrackContext from '../hooks/useTimeTrackContext'
 import { TimeEntryCard } from './TimeEntryCard'
 import useTimeLogger from '../hooks/useTimeLogger'
-import { useEffect } from 'react'
+import useHandlers from '../hooks/useHandlers'
 
 export const DayGrid = () => {
-	const { handleAddEntry, currentDate } = useTimeTrackContext()
-	const { getEntriesForDate } = useTimeLogger(currentDate)
+	const { currentDate, setInitialDate } = useTimeTrackContext()
+	const { getEntriesForDate } = useTimeLogger()
+	const { handleEditEntry, handleAddEntry } = useHandlers()
 	const todayEntries = getEntriesForDate(currentDate)
-
-	useEffect(() => {
-		console.group()
-		console.log('daygrid')
-		console.log(currentDate)
-		console.log(todayEntries)
-		console.log(getEntriesForDate(currentDate))
-		console.groupEnd()
-	}, [])
 
 	return (
 		<div className="flex h-full">
@@ -48,23 +40,34 @@ export const DayGrid = () => {
 						const hasEntry = todayEntries.some(
 							(e) => (e.startTime <= time && e.endTime > time) || e.startTime === time
 						)
+						const entry = todayEntries.filter(
+							(e) => (e.startTime <= time && e.endTime > time) || e.startTime === time
+						)
 						return (
 							<button
 								key={time}
-								onClick={() => nextTime && handleAddEntry(time, nextTime)}
+								onClick={() => {
+									if (hasEntry) {
+										handleEditEntry(entry[0])
+										// edited entry doesnt save
+									} else {
+										setInitialDate(currentDate)
+										nextTime && handleAddEntry(time, nextTime)
+									}
+								}}
 								disabled={!nextTime}
 								className={cn(
-									'flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors',
+									'group flex w-full items-center gap-2 rounded-md border border-transparent px-3 py-2 text-left text-sm transition-colors',
 									hasEntry
-										? 'bg-primary/10 text-primary border-primary/20 border'
-										: 'hover:bg-secondary text-muted-foreground hover:text-foreground'
+										? 'bg-primary/10 text-primary border-primary/20'
+										: 'hover:bg-accent/10 hover:border-primary/80 text-muted-foreground hover:text-foreground'
 								)}
 							>
 								<span className="w-12 font-mono text-xs">{time}</span>
 								{hasEntry ? (
 									<span className="text-xs">Logged</span>
 								) : (
-									<Plus className="size-3 opacity-0 group-hover:opacity-100" />
+									<Plus className="ml-auto size-3 opacity-0 group-hover:opacity-100" />
 								)}
 							</button>
 						)

@@ -11,12 +11,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { type KanbanCard } from '@/types/kanban-types'
-import { type Project } from '@/types/project-types'
+// import { type KanbanCard } from '@/types/kanban-types'
+// import { type Project } from '@/types/project-types'
 import { type TimeEntry } from '@/types/timetrack-types'
 import { FolderKanban, LayoutGrid } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { addHour, format } from '@formkit/tempo'
+import type { formify } from 'src/types/calendar-types'
+import { updateForm, useForm } from 'src/modules/core/hooks/useForm'
+import useTimetrackContext from '../hooks/useTimeTrackContext'
+import { dayTimeSlots } from 'src/data/dayTimeSlots'
 
 interface TimeEntryDialogProps {
 	open: boolean
@@ -26,71 +30,76 @@ interface TimeEntryDialogProps {
 	initialDate?: Date
 	initialStartTime?: string
 	initialEndTime?: string
-	projects?: Project[]
-	kanbanCards?: KanbanCard[]
+	// projects?: Project[]
+	// kanbanCards?: KanbanCard[]
 }
+const splitTags = (tags: string) =>
+	tags
+		.split(',')
+		.map((t: string) => t.trim())
+		.filter(Boolean)
 
 export function TimeEntryDialog({
 	open,
 	onOpenChange,
 	onSave,
-	editEntry,
 	initialDate,
 	initialStartTime,
-	initialEndTime,
-	projects = [],
-	kanbanCards = []
+	initialEndTime
+	// projects = [],
+	// kanbanCards = []
 }: TimeEntryDialogProps) {
-	const [title, setTitle] = useState('')
-	const [description, setDescription] = useState('')
-	const [date, setDate] = useState('')
-	const [startTime, setStartTime] = useState('')
-	const [endTime, setEndTime] = useState('')
-	const [linkedProjectId, setLinkedProjectId] = useState('')
-	const [linkedKanbanId, setLinkedKanbanId] = useState('')
-	const [tagsInput, setTagsInput] = useState('')
+	const initialForm: formify<TimeEntry> = {
+		id: '',
+		title: '',
+		description: '',
+		date: '',
+		startTime: '',
+		endTime: '',
+		projectId: '',
+		kanbanId: '',
+		tags: '',
+		createdAt: '',
+		updatedAt: ''
+	}
+	const { formState, setFormState, onInputChange, onResetForm } = useForm(initialForm)
+	const { editEntry, dialogOpen, projects, kanbanCards, setEditEntry } = useTimetrackContext()
 
 	useEffect(() => {
 		if (editEntry) {
-			setTitle(editEntry.title)
-			setDescription(editEntry.description || '')
-			setDate(editEntry.date.toISOString().split('T')[0])
-			setStartTime(editEntry.startTime)
-			setEndTime(editEntry.endTime)
-			setLinkedProjectId(editEntry.projectId || '')
-			setLinkedKanbanId(editEntry.kanbanCardId || '')
-			setTagsInput(editEntry.tags?.join(', ') || '')
+			for (const prop in editEntry) {
+				updateForm(prop as keyof TimeEntry, editEntry, setFormState)
+			}
 		} else {
-			setTitle('')
-			setDescription('')
-			setDate(initialDate ? initialDate.toISOString().split('T')[0] : new Date().toISOString().split('T')[0])
-			setStartTime(initialStartTime || '')
-			setEndTime(initialEndTime || '')
-			setLinkedProjectId('')
-			setLinkedKanbanId('')
-			setTagsInput('')
+			setFormState((prev) => ({
+				...prev,
+				date: initialDate ? format(initialDate, 'YYYY-MM-DD', 'en') : format(new Date(), 'YYYY-MM-DD', 'en'),
+				startTime: initialStartTime || '',
+				endTime: initialEndTime || ''
+			}))
 		}
-	}, [editEntry, initialDate, initialStartTime, initialEndTime, open])
+		return () => {
+			setEditEntry(null)
+			onResetForm()
+		}
+	}, [dialogOpen, editEntry, initialStartTime, initialEndTime, initialDate, onResetForm, setEditEntry, setFormState])
 
 	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		if (!title.trim() || !startTime || !endTime) return
+		if (!formState.title.trim() || !formState.startTime || !formState.endTime) return
 
-		const tags = tagsInput
-			.split(',')
-			.map((t) => t.trim())
-			.filter(Boolean)
+		const tags = splitTags(formState.tags!)
 
 		onSave({
 			id: editEntry?.id,
-			title: title.trim(),
-			description: description.trim() || undefined,
-			date: new Date(addHour(format(date, 'YYYY-MM-DD', 'en'), 4)),
-			startTime,
-			endTime,
-			projectId: linkedProjectId || undefined,
-			kanbanCardId: linkedKanbanId || undefined,
-			tags: tags.length > 0 ? tags : undefined
+			title: formState.title.trim(),
+			description: formState.description!.trim() || undefined,
+			date: new Date(addHour(format(formState.date!, 'YYYY-MM-DD', 'en'), 4)),
+			startTime: formState.startTime,
+			endTime: formState.endTime,
+			projectId: formState.projectId || undefined,
+			kanbanId: formState.kanbanId || undefined,
+			tags: tags
 		})
 
 		onOpenChange(false)
@@ -109,9 +118,9 @@ export function TimeEntryDialog({
 					<div className="space-y-2">
 						<Label htmlFor="title">What did you work on?</Label>
 						<Input
-							id="title"
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
+							name="title"
+							value={formState.title}
+							onChange={onInputChange}
 							placeholder="e.g., Client meeting, Bug fixes, Research..."
 							required
 						/>
@@ -120,9 +129,9 @@ export function TimeEntryDialog({
 					<div className="space-y-2">
 						<Label htmlFor="description">Notes (optional)</Label>
 						<Textarea
-							id="description"
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
+							name="description"
+							value={formState.description}
+							onChange={onInputChange}
 							placeholder="Additional details about this time block..."
 							rows={2}
 						/>
@@ -131,33 +140,59 @@ export function TimeEntryDialog({
 					<div className="grid grid-cols-3 gap-3">
 						<div className="space-y-2">
 							<Label htmlFor="date">Date</Label>
-							<Input
-								id="date"
-								type="date"
-								value={date}
-								onChange={(e) => setDate(e.target.value)}
-								required
-							/>
+							<Input name="date" type="date" value={formState.date} onChange={onInputChange} required />
 						</div>
 						<div className="space-y-2">
-							<Label htmlFor="startTime">Start</Label>
-							<Input
-								id="startTime"
-								type="time"
-								value={startTime}
-								onChange={(e) => setStartTime(e.target.value)}
-								required
-							/>
+							<Label htmlFor="startTime">Start Time</Label>
+							<Select
+								value={formState.startTime}
+								onValueChange={(value) => {
+									onInputChange({
+										target: {
+											name: 'startTime',
+											value: value
+										}
+									})
+								}}
+							>
+								<SelectTrigger className="mb-0 w-full">
+									<SelectValue placeholder="Start" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="none">No time</SelectItem>
+									{dayTimeSlots.map((time) => (
+										<SelectItem key={time} value={time}>
+											{time}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 						</div>
 						<div className="space-y-2">
-							<Label htmlFor="endTime">End</Label>
-							<Input
-								id="endTime"
-								type="time"
-								value={endTime}
-								onChange={(e) => setEndTime(e.target.value)}
-								required
-							/>
+							<Label htmlFor="endTime">End Time</Label>
+							<Select
+								value={formState.endTime}
+								onValueChange={(value) => {
+									onInputChange({
+										target: {
+											name: 'endTime',
+											value: value
+										}
+									})
+								}}
+							>
+								<SelectTrigger className="mb-0 w-full">
+									<SelectValue placeholder="End" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="none">No time</SelectItem>
+									{dayTimeSlots.map((time) => (
+										<SelectItem key={time} value={time}>
+											{time}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 						</div>
 					</div>
 
@@ -167,7 +202,17 @@ export function TimeEntryDialog({
 								<FolderKanban className="size-3.5" />
 								Link to Project
 							</Label>
-							<Select value={linkedProjectId} onValueChange={setLinkedProjectId}>
+							<Select
+								value={formState.projectId}
+								onValueChange={(value) => {
+									onInputChange({
+										target: {
+											name: 'projectId',
+											value: value
+										}
+									})
+								}}
+							>
 								<SelectTrigger>
 									<SelectValue placeholder="None" />
 								</SelectTrigger>
@@ -183,11 +228,22 @@ export function TimeEntryDialog({
 						</div>
 
 						<div className="space-y-2">
+							{/* hacer un select reusable, o inputs reusables o un form reusable, con  RhForms y las validaciones */}
 							<Label className="flex items-center gap-1.5">
 								<LayoutGrid className="size-3.5" />
 								Link to Task
 							</Label>
-							<Select value={linkedKanbanId} onValueChange={setLinkedKanbanId}>
+							<Select
+								value={formState.kanbanId}
+								onValueChange={(value) => {
+									onInputChange({
+										target: {
+											name: 'kanbanId',
+											value: value
+										}
+									})
+								}}
+							>
 								<SelectTrigger>
 									<SelectValue placeholder="None" />
 								</SelectTrigger>
@@ -206,10 +262,10 @@ export function TimeEntryDialog({
 					<div className="space-y-2">
 						<Label htmlFor="tags">Tags (comma-separated)</Label>
 						<Input
-							id="tags"
-							value={tagsInput}
-							onChange={(e) => setTagsInput(e.target.value)}
-							placeholder="e.g., billable, meeting, deep work"
+							name="tags"
+							value={formState.tags}
+							onChange={onInputChange}
+							placeholder="rest, exercise, billable, meeting, deep work"
 						/>
 					</div>
 
@@ -217,7 +273,7 @@ export function TimeEntryDialog({
 						<Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
 							Cancel
 						</Button>
-						<Button type="submit">{editEntry ? 'Update' : 'Log Time'}</Button>
+						<Button type="submit">{editEntry ? 'Save Changes' : 'Create Entry'}</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>

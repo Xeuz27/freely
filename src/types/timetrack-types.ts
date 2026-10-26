@@ -9,7 +9,7 @@ export interface TimeEntry {
 	startTime: string
 	endTime: string
 	projectId?: string
-	kanbanCardId?: string
+	kanbanId?: string
 	tags?: string[]
 	createdAt: Date
 	updatedAt?: Date
