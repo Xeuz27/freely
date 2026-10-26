@@ -1,69 +1,7 @@
 import { eventHandler, linksHandler } from '@/store/store'
 import type { CalendarEvent } from '@/types/calendar-types'
-import type { Dispatch, SetStateAction } from 'react'
 import { type eventLink } from './../../../types/calendar-types'
-
-const handlePrev = (
-	view: string,
-	year: number,
-	month: number,
-	currentDate: Date,
-	setCurrentDate: Dispatch<SetStateAction<Date>>
-) => {
-	if (view === 'month') {
-		setCurrentDate(new Date(year, month - 1, 1))
-	} else if (view === 'week') {
-		const newDate = new Date(currentDate)
-		newDate.setDate(newDate.getDate() - 7)
-		setCurrentDate(newDate)
-	} else {
-		const newDate = new Date(currentDate)
-		newDate.setDate(newDate.getDate() - 1)
-		setCurrentDate(newDate)
-	}
-}
-
-const handleNext = (view: any, currentDate: any, setCurrentDate: any, year: any, month: any) => {
-	if (view === 'month') {
-		setCurrentDate(new Date(year, month + 1, 1))
-	} else if (view === 'week') {
-		const newDate = new Date(currentDate)
-		newDate.setDate(newDate.getDate() + 7)
-		setCurrentDate(newDate)
-	} else {
-		const newDate = new Date(currentDate)
-		newDate.setDate(newDate.getDate() + 1)
-		setCurrentDate(newDate)
-	}
-}
-
-const handleAddEvent = (
-	date?: Date,
-	time?: string,
-	setEditingEvent?: any,
-	setSelectedDate?: any,
-	setSelectedTime?: any,
-	setDialogOpen?: any
-) => {
-	setEditingEvent(null)
-	setSelectedDate(date || null)
-	setSelectedTime(time)
-	setDialogOpen(true)
-}
-
-const handleEditEvent = (
-	event: CalendarEvent,
-	setEditingEvent?: any,
-	setSelectedDate?: any,
-	setSelectedTime?: any,
-	setDialogOpen?: any
-) => {
-	setEditingEvent(event)
-	setSelectedDate(null)
-	setSelectedTime(undefined)
-	setDialogOpen(true)
-}
-
+//abstraer todo a useCalendarHandlers??
 const handleDeleteEvent = (event: CalendarEvent) => {
 	eventHandler(event, true)
 }
@@ -94,12 +32,4 @@ const handleSaveEvent = (eventData: eventData) => {
 	return event as CalendarEvent
 }
 
-export {
-	handleAddEvent,
-	handleDeleteEvent,
-	handleEditEvent,
-	handleNext,
-	handlePrev,
-	handleSaveEvent,
-	handleSaveEventLink
-}
+export { handleDeleteEvent, handleSaveEvent, handleSaveEventLink }

@@ -82,7 +82,8 @@ export function TimeEntryDialog({
 			setEditEntry(null)
 			onResetForm()
 		}
-	}, [dialogOpen, editEntry, initialStartTime, initialEndTime, initialDate, onResetForm, setEditEntry, setFormState])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dialogOpen])
 
 	const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
 		e.preventDefault()

@@ -3,21 +3,14 @@ import { dayTimeSlots } from '@/data/dayTimeSlots'
 import { cn } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 import useCalendarContext from '../../hooks/useCalendarContext'
-import { handleAddEvent } from '../../utils/handlers'
+import useCalendarHandlers from '../../hooks/useCalendarHandlers'
 import { isToday } from '../../utils/isToday'
 import { DayEventCard } from './day-event-card'
 import { useSidebar } from '@/components/ui/sidebar'
 
 const ScheduleColumn = () => {
-	const {
-		getEventsForDate,
-		currentDate,
-		selectedTime,
-		setEditingEvent,
-		setSelectedDate,
-		setSelectedTime,
-		setDialogOpen
-	} = useCalendarContext()
+	const { getEventsForDate, currentDate } = useCalendarContext()
+	const { handleAddEvent } = useCalendarHandlers()
 	const dayEvents = getEventsForDate(currentDate)
 	const { open } = useSidebar()
 
@@ -54,15 +47,7 @@ const ScheduleColumn = () => {
 										slotEvents.length > 0 ? '' : 'hover:bg-secondary/20'
 									)}
 									onClick={() => {
-										handleAddEvent(
-											currentDate,
-											selectedTime,
-											setEditingEvent,
-											setSelectedDate,
-											setSelectedTime,
-											setDialogOpen
-										)
-										setSelectedTime(time)
+										handleAddEvent(currentDate, time)
 									}}
 								>
 									{slotEvents.length === 0 && (
@@ -70,15 +55,7 @@ const ScheduleColumn = () => {
 											className="hover:bg-secondary absolute top-2 right-2 rounded p-1 opacity-0 transition-opacity group-hover/slot:opacity-100"
 											onClick={(event) => {
 												event.stopPropagation()
-												handleAddEvent(
-													currentDate,
-													selectedTime,
-													setEditingEvent,
-													setSelectedDate,
-													setSelectedTime,
-													setDialogOpen
-												)
-												setSelectedTime(time)
+												handleAddEvent(currentDate, time)
 											}}
 										>
 											<Plus className="text-muted-foreground size-3.5" />

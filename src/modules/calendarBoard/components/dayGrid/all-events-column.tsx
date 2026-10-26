@@ -3,21 +3,14 @@ import { cn } from '@/lib/utils'
 import { eventTypeConfig, type EventType } from '@/types/calendar-types'
 import { CalendarDays, Plus } from 'lucide-react'
 import useCalendarContext from '../../hooks/useCalendarContext'
-import { handleAddEvent } from '../../utils/handlers'
+import useCalendarHandlers from '../../hooks/useCalendarHandlers'
 import { sortEventsByStartTime } from '../../utils/eventQueries'
 import { eventTypeIcons } from '../calendar-board'
 import { DayEventCard } from './day-event-card'
 
 const AllEventsColumn = () => {
-	const {
-		getEventsForDate,
-		currentDate,
-		selectedTime,
-		setEditingEvent,
-		setSelectedDate,
-		setSelectedTime,
-		setDialogOpen
-	} = useCalendarContext()
+	const { getEventsForDate, currentDate, selectedTime } = useCalendarContext()
+	const { handleAddEvent } = useCalendarHandlers()
 	const dayEvents = sortEventsByStartTime(getEventsForDate(currentDate))
 	const eventsByType = (Object.keys(eventTypeConfig) as EventType[])
 		.map((type) => ({
@@ -41,16 +34,7 @@ const AllEventsColumn = () => {
 							variant="outline"
 							size="sm"
 							className="mt-3"
-							onClick={() =>
-								handleAddEvent(
-									currentDate,
-									selectedTime,
-									setEditingEvent,
-									setSelectedDate,
-									setSelectedTime,
-									setDialogOpen
-								)
-							}
+							onClick={() => handleAddEvent(currentDate, selectedTime)}
 						>
 							<Plus className="mr-1 size-3.5" />
 							Add Event

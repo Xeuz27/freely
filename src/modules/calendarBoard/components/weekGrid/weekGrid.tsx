@@ -3,13 +3,15 @@ import { addHour } from '@formkit/tempo'
 import { Plus } from 'lucide-react'
 import { Fragment } from 'react'
 import useCalendarContext from '../../hooks/useCalendarContext'
+import useCalendarHandlers from '../../hooks/useCalendarHandlers'
 import { useWeekEvents } from '../../hooks/useWeekEvents'
 import { isToday } from '../../utils/isToday'
 import EventCard from '../event-card'
 import { DayLabel } from './dayLabel'
 
 const WeekGrid = () => {
-	const { currentDate, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
+	const { currentDate } = useCalendarContext()
+	const { handleAddEvent } = useCalendarHandlers()
 	const { weekDays, eventsHourDay } = useWeekEvents(currentDate)
 	return (
 		<div className="h-full overflow-y-hidden pb-8">
@@ -40,8 +42,8 @@ const WeekGrid = () => {
 										)}
 										onClick={(e) => {
 											if (event !== null) return
-											let target = e.target as HTMLDivElement
-											let btn = target.querySelector('button')
+											const target = e.target as HTMLDivElement
+											const btn = target.querySelector('button')
 											btn!.click()
 										}}
 									>
@@ -49,9 +51,7 @@ const WeekGrid = () => {
 											<button
 												onClick={(e) => {
 													e.stopPropagation()
-													setSelectedTime(time)
-													setSelectedDate(new Date(day))
-													setDialogOpen(true)
+													handleAddEvent(new Date(day), time)
 												}}
 												className="hover:bg-secondary ml-auto w-fit rounded-full p-1 opacity-0 transition-opacity group-hover/time:opacity-100"
 											>

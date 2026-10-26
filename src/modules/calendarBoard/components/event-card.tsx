@@ -2,12 +2,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { cn } from '@/lib/utils'
 import { type CalendarEvent, eventTypeConfig } from '@/types/calendar-types'
 import { Edit2, MoreHorizontal, Trash2 } from 'lucide-react'
-import useCalendarContext from '../hooks/useCalendarContext'
-import { handleDeleteEvent } from '../utils/handlers'
+import useCalendarHandlers from '../hooks/useCalendarHandlers'
 import { eventTypeIcons } from './calendar-board'
 
 const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean }) => {
-	const { setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
+	const { handleDeleteEvent, handleEditEvent } = useCalendarHandlers()
 	const EventIcon = eventTypeIcons[event.type]
 	return (
 		<div
@@ -36,14 +35,7 @@ const EventCard = ({ event, compact }: { event: CalendarEvent; compact?: boolean
 					</button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
-					<DropdownMenuItem
-						onClick={() => {
-							setEditingEvent(event)
-							setSelectedDate(undefined)
-							setSelectedTime(undefined)
-							setDialogOpen(true)
-						}}
-					>
+					<DropdownMenuItem onClick={() => handleEditEvent(event)}>
 						<Edit2 className="mr-2 size-3" />
 						Edit
 					</DropdownMenuItem>

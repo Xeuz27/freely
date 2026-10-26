@@ -18,9 +18,9 @@ import {
 } from 'lucide-react'
 import { Activity } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext'
+import useCalendarHandlers from '../hooks/useCalendarHandlers'
 import { useEventReminders } from '../hooks/useEventReminders'
-import { formatDateHeader } from '../utils/formatDateHeader'
-import { handleNext, handlePrev } from '../utils/handlers'
+import { formatDateHeader } from '../utils/formatters'
 import { DayGrid } from './dayGrid/dayGrid'
 import { EventDialog } from './event-dialog'
 import { MonthGrid } from './monthGrid'
@@ -40,28 +40,21 @@ interface CalendarBoardProps {
 }
 
 const Grid = () => {
-	const { year, currentDate, setCurrentDate, month, view, setView } = useCalendarContext()
+	const { currentDate, month, year, view, setCurrentDate, setView } = useCalendarContext()
+	const { handleNext, handlePrev } = useCalendarHandlers()
 
 	return (
 		<>
 			<div className="border-border border-b py-3">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-2">
-						<Button
-							variant="ghost"
-							size="icon"
-							onClick={() => handlePrev(view, year, month, currentDate, setCurrentDate)}
-						>
+						<Button variant="ghost" size="icon" onClick={handlePrev}>
 							<ChevronLeft className="size-4" />
 						</Button>
 						<h2 className="text-center text-lg font-semibold lg:min-w-70">
-							{formatDateHeader(view, currentDate, month, year)}
+							{formatDateHeader(currentDate, view, month, year)}
 						</h2>
-						<Button
-							variant="ghost"
-							size="icon"
-							onClick={() => handleNext(view, currentDate, setCurrentDate, year, month)}
-						>
+						<Button variant="ghost" size="icon" onClick={handleNext}>
 							<ChevronRight className="size-4" />
 						</Button>
 					</div>
@@ -95,8 +88,8 @@ const Grid = () => {
 }
 
 export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanCards }: CalendarBoardProps) {
-	const { view, setView, selectedTime, setEditingEvent, selectedDate, setDialogOpen, editingEvent, dialogOpen } =
-		useCalendarContext()
+	const { view, setView, selectedTime, selectedDate, editingEvent, dialogOpen, setDialogOpen } = useCalendarContext()
+	const { handleAddEvent } = useCalendarHandlers()
 	useEventReminders()
 
 	return (
@@ -121,13 +114,7 @@ export function CalendarBoard({ leads = sampleLeads, kanbanCards = sampleKanbanC
 						</WorkspaceHeader.Tabs>
 					</div>
 
-					<WorkspaceHeader.Button
-						text="Add Event"
-						onClick={() => {
-							setEditingEvent(undefined)
-							setDialogOpen(true)
-						}}
-					/>
+					<WorkspaceHeader.Button text="Add Event" onClick={() => handleAddEvent()} />
 				</WorkspaceHeader.Actions>
 			</WorkspaceHeader>
 			<WorkspaceHeader.Tabs className="my-2.5 lg:hidden">

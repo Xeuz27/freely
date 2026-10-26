@@ -3,15 +3,15 @@ import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext.ts'
 import useMonthEvents from '../hooks/useMonthEvents.ts'
-import { handleAddEvent } from '../utils/handlers.ts'
+import useCalendarHandlers from '../hooks/useCalendarHandlers'
 import { isToday } from '../utils/isToday.ts'
 import EventCard from './event-card.tsx'
 
 const MonthGrid = () => {
 	const monthDays = useMonthEvents()
 	const [visibleEventCount, setVisibleEventCount] = useState(1)
-	const { setCurrentDate, setView, setEditingEvent, setDialogOpen, selectedTime, setSelectedDate, setSelectedTime } =
-		useCalendarContext()
+	const { setCurrentDate, setView, selectedTime } = useCalendarContext()
+	const { handleAddEvent } = useCalendarHandlers()
 
 	useEffect(() => {
 		const compactScreen = window.matchMedia('(max-width: 769px)')
@@ -77,14 +77,7 @@ const MonthGrid = () => {
 								</button>
 								<button
 									onClick={() => {
-										handleAddEvent(
-											day,
-											selectedTime,
-											setEditingEvent,
-											setSelectedDate,
-											setSelectedTime,
-											setDialogOpen
-										)
+										handleAddEvent(day, selectedTime)
 									}}
 									className="hover:bg-secondary rounded-full p-1 opacity-0 transition-opacity group-hover/day:opacity-100 max-md:hidden"
 								>

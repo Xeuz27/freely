@@ -2,8 +2,7 @@ import { cn } from '@/lib/utils'
 import { eventTypeConfig, type CalendarEvent, type EventType } from '@/types/calendar-types'
 import { AlertCircle, Bell, CheckSquare, Clock, Phone, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import useCalendarContext from '../../hooks/useCalendarContext'
-import { handleEditEvent } from '../../utils/handlers'
+import useCalendarHandlers from '../../hooks/useCalendarHandlers'
 
 const eventIcons: Record<EventType, LucideIcon> = {
 	meeting: Users,
@@ -21,7 +20,7 @@ type DayEventCardProps = {
 }
 
 const DayEventCard = ({ event, className }: DayEventCardProps) => {
-	const { setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen } = useCalendarContext()
+	const { handleEditEvent } = useCalendarHandlers()
 	const EventIcon = eventIcons[event.type]
 	const content = (
 		<>
@@ -60,7 +59,7 @@ const DayEventCard = ({ event, className }: DayEventCardProps) => {
 			)}
 			onClick={(e) => {
 				e.stopPropagation()
-				handleEditEvent(event, setEditingEvent, setSelectedDate, setSelectedTime, setDialogOpen)
+				handleEditEvent(event)
 			}}
 		>
 			<div className="pointer-events-none flex min-w-0 flex-1 items-center gap-2">{content}</div>

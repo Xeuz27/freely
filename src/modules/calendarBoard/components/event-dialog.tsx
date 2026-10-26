@@ -12,7 +12,7 @@ import { addHour, format } from '@formkit/tempo'
 import { AlertCircle, Bell, CheckSquare, Phone, Users } from 'lucide-react'
 import { useEffect } from 'react'
 import useCalendarContext from '../hooks/useCalendarContext'
-import { handleDeleteEvent, handleSaveEvent } from '../utils/handlers'
+import useCalendarHandlers from '../hooks/useCalendarHandlers'
 
 const eventTypeIcons: Record<EventType, React.ReactNode> = {
 	meeting: <Users className="size-4" />,
@@ -48,8 +48,9 @@ export function EventDialog({
 		endTime: '',
 		type: 'meeting'
 	}
-	const { formState, setFormState, onInputChange } = useForm(initialForm)
+	const { formState, setFormState, onInputChange, onResetForm } = useForm(initialForm)
 	const { editingEvent, dialogOpen } = useCalendarContext()
+	const { handleDeleteEvent, handleSaveEvent } = useCalendarHandlers()
 
 	useEffect(() => {
 		if (editingEvent) {
@@ -63,7 +64,12 @@ export function EventDialog({
 				startTime: initialTime || ''
 			}))
 		}
-	}, [])
+		return () => {
+			onResetForm()
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [dialogOpen])
 
 	const handleSubmit = (e: React.SubmitEvent) => {
 		e.preventDefault()
@@ -113,7 +119,9 @@ export function EventDialog({
 										onInputChange({
 											target: {
 												name: 'type',
-												//@ts-ignore
+												// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+												//@ts-expect-error
+												// //learn how to use
 												value: t.target.innerText.toLowerCase()
 											}
 										})
