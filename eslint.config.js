@@ -1,13 +1,22 @@
-import eslintPluginAstro from "eslint-plugin-astro";
+// import eslintPluginAstro from 'eslint-plugin-astro'
+import reactHooks from 'eslint-plugin-react-hooks'
+import tseslint from 'typescript-eslint'
 
 export default [
-	// add more generic rule sets here, such as:
-	// js.configs.recommended,
-	...eslintPluginAstro.configs.recommended,
+	// ...eslintPluginAstro.configs['flat/recommended'],
+	...tseslint.configs.recommended,
 	{
+		files: ['**/*.{ts,tsx}'],
+		plugins: {
+			'react-hooks': reactHooks
+		},
 		rules: {
-			// override/add rules settings here, such as:
-			// "astro/no-set-html-directive": "error"
+			'@typescript-eslint/no-unused-expressions': 'warn',
+			'react-hooks/rules-of-hooks': 'error',
+			'react-hooks/exhaustive-deps': 'warn'
 		}
+	},
+	{
+		ignores: ['dist/**', '.astro/**', 'node_modules/**']
 	}
-];
+]

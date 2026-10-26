@@ -7,6 +7,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "astro": "astro"
   },
   "dependencies": {
@@ -37,6 +41,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "10.13.0",
     "eslint-plugin-astro": "3.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.1",
     "prettier-plugin-tailwindcss": "0.8.1",
