@@ -63,7 +63,7 @@ export function TimeEntryDialog({
 		updatedAt: ''
 	}
 	const { formState, setFormState, onInputChange, onResetForm } = useForm(initialForm)
-	const { editEntry, dialogOpen, projects, kanbanCards, setEditEntry } = useTimetrackContext()
+	const { editEntry, dialogOpen, projects, kanbanCards } = useTimetrackContext()
 
 	useEffect(() => {
 		if (editEntry) {
@@ -79,7 +79,6 @@ export function TimeEntryDialog({
 			}))
 		}
 		return () => {
-			setEditEntry(null)
 			onResetForm()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
