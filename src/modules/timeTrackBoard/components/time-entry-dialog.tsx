@@ -89,7 +89,7 @@ export function TimeEntryDialog({
 		e.preventDefault()
 		if (!formState.title.trim() || !formState.startTime || !formState.endTime) return
 
-		const tags = splitTags(formState.tags!)
+		const tags = formState.tags ? splitTags(formState.tags) : undefined
 
 		onSave({
 			id: editEntry?.id,
