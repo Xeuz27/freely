@@ -52,8 +52,8 @@ const useHandlers = () => {
 				id: crypto.randomUUID().split('-')[0],
 				createdAt: new Date()
 			}
-			entriesHandler(entry as TimeEntry)
 		}
+		entriesHandler(entry as TimeEntry)
 	}
 
 	const goToToday = () => {
