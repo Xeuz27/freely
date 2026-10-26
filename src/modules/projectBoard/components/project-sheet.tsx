@@ -54,8 +54,8 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 			setPriority(editProject.priority)
 			setOwnerId(editProject.ownerId || '')
 			setLeadId(editProject.leadId || '')
-			setStartDate(editProject.startDate!.toISOString().split('T')[0])
-			setDeliveryDate(editProject.deliveryDate!.toISOString().split('T')[0])
+			setStartDate(new Date(editProject.startDate!).toISOString().split('T')[0])
+			setDeliveryDate(new Date(editProject.deliveryDate!).toISOString().split('T')[0])
 		} else {
 			const today = new Date()
 			const nextMonth = new Date(today)
@@ -243,12 +243,11 @@ export function ProjectSheet({ open, onOpenChange, onSave, onDelete, editProject
 							/>
 						</div>
 					</div>
-					!
 					{editProject && (
 						<div className="border-border border-t pt-4">
 							<div className="text-muted-foreground flex items-center justify-between text-xs">
-								<span>Created: {editProject.createdAt.toLocaleDateString()}</span>
-								<span>Updated: {editProject.updatedAt!.toLocaleDateString()}</span>
+								<span>Created: {new Date(editProject.createdAt).toLocaleDateString()}</span>
+								<span>Updated: {new Date(editProject.updatedAt!).toLocaleDateString()}</span>
 							</div>
 						</div>
 					)}

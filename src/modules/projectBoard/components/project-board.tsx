@@ -34,7 +34,6 @@ export function ProjectBoard() {
 	const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
 
 	usePersist('projects', projects, setProjects)
-
 	const handleSaveProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => {
 		if (projectData.id) {
 			setProjects((prev) =>
@@ -45,11 +44,11 @@ export function ProjectBoard() {
 		} else {
 			const newProject: Project = {
 				...projectData,
-				id: crypto.randomUUID(),
+				id: crypto.randomUUID().split('-')[0],
 				createdAt: new Date(),
 				updatedAt: new Date()
 			}
-			setProjects((prev) => [newProject, ...prev])
+			setProjects((prev) => [...prev, newProject])
 		}
 		setEditingProject(null)
 	}
@@ -96,10 +95,10 @@ export function ProjectBoard() {
 					comparison = priorityOrder[a.priority] - priorityOrder[b.priority]
 					break
 				case 'deliveryDate':
-					comparison = a.deliveryDate!.getTime() - b.deliveryDate!.getTime()
+					comparison = new Date(a.deliveryDate!).getTime() - new Date(b.deliveryDate!).getTime()
 					break
 				case 'startDate':
-					comparison = a.startDate!.getTime() - b.startDate!.getTime()
+					comparison = new Date(a.startDate!).getTime() - new Date(b.startDate!).getTime()
 					break
 			}
 			return sortOrder === 'asc' ? comparison : -comparison

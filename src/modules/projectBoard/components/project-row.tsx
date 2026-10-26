@@ -26,8 +26,10 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 	const priorityConfig = projectPriorityConfig[project.priority]
 
 	const today = new Date()
-	const deliveryDate = new Date(project.deliveryDate!)
-	const daysUntilDelivery = Math.ceil((deliveryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+
+	const daysUntilDelivery = Math.ceil(
+		(new Date(project.deliveryDate!).getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+	)
 	const isOverdue = daysUntilDelivery < 0 && project.status !== 'completed' && project.status !== 'cancelled'
 	const isNearDeadline =
 		daysUntilDelivery <= 7 &&
@@ -36,7 +38,8 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 		project.status !== 'cancelled'
 
 	const formatDate = (date: Date) => {
-		return date.toLocaleDateString('en-US', {
+		if (!date) return 'N/A'
+		return new Date(date).toLocaleDateString('en-US', {
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric'
@@ -128,7 +131,7 @@ export function ProjectRow({ project, onEdit, onDelete }: ProjectRowProps) {
 						)}
 					>
 						<Calendar className="size-3" />
-						<span className="text-sm">{formatDate(deliveryDate)}</span>
+						<span className="text-sm">{formatDate(project.deliveryDate!)}</span>
 					</div>
 					{isOverdue && (
 						<span className="text-xs text-red-400">{Math.abs(daysUntilDelivery)} days overdue</span>

@@ -69,7 +69,7 @@ export const sampleProjects: Project[] = [
 		status: "in_progress",
 		priority: "high",
 		startDate: new Date(),
-		deliveryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+		deliveryDate: new Date("2026-10-30"),
 		createdAt: new Date()
 	},
 	{
@@ -78,7 +78,7 @@ export const sampleProjects: Project[] = [
 		status: "planning",
 		priority: "urgent",
 		startDate: new Date(),
-		deliveryDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+		deliveryDate: new Date("2026-11-15"),
 		createdAt: new Date()
 	}
 ];
