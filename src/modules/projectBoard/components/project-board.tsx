@@ -3,116 +3,41 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { WorkspaceHeader } from '@/modules/core/components/workspace-Header.tsx'
-import { type Lead } from '@/types/crm-types'
 import {
-	type Project,
 	type ProjectPriority,
 	projectPriorityConfig,
 	type ProjectStatus,
 	projectStatusConfig
 } from '@/types/project-types'
 import { ArrowUpDown, Filter, FolderKanban, Plus } from 'lucide-react'
-import { useState } from 'react'
 import { ProjectRow } from './project-row.tsx'
 import { ProjectSheet } from './project-sheet.tsx'
-import { sampleProjects } from 'src/data/sampleProjects.ts'
-import { sampleLeads } from 'src/data/sampleLeads.ts'
-import usePersist from 'src/modules/core/hooks/usePersist.ts'
-
-type SortField = 'name' | 'status' | 'priority' | 'deliveryDate' | 'startDate'
-type SortOrder = 'asc' | 'desc'
+import useProjectsContext from '../hooks/useProjectsContext.ts'
+import useHandlers from '../hooks/useHandlers.ts'
 
 export function ProjectBoard() {
-	const [projects, setProjects] = useState<Project[]>(sampleProjects)
-	const [leads] = useState<Lead[]>(sampleLeads)
-	const [searchQuery, setSearchQuery] = useState('')
-	const [statusFilter, setStatusFilter] = useState<ProjectStatus | 'all'>('all')
-	const [priorityFilter, setPriorityFilter] = useState<ProjectPriority | 'all'>('all')
-	const [sheetOpen, setSheetOpen] = useState(false)
-	const [editingProject, setEditingProject] = useState<Project | null>(null)
-	const [sortField, setSortField] = useState<SortField>('deliveryDate')
-	const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
-
-	usePersist('projects', projects, setProjects)
-	const handleSaveProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => {
-		if (projectData.id) {
-			setProjects((prev) =>
-				prev.map((project) =>
-					project.id === projectData.id ? { ...project, ...projectData, updatedAt: new Date() } : project
-				)
-			)
-		} else {
-			const newProject: Project = {
-				...projectData,
-				id: crypto.randomUUID().split('-')[0],
-				createdAt: new Date(),
-				updatedAt: new Date()
-			}
-			setProjects((prev) => [...prev, newProject])
-		}
-		setEditingProject(null)
-	}
-
-	const handleDeleteProject = (id: string) => {
-		setProjects((prev) => prev.filter((project) => project.id !== id))
-	}
-
-	const handleEditProject = (project: Project) => {
-		setEditingProject(project)
-		setSheetOpen(true)
-	}
-
-	const handleSort = (field: SortField) => {
-		if (sortField === field) {
-			setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-		} else {
-			setSortField(field)
-			setSortOrder('asc')
-		}
-	}
-
-	const filteredAndSortedProjects = projects
-		.filter((project) => {
-			const matchesSearch =
-				project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				project.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				project.ownerId?.toLowerCase().includes(searchQuery.toLowerCase())
-			const matchesStatus = statusFilter === 'all' || project.status === statusFilter
-			const matchesPriority = priorityFilter === 'all' || project.priority === priorityFilter
-			return matchesSearch && matchesStatus && matchesPriority
-		})
-		.sort((a, b) => {
-			let comparison = 0
-			switch (sortField) {
-				case 'name':
-					comparison = a.name.localeCompare(b.name)
-					break
-				case 'status':
-					comparison = a.status.localeCompare(b.status)
-					break
-				case 'priority':
-					const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 }
-					comparison = priorityOrder[a.priority] - priorityOrder[b.priority]
-					break
-				case 'deliveryDate':
-					comparison = new Date(a.deliveryDate!).getTime() - new Date(b.deliveryDate!).getTime()
-					break
-				case 'startDate':
-					comparison = new Date(a.startDate!).getTime() - new Date(b.startDate!).getTime()
-					break
-			}
-			return sortOrder === 'asc' ? comparison : -comparison
-		})
-
-	const statusCounts = projects.reduce(
-		(acc, project) => {
-			acc[project.status] = (acc[project.status] || 0) + 1
-			return acc
-		},
-		{} as Record<ProjectStatus, number>
-	)
-
-	const activeProjects = projects.filter((p) => p.status !== 'completed' && p.status !== 'cancelled').length
+	const {
+		editingProject,
+		searchQuery,
+		setSearchQuery,
+		setEditingProject,
+		setSheetOpen,
+		setStatusFilter,
+		leads,
+		priorityFilter,
+		setPriorityFilter,
+		sheetOpen,
+		statusFilter
+	} = useProjectsContext()
+	const {
+		handleSaveProject,
+		handleDeleteProject,
+		handleEditProject,
+		handleSort,
+		filteredAndSortedProjects,
+		statusCounts,
+		activeProjects
+	} = useHandlers()
 
 	return (
 		<div className="bg-background flex h-screen flex-1 flex-col px-4">

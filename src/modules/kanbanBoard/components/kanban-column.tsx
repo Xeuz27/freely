@@ -21,9 +21,7 @@ export function KanbanColumn({ column, onAddCard, onDeleteCard, onDeleteColumn }
 
 	return (
 		<div
-			className={cn(
-				'bg-secondary/30 border-border/50 flex h-full min-h-[500px] shrink-0 flex-col rounded-xl border'
-			)}
+			className={cn('bg-secondary/30 border-border/50 flex h-full min-h-125 shrink-0 flex-col rounded-xl border')}
 		>
 			<div className="border-border/50 flex items-center justify-between border-b p-4">
 				<div className="flex items-center gap-2">
