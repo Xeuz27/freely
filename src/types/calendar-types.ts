@@ -14,11 +14,9 @@ export interface CalendarEvent {
 	updatedAt?: Date
 }
 export type linkHandlerParams =
-	| { id: string; key: keyof eventLink }
-	| {
-			link: eventLink
-			toDelete?: boolean
-	  }
+	//prettier-ignore
+	{ id: string; key: keyof eventLink } | { link: eventLink; toDelete?: boolean }
+
 export interface eventLink {
 	id: string
 	eventId: string
@@ -56,11 +54,3 @@ export const eventTypeConfig: Record<EventType, { label: string; color: string; 
 }
 
 export const timeSlots = dayTimeSlots
-
-export type formify<Type> = {
-	[Key in keyof Type]: Type[Key] extends Date | undefined
-		? string | undefined
-		: Type[Key] extends string[] | undefined
-			? string
-			: Type[Key]
-}
