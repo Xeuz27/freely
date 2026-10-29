@@ -1,6 +1,8 @@
 import type { TimeEntry } from 'src/types/timetrack-types'
 import { entriesHandler } from 'src/store/timeTrack'
 import useTimetrackContext from './useTimeTrackContext'
+import useProjectContext from 'src/modules/projectBoard/hooks/useProjectsContext'
+import useKanbanContext from 'src/modules/kanbanBoard/hooks/useKanbanContext'
 
 const useHandlers = () => {
 	const {
@@ -10,10 +12,10 @@ const useHandlers = () => {
 		setInitialEndTime,
 		currentDate,
 		viewMode,
-		setCurrentDate,
-		projects,
-		kanbanCards
+		setCurrentDate
 	} = useTimetrackContext()
+	const { projects } = useProjectContext()
+	const { kanbanCards } = useKanbanContext()
 
 	const navigateDate = (direction: 'prev' | 'next') => {
 		const newDate = new Date(currentDate)

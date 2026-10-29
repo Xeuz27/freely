@@ -11,16 +11,15 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-// import { type KanbanCard } from '@/types/kanban-types'
-// import { type Project } from '@/types/project-types'
 import { type TimeEntry } from '@/types/timetrack-types'
-import { FolderKanban, LayoutGrid } from 'lucide-react'
+import { Kanban, FolderOpenDot } from 'lucide-react'
 import { useEffect } from 'react'
 import { addHour, format } from '@formkit/tempo'
 import type { formify } from 'src/types/calendar-types'
 import { updateForm, useForm } from 'src/modules/core/hooks/useForm'
 import useTimetrackContext from '../hooks/useTimeTrackContext'
-import { dayTimeSlots } from 'src/data/dayTimeSlots'
+import useProjectsContext from 'src/modules/projectBoard/hooks/useProjectsContext'
+import useKanbanContext from 'src/modules/kanbanBoard/hooks/useKanbanContext'
 
 interface TimeEntryDialogProps {
 	open: boolean
@@ -30,8 +29,6 @@ interface TimeEntryDialogProps {
 	initialDate?: Date
 	initialStartTime?: string
 	initialEndTime?: string
-	// projects?: Project[]
-	// kanbanCards?: KanbanCard[]
 }
 const splitTags = (tags: string) =>
 	tags
@@ -46,8 +43,6 @@ export function TimeEntryDialog({
 	initialDate,
 	initialStartTime,
 	initialEndTime
-	// projects = [],
-	// kanbanCards = []
 }: TimeEntryDialogProps) {
 	const initialForm: formify<TimeEntry> = {
 		id: '',
@@ -63,7 +58,9 @@ export function TimeEntryDialog({
 		updatedAt: ''
 	}
 	const { formState, setFormState, onInputChange, onResetForm } = useForm(initialForm)
-	const { editEntry, dialogOpen, projects, kanbanCards } = useTimetrackContext()
+	const { editEntry, dialogOpen } = useTimetrackContext()
+	const { projects } = useProjectsContext()
+	const { kanbanCards } = useKanbanContext()
 
 	useEffect(() => {
 		if (editEntry) {
@@ -144,62 +141,61 @@ export function TimeEntryDialog({
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="startTime">Start Time</Label>
-							<Select
+							<Input
+								name="startTime"
+								type="time"
 								value={formState.startTime}
-								onValueChange={(value) => {
-									onInputChange({
-										target: {
-											name: 'startTime',
-											value: value
-										}
-									})
-								}}
-							>
-								<SelectTrigger className="mb-0 w-full">
-									<SelectValue placeholder="Start" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="none">No time</SelectItem>
-									{dayTimeSlots.map((time) => (
-										<SelectItem key={time} value={time}>
-											{time}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+								onChange={onInputChange}
+								required
+							/>
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="endTime">End Time</Label>
-							<Select
+							<Input
+								name="endTime"
+								type="time"
 								value={formState.endTime}
+								onChange={onInputChange}
+								required
+							/>
+						</div>
+					</div>
+
+					<div className="grid grid-cols-3 gap-3">
+						{/* hacer un select reusable, o inputs reusables o un form reusable, con  RhForms y las validaciones */}
+
+						<div className="space-y-2">
+							<Label className="flex items-center gap-1.5">
+								<Kanban className="size-3.5" />
+								Link to Kanban
+							</Label>
+							<Select
+								value={formState.kanbanId}
 								onValueChange={(value) => {
 									onInputChange({
 										target: {
-											name: 'endTime',
+											name: 'kanbanId',
 											value: value
 										}
 									})
 								}}
 							>
-								<SelectTrigger className="mb-0 w-full">
-									<SelectValue placeholder="End" />
+								<SelectTrigger>
+									<SelectValue placeholder="None" />
 								</SelectTrigger>
 								<SelectContent>
-									<SelectItem value="none">No time</SelectItem>
-									{dayTimeSlots.map((time) => (
-										<SelectItem key={time} value={time}>
-											{time}
+									<SelectItem value="none">None</SelectItem>
+									{kanbanCards.map((kanban) => (
+										<SelectItem key={kanban.id} value={kanban.id}>
+											{kanban.title}
 										</SelectItem>
 									))}
 								</SelectContent>
 							</Select>
 						</div>
-					</div>
-
-					<div className="grid grid-cols-2 gap-3">
 						<div className="space-y-2">
 							<Label className="flex items-center gap-1.5">
-								<FolderKanban className="size-3.5" />
+								<FolderOpenDot className="size-3.5" />
 								Link to Project
 							</Label>
 							<Select
@@ -221,37 +217,6 @@ export function TimeEntryDialog({
 									{projects.map((project) => (
 										<SelectItem key={project.id} value={project.id}>
 											{project.name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-
-						<div className="space-y-2">
-							{/* hacer un select reusable, o inputs reusables o un form reusable, con  RhForms y las validaciones */}
-							<Label className="flex items-center gap-1.5">
-								<LayoutGrid className="size-3.5" />
-								Link to Task
-							</Label>
-							<Select
-								value={formState.kanbanId}
-								onValueChange={(value) => {
-									onInputChange({
-										target: {
-											name: 'kanbanId',
-											value: value
-										}
-									})
-								}}
-							>
-								<SelectTrigger>
-									<SelectValue placeholder="None" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="none">None</SelectItem>
-									{kanbanCards.map((card) => (
-										<SelectItem key={card.id} value={card.id}>
-											{card.title}
 										</SelectItem>
 									))}
 								</SelectContent>

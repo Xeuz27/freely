@@ -1,8 +1,6 @@
 import { useState, useMemo } from 'react'
-import { sampleKanbanCards as kanbanCards } from '@/data/sampleKanbanCards'
 import { type TimeEntry, calculateDuration } from '@/types/timetrack-types'
 import useTimeLogger from './useTimeLogger'
-import { sampleProjects as projects } from '@/data/sampleProjects'
 
 const useTimeTracker = () => {
 	const { getEntriesForDate, entries } = useTimeLogger()
@@ -64,8 +62,6 @@ const useTimeTracker = () => {
 		setInitialEndTime,
 		viewMode,
 		setViewMode,
-		projects,
-		kanbanCards,
 		getWeekDates,
 		todayTotalMinutes,
 		weekTotalMinutes
