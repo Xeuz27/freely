@@ -1,6 +1,7 @@
 import TimetrackContextProvider from '@/modules/timeTrackBoard/context/timetrackContext.tsx'
 
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 
 import CalendarContextProvider from '@/modules/calendarBoard/context/calendarContext.tsx'
@@ -15,11 +16,13 @@ import { CrmBoard } from '@/modules/crmBoard/components/crm-board'
 import { CalendarBoard } from '@/modules/calendarBoard/components/calendar-board'
 
 import { useState } from 'react'
+import ProjectContextProvider from 'src/modules/projectBoard/context/ProjectsContext'
+import KanbanContextProvider from 'src/modules/kanbanBoard/context/kanbanContext'
 
 export type Board = 'kanban' | 'crm' | 'calendar' | 'projects' | 'timetrack' | 'document'
 
 export function Workspace() {
-	const [activeBoard, setActiveBoard] = useState<Board>('timetrack')
+	const [activeBoard, setActiveBoard] = useState<Board>('projects')
 	// const [installed, setInstalled] = useState(false)
 	const boards = {
 		kanban: KanbanBoard,
@@ -76,9 +79,11 @@ export function Workspace() {
 			<CalendarContextProvider>
 				<TimetrackContextProvider>
 					<CrmContextProvider>
-						<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
-						<SidebarInset>
-							{/* <div className="flex divide-x divide-accent items-center justify-center gap-4 border border-border rounded-md p-4">
+						<KanbanContextProvider>
+							<ProjectContextProvider>
+								<AppSidebar setActiveBoard={setActiveBoard} activeBoard={activeBoard} />
+								<SidebarInset>
+									{/* <div className="flex divide-x divide-accent items-center justify-center gap-4 border border-border rounded-md p-4">
 								<button className='dialog border-accent px-4 py-2 border rounded-sm ' onClick={() => setInstalled(true)}>dialog</button>
 								
 								<button className='install bg-primary flex items-center px-4 gap-2 py-2 border rounded-sm' onClick={downloadApp}>
@@ -89,8 +94,8 @@ export function Workspace() {
 								
 								</button>
 								</div> */}
-							<main className="flex flex-1 overflow-hidden">
-								{/* <Dialog open={installed} onOpenChange={() => setInstalled(false)}>
+									<main className="flex flex-1 overflow-hidden">
+										{/* <Dialog open={installed} onOpenChange={() => setInstalled(false)}>
 									<DialogContent>
 									<DialogHeader>
 									<DialogTitle>App installed</DialogTitle>
@@ -101,9 +106,11 @@ export function Workspace() {
 									</DialogContent>
 									</Dialog> */}
 
-								<ActiveBoard />
-							</main>
-						</SidebarInset>
+										<ActiveBoard />
+									</main>
+								</SidebarInset>
+							</ProjectContextProvider>
+						</KanbanContextProvider>
 					</CrmContextProvider>
 				</TimetrackContextProvider>
 			</CalendarContextProvider>
